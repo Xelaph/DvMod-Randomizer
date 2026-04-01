@@ -8,6 +8,7 @@ using Archipelago.MultiClient.Net.DataPackage;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using DV.Booklets;
+using DV.CabControls;
 using DV.InventorySystem;
 using DV.LocoRestoration;
 using DV.Shops;
@@ -42,7 +43,7 @@ namespace DvMod.Randomizer
             ImageConversion.LoadImage(icon, File.ReadAllBytes(Path.Combine(Main.mod!.Path,"icons", $"icon_{name}.png")));
             return Sprite.Create(icon, new(0,0,256,256), new(0.5f, 0.5f));
         }
-        private static readonly Dictionary<string, int> StationOrder = new() {{"CME", 0}, {"CMS",1}, {"CP",2}, {"CS",3}, {"CW",4}, {"FF",5}, {"FM",6}, {"FRC",7}, {"FRS",8}, {"GF",9}, {"HB",10}, {"IME",11}, {"IMW",12}, {"MB",13}, {"MF",14}, {"OR",15}, {"OWC",16}, {"OWN",17}, {"SM",18}, {"SW",19}};
+        private static readonly Dictionary<string, int> StationOrder = new() {{"CME", 0}, {"CMS",1}, {"CP",2}, {"CS",3}, {"CW",4}, {"FF",5}, {"FM",6}, {"FRC",7}, {"FRS",8}, {"GF",9}, {"HB",10}, {"HMB", 10}, {"IME",11}, {"IMW",12}, {"MB",13}, {"MF",14}, {"MFMB", 14}, {"OR",15}, {"OWC",16}, {"OWN",17}, {"SM",18}, {"SW",19}};
         private static readonly Dictionary<TrainCarType, int> TrainTypeOrder = new() {
             {TrainCarType.LocoShunter, 0}, 
             {TrainCarType.LocoDM3, 1}, 
@@ -719,7 +720,8 @@ namespace DvMod.Randomizer
             InventoryItemSpec item = license.GetComponent<InventoryItemSpec>();
             item.BelongsToPlayer = true;
             item.name=name+" station license";
-            SingletonBehaviour<StorageController>.Instance.AddItemToWorldStorageAfterOneFrame(license);
+            ItemBase component = item.GetComponent<ItemBase>();
+            SingletonBehaviour<StorageController>.Instance.AddItemToWorldStorage(component);
         }
         public static string GetStationNameFromFinishingJobId(long Id) {
             return GetStationNameFromOrder((Id & 0x1F00)>>8);

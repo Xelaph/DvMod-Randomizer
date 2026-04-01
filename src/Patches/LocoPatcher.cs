@@ -6,6 +6,7 @@ using DV.Utils;
 using CommandTerminal;
 using System.Linq;
 using DV.ThingTypes.TransitionHelpers;
+using System.Data;
 
 namespace DvMod.Randomizer
 {
@@ -26,14 +27,20 @@ namespace DvMod.Randomizer
                 Garage.DH4_Relic,
                 Garage.DE6_Relic,
                 Garage.S060_Relic,
-                Garage.S282_Relic
+                Garage.S282_Relic,
             ];
             ___availableVehiclesForSpawn = 
                     crewVehicleGarages
                     .Select(g => g.ToV2())
                     .Where(Main.player!.HasUnlocked)
                     .SelectMany(g => g.garageCarLiveries)
-                    .ToList()??[];
+                    .AddItem(TrainCarType.HandCar.ToV2())
+                    .ToList();
+        }
+        [HarmonyPrefix, HarmonyPatch("SetState")]
+        public static void RefreshList(CommsRadioCrewVehicle.State newState, CommsRadioCrewVehicle __instance) {
+            if (newState == CommsRadioCrewVehicle.State.EnterSpawnMode)
+                __instance.UpdateAvailableVehicles();
         }
     }
 

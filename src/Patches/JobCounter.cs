@@ -8,79 +8,100 @@ using System.Linq;
 using DV.CabControls.Spec;
 using Archipelago.MultiClient.Net.Models;
 using System.Text;
+using System;
+using System.Security.Cryptography;
 namespace DvMod.Randomizer
 {
     [HarmonyPatch(typeof(BookletCreator_JobReport))]
     public class JobCounter {
+        private static void AddData(ref List<TemplatePaperData> mainList, List<JobReportTasksTemplatePaperData.JobReportEntry> ToAdd) {
+            if (ToAdd.Count == 0) return;
+            TemplatePaperData lastPage = mainList[mainList.Count-2];
+            List<JobReportTasksTemplatePaperData.JobReportEntry> missing;
+            int canFit;
+            switch (lastPage) {
+                case JobReportOverviewTemplatePaperData p : 
+                canFit = Math.Min(ToAdd.Count, 5-p.reportEntries.Count);
+                p.reportEntries.AddRange(ToAdd.Take(canFit));
+                missing = [.. ToAdd.Skip(canFit)];
+                break;
+                case JobReportTasksTemplatePaperData p : 
+                canFit = Math.Min(ToAdd.Count, 9-p.reportEntries.Count);
+                p.reportEntries.AddRange(ToAdd.Take(canFit));
+                missing = [.. ToAdd.Skip(canFit)];
+                break;
+                default :
+                missing = ToAdd;
+                break;
+            };
+            if (missing.Count > 0) {
+                int PagesToAdd = missing.Count / 9 + (missing.Count % 9 > 0 ? 1 : 0);
+                JobReportPaymentTemplatePaperData lastPageData = (JobReportPaymentTemplatePaperData) mainList.Last();
+                string newTotalPages = (int.Parse(lastPageData.totalPages) + PagesToAdd).ToString();
+                int newLastPage = int.Parse(lastPageData.pageNumber) + PagesToAdd;
+                foreach (TemplatePaperData middlePage in mainList) {
+                    switch (middlePage) {
+                        case JobReportOverviewTemplatePaperData p: p.totalPages = newTotalPages; break;
+                        case JobReportTasksTemplatePaperData p: p.totalPages = newTotalPages; break;
+                        case JobReportPaymentTemplatePaperData p: p.totalPages = newTotalPages; p.pageNumber = newLastPage.ToString(); break;
+                    }
+                }
+                mainList.InsertRange(mainList.Count-1, 
+                    Enumerable.Range(0, PagesToAdd).Select(
+                        i => new JobReportTasksTemplatePaperData([.. ToAdd.Skip(9*i).Take(9)], (newLastPage - PagesToAdd + i).ToString(), newTotalPages)
+                    )
+                );
+                
+            }
+        }
 
         [HarmonyPatch("GetReportTemplateData")]
         public static void Postfix(ref List<TemplatePaperData> __result, Job_data data) {
             if (Main.player == null) return;
             if (data.state != JobState.Completed) return;
-            string Station = data.type switch {
-                JobType.ShuntingUnload => data.chainDestinationStationInfo.YardID,
-                _ => data.chainOriginStationInfo.YardID
-            };
-            bool IsShuntingJob = data.type == JobType.ShuntingLoad || data.type == JobType.ShuntingUnload;
+            JobFinishState jobState = Main.player.FinishJob(data);
+            Main.Log("I got data!");
+            Main.Log($"What is inside: {jobState.HasWon}/{jobState.IsShunting}/{jobState.Item}/{jobState.RemainingForVictory}/{jobState.RemainingJobs}");
             List<JobReportTasksTemplatePaperData.JobReportEntry> ToAdd = [];
-            if (Main.player.GotStationLicense(Station)){
-                (int curr, int max) = IsShuntingJob ? Main.player.GetShuntingData(Station) : Main.player.GetTransportData(Station);
+            if (jobState.RemainingForVictory >= 0){
                 StringBuilder sb = new();
-                if (curr < max) {
-                    ItemInfo JobItem = Main.player.UnlockCheck(RandoCommonData.ComputeCheckForJob(IsShuntingJob, Station, curr));
-                    sb.AppendLine($"You got a {JobItem.ItemDisplayName}.");
+                if (jobState.Item != null) {
+                    sb.AppendLine($"You got a {jobState.Item.ItemDisplayName} for {jobState.Item.Player.Name}.");
                 }
-                string job = IsShuntingJob?"shunting":"transport";
-                if (curr < max-1) 
-                    sb.AppendLine($"There are {max-curr+1} rewards left for {job} in station {Station}");
+                string job = jobState.IsShunting?"shunting":"transport";
+                int remaining = jobState.RemainingJobs;
+                if (remaining > 0) 
+                    sb.AppendLine($"There are {remaining} rewards left for {job} here");
                 else 
-                    sb.AppendLine($"You got all rewards for {job} in station {Station}");
-                ToAdd.Add(new(sb.ToString(), "", curr < max-1?JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS:JobReportTasksTemplatePaperData.EntryState.COMPLETED));
+                    sb.AppendLine($"You got all rewards for {job} here");
+                ToAdd.Add(new(sb.ToString(), "", remaining > 0?JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS:JobReportTasksTemplatePaperData.EntryState.COMPLETED));
             } else {
                 ToAdd.Add(new("You do not have the required station license. You cannot earn any item", "", JobReportTasksTemplatePaperData.EntryState.WARNING));
             }
-            
-            TrainCarType LastLoco = PlayerManager.LastLoco.carType;
-            (long checkLoco, int remainingLoco) = Main.player.FinishLoco(PlayerManager.LastLoco.carType);
-            if (remainingLoco < 0)
-                ToAdd.Add(new("You already got the reward for using the "+RandoCommonData.GetLocoNameFromType(LastLoco), "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
-            else if (remainingLoco == 0) {
-                ItemInfo LocoItem = Main.player.UnlockCheck(checkLoco);
-                ToAdd.Add(new("You finished enough job with a "+RandoCommonData.GetLocoNameFromType(LastLoco)+" to get a "+LocoItem.ItemDisplayName, "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
-            } else
-                ToAdd.Add(new($"You still need {remainingLoco} jobs with a {RandoCommonData.GetLocoNameFromType(LastLoco)} to get a reward", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS));
-            
-            TemplatePaperData lastPage = __result[__result.Count-2];
-            if (lastPage is JobReportOverviewTemplatePaperData overviewData) {
-                if (overviewData.reportEntries.Count <= 3) {
-                    overviewData.reportEntries.AddRange(ToAdd);
-                    ToAdd = [];
-                } else if (overviewData.reportEntries.Count == 4) {
-                    overviewData.reportEntries.Add(ToAdd[0]);
-                    ToAdd = [ToAdd[1]];
-                } 
-            } else if (lastPage is JobReportTasksTemplatePaperData reportData) {
-                if (reportData.reportEntries.Count <= 7) {
-                    reportData.reportEntries.AddRange(ToAdd);
-                    ToAdd = [];
-                } else if (reportData.reportEntries.Count == 8) {
-                    reportData.reportEntries.Add(ToAdd[0]);
-                    ToAdd = [ToAdd[1]];
-                }
+            if (jobState.HasWon) {
+                ToAdd.Add(new("You have completed the game!", "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
+            } else if (jobState.RemainingForVictory == 0) {
+                ToAdd.Add(new("You have not won yet, but you finished enough jobs in this station","", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
+            } else if (jobState.RemainingForVictory > 0) {
+                ToAdd.Add(new($"You need {jobState.RemainingForVictory} jobs to finish this station", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS));
+            } else {
+                ToAdd.Add(new("You cannot progress towards victory here", "", JobReportTasksTemplatePaperData.EntryState.WARNING));
             }
-            if (ToAdd.Count > 0) {
-                JobReportPaymentTemplatePaperData lastPageData = (JobReportPaymentTemplatePaperData) __result.Last();
-                string newTotalPage = (int.Parse(lastPageData.totalPages)+1).ToString();
-                string newLastPage = (int.Parse(lastPageData.pageNumber)+1).ToString();
-                foreach (TemplatePaperData page in __result){
-                    switch (page) {
-                        case JobReportOverviewTemplatePaperData p: p.totalPages = newTotalPage; break;
-                        case JobReportTasksTemplatePaperData p: p.totalPages = newTotalPage; break;
-                        case JobReportPaymentTemplatePaperData p: p.totalPages = newTotalPage; p.pageNumber = newLastPage; break;
-                    }
-                }
-                __result.Insert(__result.Count-1, new JobReportTasksTemplatePaperData(ToAdd, (int.Parse(newLastPage)-1).ToString(), newTotalPage));
+            Main.Log("I've finished the first part");
+            if (PlayerManager.LastLoco == null) {
+                ToAdd.Add(new("Could not find your last loco", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS_WITH_X_MARK));
+            } else {
+                TrainCarType LastLoco = PlayerManager.LastLoco.carType;
+                (long checkLoco, int remainingLoco) = Main.player.FinishLoco(PlayerManager.LastLoco.carType);
+                if (remainingLoco < 0)
+                    ToAdd.Add(new("You already got the reward for using the "+RandoCommonData.GetLocoNameFromType(LastLoco), "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
+                else if (remainingLoco == 0) {
+                    ItemInfo LocoItem = Main.player.UnlockCheck(checkLoco);
+                    ToAdd.Add(new("You finished enough job with a "+RandoCommonData.GetLocoNameFromType(LastLoco)+" to get a "+LocoItem.ItemDisplayName, "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
+                } else
+                    ToAdd.Add(new($"You still need {remainingLoco} jobs with a {RandoCommonData.GetLocoNameFromType(LastLoco)} to get a reward", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS));
             }
+            AddData(ref __result, ToAdd);
         }
     
     }

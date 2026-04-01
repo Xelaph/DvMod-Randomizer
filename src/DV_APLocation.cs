@@ -34,12 +34,10 @@ public class APLoc_DemoLocoSpawn(long Id) : DV_APLocation(Id) {
         Main.player!.CheckRestoLoco(Id);
 }
 public class APLoc_ShuntingJobs(long Id) : DV_APLocation(Id) {
-    protected override void ChangeLocalState() =>
-        Main.player!.FinishShunting(RandoCommonData.GetStationNameFromFinishingJobId(Id));
+    protected override void ChangeLocalState() {}
 }
 public class APLoc_TransportJobs(long Id) : DV_APLocation(Id) {
-    protected override void ChangeLocalState() =>
-        Main.player!.FinishTransport(RandoCommonData.GetStationNameFromFinishingJobId(Id));
+    protected override void ChangeLocalState() {}
 }
 public class APLoc_LocoJobs(long Id) : DV_APLocation(Id) {
     protected override void ChangeLocalState() =>

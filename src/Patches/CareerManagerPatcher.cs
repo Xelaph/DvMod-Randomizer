@@ -60,7 +60,7 @@ namespace DvMod.Randomizer
                 price = ___jobLicenseToBuy.price;
             }
             CashRegisterModule ToPrint = new GenericThingCashRegisterModule();
-            string itemName = item.ItemDisplayName;
+            string itemName = item.ItemDisplayName+" ("+item.Player.Name+")";
             ToPrint.Data.unitsToBuy = 1;
             ToPrint.Data.pricePerUnit = price;
             ToPrint.Data.resourceName = itemName;

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using CommandTerminal;
 using DV;
+using DV.CabControls;
 using DV.Customization.Paint;
 using DV.Damage;
+using DV.InventorySystem;
 using DV.LocoRestoration;
 using DV.OriginShift;
 using DV.ThingTypes;
