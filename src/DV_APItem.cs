@@ -55,6 +55,7 @@ namespace DvMod.Randomizer {
         protected override string Name => Station+" station license";
         protected override bool AcquireUnconditional() {
             Main.player!.AcquireLicense(Station);
+            MapMarkerPatcher.GotLicense(Station);
             RandoCommonData.AcquireStationLicense(Station);
             return true;
         }
