@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Models;
-using Archipelago.MultiClient.Net.Enums;
 using DV;
 using DV.Booklets;
 using DV.CabControls;
@@ -135,7 +132,15 @@ namespace DvMod.Randomizer {
             get => true;
         }
     }
+    public class AP_DoubleToken(int idx, ItemInfo item) : DV_APItem(idx, item)
+    {
+        public override bool IsObtainable => true;
 
+        protected override string Name => "Double Job Token";
+
+        protected override bool AcquireUnconditional() { Main.player!.AddToken(); return true;}
+        
+    }
     public class AP_Money(int idx, ItemInfo item) : DV_APItem(idx, item)
     {
         protected override string Name => "Money";
