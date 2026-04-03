@@ -31,8 +31,12 @@ namespace Archipelago.MultiClient.Net.Helpers
             JsonSerializer.Create(settings).Serialize(new StringWriter(sb), obj);
             return sb.ToString();
         }
-		public static T Deserialize<T>(string json, JsonSerializerSettings settings) 
-            => JsonSerializer.Create(settings).Deserialize<T>(new JsonTextReader(new StringReader(json)))!;
+		public static T Deserialize<T>(string json, JsonSerializerSettings settings) {
+            settings.Error += (_, args) => Main.Log("JSON ERROR: "+args.ErrorContext.Error.Message);
+            var x =  JsonSerializer.Create(settings).Deserialize<T>(new JsonTextReader(new StringReader(json)))!;
+            settings.Error = null;
+            return x;
+        }
 	}
     public class ArchipelagoSocketHelper : IArchipelagoSocketHelper
     {
@@ -339,8 +343,8 @@ namespace Archipelago.MultiClient.Net.Helpers
         {
 	        if (!e.IsText || PacketReceived == null) return;
 
-	        List<ArchipelagoPacketBase> packets = null;
-
+	        List<ArchipelagoPacketBase> packets = [];
+            Main.Log(e.Data);
 	        try
 	        {
 		        packets = JsonTranslate.Deserialize<List<ArchipelagoPacketBase>>(e.Data, Converter);
@@ -349,10 +353,10 @@ namespace Archipelago.MultiClient.Net.Helpers
 	        {
 		        OnError(exception);
 	        }
-			
-			if (packets != null)
-				foreach (var packet in packets)
-			        PacketReceived(packet);
+			Main.Log($"I passed the try-catch block with {packets.Count} packets to parse");
+            foreach (var packet in packets){
+                PacketReceived(packet);
+            }
         }
 
         void OnError(object sender, WebSocketSharp.ErrorEventArgs e)

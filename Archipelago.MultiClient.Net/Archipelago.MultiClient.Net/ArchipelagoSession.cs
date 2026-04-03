@@ -192,7 +192,7 @@ namespace Archipelago.MultiClient.Net
             {
                 case ConnectedPacket _:
 	            case ConnectionRefusedPacket _:
-#if NET35
+#if NET35	
 					if (expectingLoginResult)
                     {
                         expectingLoginResult = false;
@@ -200,6 +200,7 @@ namespace Archipelago.MultiClient.Net
                     }
                     break;
 #else
+					Main.Log("I found a packet: "+packet.ToString());
                     loginResultTask.TrySetResult(LoginResult.FromPacket(packet));
                     break;
 #endif
@@ -264,7 +265,7 @@ namespace Archipelago.MultiClient.Net
             }
 
             SetResultAfterTimeout<LoginResult>(loginResultTask, ArchipelagoConnectionTimeoutInSeconds, 
-	            new LoginFailure("Connection timed out."));
+	            new LoginFailure("Connection timed out. Yep, that's the one"));
 
             return loginResultTask.Task;
         }

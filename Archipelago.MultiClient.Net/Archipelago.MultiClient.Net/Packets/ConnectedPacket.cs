@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace Archipelago.MultiClient.Net.Packets
 {
+    public class APSlotData {
+        public float Money;
+        public DvMod.Randomizer.DVConfig Config;
+        public string StartStation;
+    }
     public class ConnectedPacket : ArchipelagoPacketBase
     {
         public override ArchipelagoPacketType PacketType => ArchipelagoPacketType.Connected;
@@ -23,7 +28,7 @@ namespace Archipelago.MultiClient.Net.Packets
         [JsonProperty("checked_locations")]
         public long[] LocationsChecked { get; set; }
         [JsonProperty("slot_data")]
-        public Dictionary<string, object> SlotData { get; set; }
+        public APSlotData SlotData { get; set; }
         [JsonProperty("slot_info")]
         public Dictionary<int, NetworkSlot> SlotInfo { get; set; }
         

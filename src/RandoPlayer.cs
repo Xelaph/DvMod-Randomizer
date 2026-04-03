@@ -30,6 +30,7 @@ using Archipelago.MultiClient.Net.Packets;
 using DV.Util.EventWrapper;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using DV.ServicePenalty.UI;
+using System.Data.Common;
 
 namespace DvMod.Randomizer
 {
@@ -41,6 +42,16 @@ namespace DvMod.Randomizer
         public int RemainingJobs;
         public bool IsShunting;
     }
+    public class DVConfig(int[] ShuntThreshold, int[] FreightThreshold, int[] LocoJobsThreshold, int Victory, int VictoryThreshold, bool HintsOnLocoLicense, bool HintsOnStationLicense, bool DeathLink) {
+                public int[] ShuntThreshold = ShuntThreshold;
+                public int[] FreightThreshold = FreightThreshold;
+                public int[] LocoJobsThreshold = LocoJobsThreshold;
+                public int Victory=Victory;
+                public int VictoryThreshold = VictoryThreshold;
+                public bool HintsOnLocoLicense = HintsOnLocoLicense;
+                public bool HintsOnStationLicense = HintsOnStationLicense;
+                public bool DeathLink = DeathLink;
+            }
     public class RandoSaveData(
         int Version,
         bool[] StationLicenses, 
@@ -51,29 +62,13 @@ namespace DvMod.Randomizer
         int[] ReceivedRelics, 
         int Index, 
         int[] Shunts, 
-        int[] ShuntThreshold, 
         int[] Freights, 
-        int[] FreightThreshold, 
         int[] LocoJobs, 
-        int[] LocoJobsThreshold, 
-        int Victory, 
-        int VictoryThreshold, 
         bool AlreadyWon,
-        string TeleportToStation,
         HashSet<long> LocationsChecked,
-        bool HintsOnLocoLicense,
-        bool HintsOnStationLicense, 
-        bool DeathLink) {
-            public class DVConfig(int[] ShuntThreshold, int[] FreightThreshold, int[] LocoJobsThreshold, int Victory, int VictoryThreshold, bool HintsOnLocoLicense, bool HintsOnStationLicense, bool DeathLink) {
-                public int[] ShuntThreshold = ShuntThreshold;
-                public int[] FreightThreshold = FreightThreshold;
-                public int[] LocoJobsThreshold = LocoJobsThreshold;
-                public int Victory=Victory;
-                public int VictoryThreshold = VictoryThreshold;
-                public bool HintsOnLocoLicense = HintsOnLocoLicense;
-                public bool HintsOnStationLicense = HintsOnStationLicense;
-                public bool DeathLink = DeathLink;
-            }
+        DVConfig config
+        ) {
+            
         public bool[] StationLicenses = StationLicenses;
         public bool[] HiddenGarages = HiddenGarages;
         public bool[] JobLocations = JobLocations;
@@ -86,9 +81,24 @@ namespace DvMod.Randomizer
         public int[] LocoJobs = LocoJobs;
         public bool AlreadyWon = AlreadyWon;
         public int Version = Version;
-        public string TeleportToStation = TeleportToStation;
         public HashSet<long> LocationsChecked = LocationsChecked;
-        public DVConfig Config = new(ShuntThreshold, FreightThreshold, LocoJobsThreshold, Victory, VictoryThreshold, HintsOnLocoLicense, HintsOnStationLicense, DeathLink);
+        public DVConfig Config = config;
+        public static RandoSaveData CreateSaveData(DVConfig config) => new(
+            2,
+            new bool[20],
+            new bool[4],
+            new bool[12],
+            new bool[13],
+            new bool[57],
+            new int[6],
+            0,
+            new int[20],
+            new int[20],
+            new int[6],
+            false,
+            new(),
+            config
+        );
     }
     
     public class RandoPlayer
@@ -101,6 +111,7 @@ namespace DvMod.Randomizer
             private float LastTime = 0f;
             public void CheckPosition() {
                 if (PlayerManager.PlayerTransform == null) return;
+                object x = 1;
                 if (Time.time - LastTime > TimeThreshold && (PlayerManager.PlayerTransform.AbsolutePosition() - LocoPosition).magnitude < SpatialThreshold) {
                     string stationNeeded = RandoCommonData.GetStationFromLocoLocations(LocoPosition);
                     bool StationOk = Main.player!.GotStationLicense(stationNeeded);
@@ -126,10 +137,11 @@ namespace DvMod.Randomizer
         public Vector3 Position => PlayerManager.ActiveCamera.transform.position + PlayerManager.ActiveCamera.transform.forward * 0.5f;
         public Quaternion Rotation => PlayerManager.ActiveCamera.transform.rotation;
         public RandoSaveData Data {get; private set;}
-        public bool IsFirstLoading => !Data.TeleportToStation.IsNullOrEmpty();
+        public DVConfig Config {get => Data.Config;}
         private readonly ConcurrentQueue<DV_APItem> waitingQueue = new();
         private PauseMenu Menu {get => UnityEngine.Object.FindObjectOfType<PauseMenu>();}
         public ArchipelagoSession Session;
+        public APSlotData SlotData {get; private set;}
         public event Action? UpdateEvent;
         public DeathLinkService? deathLinkService = null;
         public JobFinishState FinishJob(Job_data data) {
@@ -158,9 +170,7 @@ namespace DvMod.Randomizer
             };
 
         }
-        private void CheckData() {
-            
-        }
+
         public bool AddLocation(long id) {
             return Data.LocationsChecked.Add(id);
         }
@@ -192,24 +202,24 @@ namespace DvMod.Randomizer
                 if (!Data.LocoLocations[i])
                     UpdateEvent += new DemoLocoListener(i).CheckPosition;
             }
-            if (IsFirstLoading) {
-                //All that we have to do the first time
-            }
         }
         private IEnumerator Subscribe() {
             while (Menu == null) yield return null;
             Menu.controller.ExitLevelRequested += Dispose;
             Menu.controller.QuitGameRequested += Dispose;
         }
-        public RandoPlayer(RandoSaveData saveData) {
-            Data = saveData;
-            CheckData();
-            Session = ArchipelagoSessionFactory.CreateSession(Main.settings!.serverName, Main.settings!.Port);
-            
-            if(!Session.TryConnectAndLogin("Derail Valley", Main.settings!.User, ItemsHandlingFlags.AllItems, password: Main.settings!.Password).Successful)
-                throw new TimeoutException();
+        public RandoPlayer(RandoSaveData? saveData) {
+            string Server = "ws://"+Main.settings!.serverName;
+            Session = ArchipelagoSessionFactory.CreateSession(Server, Main.settings!.Port);
+            LoginResult login = Session.TryConnectAndLogin("Derail Valley", Main.settings!.User, ItemsHandlingFlags.AllItems, password: Main.settings!.Password);
+            if (login is LoginFailure failLogin) {
+                Main.Log("Error! We got the following error while connecting: "+failLogin.Errors.Aggregate((acc, s) => acc+"/"+s));
+                MainMenu.GoBackToMainMenu();
+                throw new Exception();
+            }
+            SlotData = ((LoginSuccessful)login).SlotData;
             SingletonBehaviour<CoroutineManager>.Instance.Run(Subscribe());
-            
+            Data = saveData ?? RandoSaveData.CreateSaveData(SlotData.Config);
             if (Data.Config.DeathLink) {
                 deathLinkService = Session.CreateDeathLinkService();
                 deathLinkService.OnDeathLinkReceived += DeathLinkPatch.Derail;
@@ -217,7 +227,10 @@ namespace DvMod.Randomizer
             }
 
         }
-        private void Dispose() {
+        public void Dispose() {
+            Main.player = null;
+        }
+        ~RandoPlayer() {
             Menu.controller.ExitLevelRequested -= Dispose;
             Menu.controller.QuitGameRequested -= Dispose;
             Data.Index -= waitingQueue.Count;
@@ -225,7 +238,6 @@ namespace DvMod.Randomizer
             deathLinkService = null;
             Session.Socket.DisconnectAsync();
             UpdateEvent = null;
-            Main.player = null;
         }
         public void CallUpdate() {
             UpdateEvent?.Invoke();

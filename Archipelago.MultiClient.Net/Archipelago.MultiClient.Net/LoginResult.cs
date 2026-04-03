@@ -40,7 +40,7 @@ namespace Archipelago.MultiClient.Net
 		/// <summary>
 		/// Contains a slot data, differs per game
 		/// </summary>
-		public Dictionary<string, object> SlotData { get; }
+		public APSlotData SlotData { get; }
 
         public LoginSuccessful(ConnectedPacket connectedPacket)
         {

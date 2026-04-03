@@ -15,6 +15,7 @@ namespace DvMod.Randomizer
         [Draw("Port")] public int Port = 38281;
         [Draw("Slot name (Must correspond to the name given to the Archipelago Server)")] public string User="";
         [Draw("Password (leave blank if no password)")] public string Password = "";
+        [Draw("Create a new Archipelago save on new career save?")]public bool CreateAPSave = false;
         public override void Save(UnityModManager.ModEntry mod){
             Save(this, mod);
         }

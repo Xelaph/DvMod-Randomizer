@@ -1,4 +1,6 @@
+using System.Collections;
 using DV.Teleporters;
+using DV.Utils;
 using HarmonyLib;
 using UnityEngine;
 
@@ -22,11 +24,13 @@ namespace DvMod.Randomizer {
                 
             }
         }
-        private static void ChangeMarkerColor(MapMarker marker, Color color) {
-            MeshRenderer renderer = marker.GetComponentInChildren<MeshRenderer>();
+        private static IEnumerator ChangeMarkerColor(int order, Color color) {
+            while (allMarkers[order]==null) yield return null;
+            MeshRenderer renderer = allMarkers[order].GetComponentInChildren<MeshRenderer>();
             renderer.material.SetColor("_Color", color);
+            yield break;
         }
-        public static void GotLicense(string stationName) => ChangeMarkerColor(allMarkers[RandoCommonData.GetOrderFromStationName(stationName)], GOT_LICENSE);
-        public static void NoLicense(string stationName) => ChangeMarkerColor(allMarkers[RandoCommonData.GetOrderFromStationName(stationName)], NO_LICENSE);
+        public static void GotLicense(string stationName) => SingletonBehaviour<CoroutineManager>.Instance.Run(ChangeMarkerColor(RandoCommonData.GetOrderFromStationName(stationName), GOT_LICENSE));
+        public static void NoLicense(string stationName) => SingletonBehaviour<CoroutineManager>.Instance.Run(ChangeMarkerColor(RandoCommonData.GetOrderFromStationName(stationName), NO_LICENSE));
     }
 }

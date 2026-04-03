@@ -704,11 +704,11 @@ namespace DvMod.Randomizer
                 resourceIcon=GetStationSprite(name),
                 car=null
             }];
-            if (Main.player!.Data.Config.HintsOnStationLicense) {
+            if (Main.player!.Config.HintsOnStationLicense) {
                 int Order = GetOrderFromStationName(name);
-                for (int i = 0; i < Main.player.Data.Config.FreightThreshold[Order]; i++)
+                for (int i = 0; i < Main.player.Config.FreightThreshold[Order]; i++)
                     StationLicense.Add(GetFreightData(name, i));
-                for (int i = 0; i < Main.player.Data.Config.ShuntThreshold[Order]; i++)
+                for (int i = 0; i < Main.player.Config.ShuntThreshold[Order]; i++)
                     StationLicense.Add(GetShuntingData(name, i));
             }
             return StationLicense;

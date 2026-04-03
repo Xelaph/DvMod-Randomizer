@@ -12,7 +12,7 @@ namespace DvMod.Randomizer {
         public static void Prefix(TrainCar newCar) {
             if (Main.player == null) return;
             if (newCar == PlayerManager.Car) return;
-            if (!Main.player.Data.Config.DeathLink) return;
+            if (!Main.player.Config.DeathLink) return;
             if (newCar != null)
                 newCar.OnDerailed += SendDeathLink;
             if (PlayerManager.Car != null)

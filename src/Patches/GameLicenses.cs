@@ -34,9 +34,9 @@ namespace DvMod.Randomizer
         public static void Postfix(GeneralLicenseType_v2 ___generalLicense, ref TemplatePaperData[] __result) {
             if (Main.player == null) return;
             int Order = RandoCommonData.GetOrderFromLocoLicense(___generalLicense);
-            if (Order < 0 || !Main.player.Data.Config.HintsOnLocoLicense) return;
+            if (Order < 0 || !Main.player.Config.HintsOnLocoLicense) return;
             LicenseTemplatePaperData FirstPage = (LicenseTemplatePaperData) __result[0];
-            FirstPage.licenseDescription += $"\nIn {Main.player.Data.Config.LocoJobsThreshold[Order]} job with this loco, you will earn a {Main.player.GetItemNameFromLocationId(RandoCommonData.AP_ID.LOC_LOCO_NB_JOBS+Order, true)}";
+            FirstPage.licenseDescription += $"\nIn {Main.player.Config.LocoJobsThreshold[Order]} job with this loco, you will earn a {Main.player.GetItemNameFromLocationId(RandoCommonData.AP_ID.LOC_LOCO_NB_JOBS+Order, true)}";
         }
     }
 }

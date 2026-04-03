@@ -40,6 +40,7 @@
     <Reference Include="DV.CabControls.Spec" />
     <Reference Include="DV.RailTrack" />
     <Reference Include="WorldStreamer" />
+    <Reference Include="DV.Common" />
     <Reference Include="UnityEngine.ImageConversionModule" />
   </ItemGroup>
 
