@@ -60,6 +60,8 @@ namespace DvMod.Randomizer
     [HarmonyPatch(typeof(StartGameData_NewCareer), nameof(StartGameData_NewCareer.PrepareNewSaveData))]
     public class NewSavePatch {
         private static IEnumerator TeleportPlayer() {
+            while (StationController.allStations == null || StationController.allStations.Count == 0)
+                yield return WaitFor.Seconds(0.5f);
             Transform teleportAnchor = 
                     StationController.allStations
                     .Find(sc => sc.stationInfo.YardID.Equals(Main.player!.SlotData.StartStation))
