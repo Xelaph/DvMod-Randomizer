@@ -21,7 +21,7 @@ The restoration side quest is reworked. No demonstrator will spawn in the world.
 Every item of Derail Valley can be obtained. The vast majority are rated filler (Files, Flags, Mounts, Gadgets, Boombox related...), and the other are progression items (The 4 garage keys, a paint sprayer and the tools required to operate a steam locomotive).
 
 ### Misc items
-The last two items are Nothing rated as trap, and Money ($5000) rated as filler.
+The last three items are Nothing rated as trap, Double Job Tokens, rated as useful and Money ($5000) rated as filler. Double Job Tokens are consumables. Everytime you finish a job for which you have the required station license, and if you gain something by doubling it (a new item or progression towards victory), one token will be automatically consumed and this job will count as two. The number of job tokens can be configured (From 0% of free locations up to 100% of free locations).
 
 ## Location list
 Locations are what you have to do or where you have to go to unlock things. You will also find the rules of the logic for each location.

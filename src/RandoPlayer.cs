@@ -221,6 +221,10 @@ namespace DvMod.Randomizer
             SlotData = ((LoginSuccessful)login).SlotData;
             SingletonBehaviour<CoroutineManager>.Instance.Run(Subscribe());
             Data = saveData ?? RandoSaveData.CreateSaveData(SlotData.Config);
+            Data.ServerName = Server;
+            Data.Password = Password;
+            Data.SlotName = SlotName;
+            Data.Port = Port;
             if (Data.Config.DeathLink) {
                 deathLinkService = Session.CreateDeathLinkService();
                 deathLinkService.OnDeathLinkReceived += DeathLinkPatch.Derail;
