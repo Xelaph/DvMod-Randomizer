@@ -1,3 +1,5 @@
+using DV.UI;
+using DV.Utils;
 using HarmonyLib;
 using UnityModManagerNet;
 
@@ -16,6 +18,7 @@ namespace DvMod.Randomizer
         [Draw("Slot name (Must correspond to the name given to the Archipelago Server)")] public string User="";
         [Draw("Password (leave blank if no password)")] public string Password = "";
         [Draw("Create a new Archipelago save on new career save?")]public bool CreateAPSave = false;
+        [Draw("When continuing a file, connection information are stored in the file. Set this to true to use the provided authentication credentials instead.")]public bool ForceUseSave = false;
         public override void Save(UnityModManager.ModEntry mod){
             Save(this, mod);
         }
@@ -63,6 +66,13 @@ namespace DvMod.Randomizer
         }
         public static void Error(string message) {
             mod!.Logger.Error(message);
+        }
+        public static void NotifyPlayer(string message) {
+            SingletonBehaviour<ACanvasController<CanvasController.ElementType>>.Instance.NotificationManager.ShowNotification(
+                message,
+                duration: 5f,
+                localize: false
+            );
         }
     }
 

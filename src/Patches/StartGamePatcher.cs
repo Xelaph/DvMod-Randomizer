@@ -72,6 +72,7 @@ namespace DvMod.Randomizer
                 Debug.LogWarning("Waiting terrains and streamers to finish loading");
             }
             PlayerManager.TeleportPlayer(teleportAnchor.position, teleportAnchor.rotation, null, useRotation: true);
+            Main.settings!.CreateAPSave = false;
         }
         public static bool Prefix(StartGameData_NewCareer __instance, ref SaveGameData saveGameData, IGameSession session, IDifficulty difficultyParams) {
             if (!Main.settings!.CreateAPSave) return true;

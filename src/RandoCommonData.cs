@@ -732,18 +732,6 @@ namespace DvMod.Randomizer
                 check += 0x2000;
             return check + 0x100 * GetOrderFromStationName(Station) + nb;
         }
-        public static DV_APLocation GetAPLocation(long id) {
-            return id switch {
-                >= 0x400 and < 0x500 => new APLoc_DemoLocoSpawn(id),
-                >= 0x1000 and < 0x2500 => new APLoc_ShuntingJobs(id),
-                >= 0x2500 and < 0x4000 => new APLoc_TransportJobs(id),
-                >= 0x600 and < 0x610 => new APLoc_LocoJobs(id),
-                >= 0x660 and < 0x670 => new APLoc_GeneralLicense(id),
-                >= 0x670 and < 0x680 => new APLoc_JobLicense(id),
-                >= 0x690 and < 0x6A0 => new APLoc_UnlockedGarage(id),
-                _ => new APLoc_Nothing(id)
-            };
-        }
         public static DV_APItem GetAPItem(int idx, ItemInfo item) {
             return item.ItemId switch {
                 -1 => new AP_Nothing(idx, item),

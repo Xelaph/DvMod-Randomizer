@@ -34,12 +34,12 @@ namespace DvMod.Randomizer {
                 do {
                     while (!WorldStreamingInit.IsLoaded) await Task.Yield();
                     if (!LocalItem)
-                        Main.player!.NotifyPlayer($"You got a {DisplayName} from {LocationDisplayName}");
+                        Main.NotifyPlayer($"You got a {DisplayName} from {LocationDisplayName}");
                     GotItem = AcquireUnconditional();
                     await Task.Yield();
                 } while (!GotItem);
             } else if (!LocalItem)
-                Main.player!.NotifyPlayer($"You received a {DisplayName} from {LocationDisplayName}, but you cannot have anymore");
+                Main.NotifyPlayer($"You received a {DisplayName} from {LocationDisplayName}, but you cannot have anymore");
             
         }
         protected abstract bool AcquireUnconditional();
@@ -138,7 +138,11 @@ namespace DvMod.Randomizer {
 
         protected override string Name => "Double Job Token";
 
-        protected override bool AcquireUnconditional() { Main.player!.AddToken(); return true;}
+        protected override bool AcquireUnconditional() { 
+            Main.player!.AddToken();
+            Main.NotifyPlayer("You got a double job token!");
+            return true;
+        }
         
     }
     public class AP_Money(int idx, ItemInfo item) : DV_APItem(idx, item)
