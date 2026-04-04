@@ -344,7 +344,6 @@ namespace Archipelago.MultiClient.Net.Helpers
 	        if (!e.IsText || PacketReceived == null) return;
 
 	        List<ArchipelagoPacketBase> packets = [];
-            Main.Log(e.Data);
 	        try
 	        {
 		        packets = JsonTranslate.Deserialize<List<ArchipelagoPacketBase>>(e.Data, Converter);
@@ -353,7 +352,6 @@ namespace Archipelago.MultiClient.Net.Helpers
 	        {
 		        OnError(exception);
 	        }
-			Main.Log($"I passed the try-catch block with {packets.Count} packets to parse");
             foreach (var packet in packets){
                 PacketReceived(packet);
             }
