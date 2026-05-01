@@ -103,7 +103,7 @@ namespace DvMod.Randomizer
         public string SlotName = SlotName;
         public string Password = Password;
         public static RandoSaveData CreateSaveData(DVConfig config) => new(
-            2,
+            Main.VERSION,
             new bool[20],
             new bool[4],
             new bool[12],
@@ -161,12 +161,12 @@ namespace DvMod.Randomizer
 
         public Vector3 Position => PlayerManager.ActiveCamera.transform.position + PlayerManager.ActiveCamera.transform.forward * 0.5f;
         public Quaternion Rotation => PlayerManager.ActiveCamera.transform.rotation;
-        public RandoSaveData Data {get; private set;}
+        public RandoSaveData Data {get;}
         public DVConfig Config {get => Data.Config;}
         private readonly ConcurrentQueue<DV_APItem> waitingQueue = new();
-        private PauseMenu Menu {get => UnityEngine.Object.FindObjectOfType<PauseMenu>();}
+        private static PauseMenu Menu => UnityEngine.Object.FindObjectOfType<PauseMenu>();
         public ArchipelagoSession Session;
-        public APSlotData SlotData {get; private set;}
+        public APSlotData SlotData {get;}
         public event Action? UpdateEvent;
         public DeathLinkService? deathLinkService = null;
         

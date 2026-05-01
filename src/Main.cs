@@ -25,8 +25,8 @@ namespace DvMod.Randomizer
         public void OnChange(){}
     }
 
-    public class Main 
-    {
+    public class Main {
+        public const int VERSION = 2;
         public static Settings? settings;
         public static UnityModManager.ModEntry? mod;
         public static RandoPlayer? player;

@@ -200,7 +200,6 @@ namespace Archipelago.MultiClient.Net
                     }
                     break;
 #else
-					Main.Log("I found a packet: "+packet.ToString());
                     loginResultTask.TrySetResult(LoginResult.FromPacket(packet));
                     break;
 #endif

@@ -33,8 +33,8 @@ namespace DvMod.Randomizer
                 Main.Log("Launching game in normal mode");
                 return;
             }
-            if (data.Version != 1) {
-                ExitWithMessage($"Randomizer detected but versions do not match: Mod version = 2/Save version = {data.Version}. Returning to main menu...");
+            if (data.Version != Main.VERSION) {
+                ExitWithMessage($"Randomizer detected but versions do not match: Mod version = {Main.VERSION}/Save version = {data.Version}. Returning to main menu...");
                 return;
             }
             try {

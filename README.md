@@ -1,6 +1,6 @@
 # Derail Valley Randomizer
 This is the main repository for an Archipelago implementation for the game Derail Valley.
-Here is the source code for the APWorld (logic of the randomizer, in python, using the Archipelago structure) and the mod for Derail Valley (Installed using Unity mod manager, installation setup in [this document](docs/AP_setup.md)). The needed files to play are (will be) in the release section.
+Here is the source code for the APWorld (logic of the randomizer, in python, using the Archipelago structure) and the mod for Derail Valley (Installed using Unity mod manager, installation setup in [this document](docs/AP_setup.md)). The needed files to play are in the release section.
 
 ## Features
 You can play solo, or with other players (who can play on any game supported by Archipelago/Multiworld). The Archipelago part is provided as an .apworld file, please consult the Archipelago docs for further instructions.

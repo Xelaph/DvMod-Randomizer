@@ -1,15 +1,10 @@
 using DV.Booklets;
 using HarmonyLib;
 using DV.ThingTypes;
-using UnityEngine;
 using System.Collections.Generic;
 using DV.RenderTextureSystem.BookletRender;
 using System.Linq;
-using DV.CabControls.Spec;
-using Archipelago.MultiClient.Net.Models;
-using System.Text;
 using System;
-using System.Security.Cryptography;
 namespace DvMod.Randomizer
 {
     [HarmonyPatch(typeof(BookletCreator_JobReport))]

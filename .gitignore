@@ -6,3 +6,4 @@
 *.user
 bin/*
 obj/*
+/VERSION

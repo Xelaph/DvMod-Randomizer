@@ -736,13 +736,14 @@ namespace DvMod.Randomizer
             return item.ItemId switch {
                 -1 => new AP_Nothing(idx, item),
                 1 => new AP_Money(idx, item),
+                2 => new AP_DoubleToken(idx, item),
                 >= 0x100 and < 0x200 => new AP_PhysicalItem(idx, item),
                 >= 0x200 and < 0x300 => new AP_StationLicense(idx, item),
                 >= 0x300 and < 0x310 => new AP_GeneralLicense(idx, item),
                 >= 0x310 and < 0x320 => new AP_JobLicense(idx, item),
                 >= 0x350 and < 0x360 => new AP_RelicLoco(idx, item),
                 >= 0x360 and < 0x370 => new AP_CrewVehicle(idx, item),
-                _ => throw new ArgumentException("Invalid item id")
+                _ => throw new ArgumentException($"Invalid item id: {item.ItemId}")
             };
         }
         public static GarageType_v2 GetGarageFromId(long Id) {
