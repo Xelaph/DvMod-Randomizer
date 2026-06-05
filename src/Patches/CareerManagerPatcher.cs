@@ -6,6 +6,7 @@ using HarmonyLib;
 using TMPro;
 using DV.Localization;
 using Archipelago.MultiClient.Net.Models;
+using DV.Utils;
 
 namespace DvMod.Randomizer
 {
@@ -15,9 +16,14 @@ namespace DvMod.Randomizer
         public static void JobLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
             if (Main.player == null) return;
             __instance.IsAcquired = Main.player.HasChecked(__instance.JobLicense);
-            __instance.IsObtainable |= 
-                    __instance.JobLicense.v1 == JobLicenses.FreightHaul
-                 || __instance.JobLicense.v1 == JobLicenses.Shunting;
+            __instance.IsObtainable =
+                (__instance.JobLicense.requiredGeneralLicense == null ||
+                 SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(__instance.JobLicense
+                     .requiredGeneralLicense)) &&
+                (__instance.JobLicense.requiredJobLicense == null ||
+                 SingletonBehaviour<LicenseManager>.Instance.IsJobLicenseAcquired(__instance.JobLicense
+                     .requiredJobLicense)) &&
+                    __instance.JobLicense.v1 is JobLicenses.FreightHaul or JobLicenses.Shunting;
             if (!__instance.IsAcquired){
                 __instance.status.text = "$" + __instance.JobLicense.price.ToString("N2", LocalizationAPI.CC);
                 __instance.name.text += "?";
@@ -29,10 +35,14 @@ namespace DvMod.Randomizer
         public static void GeneralLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
             if (Main.player == null) return;
             __instance.IsAcquired = Main.player.HasChecked(__instance.GeneralLicense);
-            __instance.IsObtainable |=
-                     __instance.GeneralLicense.v1 == GeneralLicenseType.TrainDriver 
-                  || __instance.GeneralLicense.v1 == GeneralLicenseType.DE2
-                  || __instance.GeneralLicense.v1 == GeneralLicenseType.Dispatcher1;
+            __instance.IsObtainable =
+                    (__instance.GeneralLicense.requiredGeneralLicense == null ||
+                        SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(__instance.GeneralLicense
+                     .requiredGeneralLicense)) &&
+                    (__instance.GeneralLicense.requiredJobLicense == null ||
+                        SingletonBehaviour<LicenseManager>.Instance.IsJobLicenseAcquired(__instance.GeneralLicense
+                     .requiredJobLicense)) &&
+                     __instance.GeneralLicense.v1 is GeneralLicenseType.TrainDriver or GeneralLicenseType.DE2 or GeneralLicenseType.Dispatcher1;
             if (!__instance.IsAcquired){
                 __instance.status.text = "$" + __instance.GeneralLicense.price.ToString("N2", LocalizationAPI.CC);
                 __instance.name.text += "?";
