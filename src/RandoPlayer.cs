@@ -191,6 +191,7 @@ namespace DvMod.Randomizer
             GeneralLicenseType.DE2.ToV2().price = 5000;
             GeneralLicenseType.TrainDriver.ToV2().price = 1000;
             JobLicenses.FreightHaul.ToV2().price = 10000;
+            TrainCarType.LocoShunter.ToV2().requiredLicense = GeneralLicenseType.DE2.ToV2();
             //Set up demo loco locations
             for (int i = 0; i < Data.LocoLocations.Count(); i++) {
                 if (!Data.LocoLocations[i])
