@@ -63,12 +63,12 @@ namespace DvMod.Randomizer
             float price;
             ItemInfo item;
             if (___generalLicenseToBuy != null) {
-                (long Id, int _) = RandoCommonData.GetIDFromGeneralLicense(___generalLicenseToBuy);
+                (long Id, long _) = RandoCommonData.GetIDFromGeneralLicense(___generalLicenseToBuy);
                 item = Main.player.UnlockCheck(Id);
                 Main.player.CheckGLicense(Id);
                 price = ___generalLicenseToBuy.price;
             } else {
-                (long Id, int _) = RandoCommonData.GetIDFromJobLicense(___jobLicenseToBuy);
+                (long Id, long _) = RandoCommonData.GetIDFromJobLicense(___jobLicenseToBuy);
                 item = Main.player.UnlockCheck(Id);
                 Main.player.CheckJLicense(Id);
                 price = ___jobLicenseToBuy.price;

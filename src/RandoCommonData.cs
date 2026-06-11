@@ -661,7 +661,7 @@ namespace DvMod.Randomizer
             return LocoRestorationController.allLocoRestorationControllers.Find(cont => cont.locoLivery.v1 == carType).State;
         }
         
-        public static int GetIdFromLocoLocations(Vector3 position) {
+        public static long GetIdFromLocoLocations(Vector3 position) {
             return AddressToLocoRestorationLocation.FindIndex(sp => sp.Position == position);
         }
         public static string GetStationFromLocoLocations(Vector3 position) {

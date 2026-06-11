@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using DV.JObjectExtstensions;
+using DV.LocoRestoration;
+using DV.ThingTypes;
 using DV.UI;
 using DV.Utils;
 using HarmonyLib;
@@ -24,8 +30,8 @@ namespace DvMod.Randomizer
         }
         public void OnChange(){}
     }
-
-    public class Main {
+    
+    public static class Main {
         public const int VERSION = 2;
         public static Settings? settings;
         public static UnityModManager.ModEntry? mod;

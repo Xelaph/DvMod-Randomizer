@@ -8,6 +8,7 @@ using DV.CabControls;
 using DV.Customization.Paint;
 using DV.Damage;
 using DV.InventorySystem;
+using DV.JObjectExtstensions;
 using DV.LocoRestoration;
 using DV.Simulation.Cars;
 using DV.ThingTypes;
@@ -184,9 +185,13 @@ namespace DvMod.Randomizer {
                 //First level relic: Spawn relic in museum
                 controller.loco = SpawnOneRelic(controller.garageSpawner.locoSpawnPoint.transform.position, controller.locoLivery, controller.garageSpawner.flipSpawnLoco);
                 if (controller.loco == null) return false;
-                if (controller.secondCarLivery != null)
-                    controller.secondCar = SpawnOneRelic(controller.garageSpawner.locoSpawnPoint.transform.position, controller.secondCarLivery, controller.garageSpawner.flipSpawnLoco);
+                if (controller.secondCarLivery != null) {
+                    controller.secondCar = SpawnOneRelic(controller.garageSpawner.locoSpawnPoint.transform.position,
+                        controller.secondCarLivery, controller.garageSpawner.flipSpawnLoco);
+                    controller.saveData.SetString("secondCar", controller.secondCar.CarGUID);
+                }
                 controller.SetState(LocoRestorationController.RestorationState.S4_OnDestinationTrack);
+                controller.saveData.SetString("loco", controller.loco.CarGUID);
                 controller.orderPartsModule.AddThingToCart();
                 controller.orderPartsModule.ThingBought += controller.OnPartsOrdered;
                 break;
