@@ -24,8 +24,14 @@ namespace DvMod.Randomizer
             SingletonBehaviour<CoroutineManager>.Instance.StopCoroutine("LoadingRoutine");
         }
         
+        [HarmonyPrefix, HarmonyPatch("Initialize")]
+        public static void SaveLoadingPatch(StartGameData_FromSaveGame __instance, out bool __state) =>
+            __state = __instance.initialized;
+        
+
         [HarmonyPostfix, HarmonyPatch("Initialize")]
-        public static void SaveLoadingEndPatch(StartGameData_FromSaveGame __instance) {
+        public static void SaveLoadingEndPatch(StartGameData_FromSaveGame __instance, bool __state) {
+            if (__state) return;
             RandoSaveData? data = __instance.saveGameData.GetObject<RandoSaveData>("RandoData");
             if (data == null) {
                 Main.Log("Launching game in normal mode");
