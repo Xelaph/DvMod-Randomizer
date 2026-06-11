@@ -4,15 +4,15 @@ using HarmonyLib;
 
 namespace DvMod.Randomizer
 {
-    [RiderHarmonyPatch(typeof(PaintStationItemInstantiator))]
+    [HarmonyPatch(typeof(PaintStationItemInstantiator))]
     public class PainterItemInstantiatorPatch {
-        [HarmonyPrefix, RiderHarmonyPatch("Awake")]
+        [HarmonyPrefix, HarmonyPatch("Awake")]
         public static bool Prefix() => Main.Player == null;
     }
-    [RiderHarmonyPatch(typeof(LocoRestorationController))]
+    [HarmonyPatch(typeof(LocoRestorationController))]
     public static class LocoRestorationPatcher {
 
-        [HarmonyPrefix, RiderHarmonyPatch("InitCarForRestoration")]
+        [HarmonyPrefix, HarmonyPatch("InitCarForRestoration")]
         public static bool Prefix(LocoRestorationController __instance, TrainCar car){
             if (Main.Player == null) return true;
             if (__instance.State <= LocoRestorationController.RestorationState.S3_RerailedCars) {
@@ -22,7 +22,7 @@ namespace DvMod.Randomizer
             }
             return true;
         }
-        [HarmonyPostfix, RiderHarmonyPatch("DeliverPartCoro")]
+        [HarmonyPostfix, HarmonyPatch("DeliverPartCoro")]
         public static void PartsPostfix(TrainCar ___loco, LocoRestorationController __instance) {
             if (Main.Player == null) return;
             Main.Player.UnlockCheck(RandoCommonData.AP_ID.LOC_RELIC_PARTS+RandoCommonData.GetOrderFromLocoType(___loco.carType));
@@ -33,7 +33,7 @@ namespace DvMod.Randomizer
 
         }
 
-        [HarmonyPostfix, RiderHarmonyPatch("SetupListenersForPaintJob")]
+        [HarmonyPostfix, HarmonyPatch("SetupListenersForPaintJob")]
         public static void PaintPostfix(TrainCar ___loco, bool on) {
             if (Main.Player != null && !on) Main.Player.UnlockCheck(RandoCommonData.AP_ID.LOC_RELIC_PAINTED+RandoCommonData.GetOrderFromLocoType(___loco.carType));
         }

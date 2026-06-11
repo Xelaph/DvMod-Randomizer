@@ -8,7 +8,7 @@ using HarmonyLib;
 
 namespace DvMod.Randomizer;
 
-[RiderHarmonyPatch(typeof(LicenseManager))]
+[HarmonyPatch(typeof(LicenseManager))]
 public static class LicenseManagerPatch {
     public static List<T> ProcessListOfIDs<T>(string[] ids, List<T> refs) where T: Thing_v2 {
         List<T> ret = [];
@@ -17,7 +17,7 @@ public static class LicenseManagerPatch {
         
         return ret;
     }
-    [HarmonyPrefix, RiderHarmonyPatch(nameof(LicenseManager.LoadData))]
+    [HarmonyPrefix, HarmonyPatch(nameof(LicenseManager.LoadData))]
     public static bool Prefix(SaveGameData data, LicenseManager __instance) {
         if (Main.Player == null) return true;
         ProcessListOfIDs(data.GetStringArray("Licenses_General"), Globals.G.Types.generalLicenses).ForEach(__instance.AcquireGeneralLicense);
@@ -29,9 +29,9 @@ public static class LicenseManagerPatch {
         return false;
     }
 }
-[RiderHarmonyPatch(typeof(StaticLicenseBookletRender))]
+[HarmonyPatch(typeof(StaticLicenseBookletRender))]
 public static class LocoHintPatcher {
-    [HarmonyPostfix, RiderHarmonyPatch(nameof(StaticLicenseBookletRender.GetStaticTemplatePaperData))]
+    [HarmonyPostfix, HarmonyPatch(nameof(StaticLicenseBookletRender.GetStaticTemplatePaperData))]
     public static void Postfix(GeneralLicenseType_v2 ___generalLicense, ref TemplatePaperData[] __result) {
         if (Main.Player == null) return;
         int order = RandoCommonData.GetOrderFromLocoLicense(___generalLicense);

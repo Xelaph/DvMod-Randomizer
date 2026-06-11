@@ -7,7 +7,7 @@ using DV.Utils;
 using HarmonyLib;
 
 namespace DvMod.Randomizer {
-    [RiderHarmonyPatch(typeof(StationLocoSpawner))]
+    [HarmonyPatch(typeof(StationLocoSpawner))]
     public static class StationLocoSpawnPatch {
         private static bool RefreshLocos;
         public static void DoRefresh() {
@@ -29,7 +29,7 @@ namespace DvMod.Randomizer {
             }
             return [TrainCarType.HandCar.ToV2()];
         }
-        [HarmonyPostfix, RiderHarmonyPatch(nameof(StationLocoSpawner.Update))]
+        [HarmonyPostfix, HarmonyPatch(nameof(StationLocoSpawner.Update))]
         public static void RefreshPatch(StationLocoSpawner __instance) {
             if (Main.Player == null || !__instance.playerEnteredLocoSpawnRange || !RefreshLocos) return;
             RefreshLocos = false;
@@ -39,9 +39,9 @@ namespace DvMod.Randomizer {
         }
     }
 
-    [RiderHarmonyPatch(typeof(SleepingUIController))]
+    [HarmonyPatch(typeof(SleepingUIController))]
     public static class SleepPatcher {
-        [HarmonyPrefix, RiderHarmonyPatch("OnConfirmSleepClicked")]
+        [HarmonyPrefix, HarmonyPatch("OnConfirmSleepClicked")]
         public static void Prefix() {
             if (Main.Player == null) return;
             StationController? nearestController = StationController.allStations.FindMin(cont => (PlayerManager.PlayerTransform.position - cont.transform.position).magnitude);

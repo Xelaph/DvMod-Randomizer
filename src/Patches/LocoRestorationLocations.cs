@@ -3,9 +3,9 @@ using LocoSim.Implementations;
 
 
 namespace DvMod.Randomizer {
-    [RiderHarmonyPatch(typeof(SimulationFlow))]
+    [HarmonyPatch(typeof(SimulationFlow))]
     public static class UpdatePatch {
-        [HarmonyPostfix, RiderHarmonyPatch("Tick")]
+        [HarmonyPostfix, HarmonyPatch("Tick")]
         public static void Postfix() {
             Main.Player?.CallUpdate();
         }

@@ -105,7 +105,7 @@ namespace DvMod.Randomizer
         // ReSharper restore UnusedMember.Global
         
         public static RandoSaveData CreateSaveData(DVConfig config) => new(
-            Main.Version,
+            Main.VERSION,
             new bool[20],
             new bool[4],
             new bool[12],

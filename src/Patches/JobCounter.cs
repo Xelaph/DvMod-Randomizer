@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using DV.RenderTextureSystem.BookletRender;
 using System.Linq;
 using System;
+using HarmonyLib;
 
 namespace DvMod.Randomizer;
 
-[RiderHarmonyPatch(typeof(BookletCreator_JobReport))]
+[HarmonyPatch(typeof(BookletCreator_JobReport))]
 public class JobCounter {
     private static void AddData(ref List<TemplatePaperData> mainList, List<JobReportTasksTemplatePaperData.JobReportEntry> toAdd) {
         if (toAdd.Count == 0) return;
@@ -51,7 +52,7 @@ public class JobCounter {
         
     }
 
-    [RiderHarmonyPatch(nameof(BookletCreator_JobReport.GetReportTemplateData))]
+    [HarmonyPatch(nameof(BookletCreator_JobReport.GetReportTemplateData))]
     public static void Postfix(ref List<TemplatePaperData> __result, Job_data data) {
         if (Main.Player == null) return;
         if (data.state != JobState.Completed) return;

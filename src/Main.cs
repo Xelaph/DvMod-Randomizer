@@ -8,12 +8,8 @@ using UnityModManagerNet;
 
 namespace DvMod.Randomizer
 {
-    [MeansImplicitUse]
-    public class RiderHarmonyPatchAttribute : HarmonyPatch {
-        public RiderHarmonyPatchAttribute(Type t) : base(t) {}
-        public RiderHarmonyPatchAttribute(string n) : base(n) {}
-    }
-    /*[RiderHarmonyPatch(typeof(DevUtil), nameof(DevUtil.IsDevMachine))]
+
+    /*[HarmonyPatch(typeof(DevUtil), nameof(DevUtil.IsDevMachine))]
     public static class DevPatch {
         public static void Postfix(ref bool __result) => __result = true;
     }*/
@@ -30,7 +26,7 @@ namespace DvMod.Randomizer
         public void OnChange(){}
     }
 
-    /*[RiderHarmonyPatch(typeof(CarsSaveManager), nameof(CarsSaveManager.RestoreCarState))]
+    /*[HarmonyPatch(typeof(CarsSaveManager), nameof(CarsSaveManager.RestoreCarState))]
     public class Poutou {
         private static LocoRestorationController controller =>
                 LocoRestorationController.allLocoRestorationControllers.Find(
@@ -53,7 +49,7 @@ namespace DvMod.Randomizer
     }*/
 
     public static class Main {
-        public const int Version = 2;
+        public const int VERSION = 2;
         public static Settings Settings = null!;
         public static UnityModManager.ModEntry Mod = null!;
         public static RandoPlayer? Player;

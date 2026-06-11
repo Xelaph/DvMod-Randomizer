@@ -10,9 +10,9 @@ using DV.Utils;
 
 namespace DvMod.Randomizer;
 
-[RiderHarmonyPatch(typeof(CareerManagerLicensesScreen.LicenseEntry))]
+[HarmonyPatch(typeof(CareerManagerLicensesScreen.LicenseEntry))]
 public static class CareerManagerLicensesPatcher {
-    [HarmonyPostfix, RiderHarmonyPatch(nameof(CareerManagerLicensesScreen.LicenseEntry.UpdateJobLicenseData))]
+    [HarmonyPostfix, HarmonyPatch(nameof(CareerManagerLicensesScreen.LicenseEntry.UpdateJobLicenseData))]
     public static void JobLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
         if (Main.Player == null) return;
         __instance.IsAcquired = Main.Player.HasChecked(__instance.JobLicense);
@@ -30,7 +30,7 @@ public static class CareerManagerLicensesPatcher {
             __instance.status.text = CareerManagerLocalization.OWNED;
             
     }
-    [HarmonyPostfix, RiderHarmonyPatch(nameof(CareerManagerLicensesScreen.LicenseEntry.UpdateGeneralLicenseData))]
+    [HarmonyPostfix, HarmonyPatch(nameof(CareerManagerLicensesScreen.LicenseEntry.UpdateGeneralLicenseData))]
     public static void GeneralLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
         if (Main.Player == null) return;
         __instance.IsAcquired = Main.Player.HasChecked(__instance.GeneralLicense);
@@ -49,11 +49,11 @@ public static class CareerManagerLicensesPatcher {
     }
 }
 
-[RiderHarmonyPatch(typeof(CareerManagerLicensePayingScreen))]
+[HarmonyPatch(typeof(CareerManagerLicensePayingScreen))]
 public static class CareerManagerLicensePayPatcher {
-    [HarmonyPostfix, RiderHarmonyPatch(nameof(CareerManagerLicensePayingScreen.Activate))]
+    [HarmonyPostfix, HarmonyPatch(nameof(CareerManagerLicensePayingScreen.Activate))]
     public static void NamePatcher(TextMeshPro ___licenseNameText) => ___licenseNameText.text += "?";
-    [HarmonyPrefix, RiderHarmonyPatch(nameof(CareerManagerLicensePayingScreen.HandleInputAction))]
+    [HarmonyPrefix, HarmonyPatch(nameof(CareerManagerLicensePayingScreen.HandleInputAction))]
     public static bool BuyingPatch(InputAction input, CareerManagerLicensePayingScreen __instance, JobLicenseType_v2 ___jobLicenseToBuy, GeneralLicenseType_v2 ___generalLicenseToBuy) {
         if (Main.Player == null) return true;
         if (input != InputAction.Confirm) return true;

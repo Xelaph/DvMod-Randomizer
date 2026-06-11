@@ -3,12 +3,13 @@ using HarmonyLib;
 
 namespace DvMod.Randomizer
 {
-    [RiderHarmonyPatch(typeof(Terminal))]
+    [HarmonyPatch(typeof(Terminal))]
     public static class RandoConsole {
-        [HarmonyPrefix, RiderHarmonyPatch("EnterCommand")]
-        public static bool TerminalPatch(ref string ___commandText) {
+        [HarmonyPrefix, HarmonyPatch("EnterCommand")]
+        // ReSharper disable once InconsistentNaming
+        public static bool TerminalPatch(ref string ___command_text) {
             if (Main.Player == null) return true;
-            if (___commandText.Equals("/slicenses")) {
+            if (___command_text.Equals("/slicenses")) {
                 Terminal.Log("Unlocked station licenses");
                 for (int stationOrder = 0; stationOrder < 20; stationOrder++) {
                     string currStation = RandoCommonData.GetStationNameFromOrder(stationOrder);
@@ -25,10 +26,10 @@ namespace DvMod.Randomizer
                     }
                 }
             } else {
-                Main.Player.Session.Say(___commandText);
-                Terminal.Log(TerminalLogType.Input, Main.Player.Session.Players.ActivePlayer.Name+":"+___commandText);
+                Main.Player.Session.Say(___command_text);
+                Terminal.Log(TerminalLogType.Input, Main.Player.Session.Players.ActivePlayer.Name+":"+___command_text);
             }
-            ___commandText = "";
+            ___command_text = "";
             return false;
 
         }

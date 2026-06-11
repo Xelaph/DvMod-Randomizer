@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace DvMod.Randomizer
 {
-    [RiderHarmonyPatch(typeof(CommsRadioCrewVehicle))]
+    [HarmonyPatch(typeof(CommsRadioCrewVehicle))]
     public static class CrewCommsPatch {
-        [HarmonyPostfix, RiderHarmonyPatch("UpdateAvailableVehicles")]
+        [HarmonyPostfix, HarmonyPatch("UpdateAvailableVehicles")]
         public static void CustomVehicles(CommsRadioCrewVehicle __instance) {
             if (Main.Player == null) 
                 return;
@@ -21,9 +21,9 @@ namespace DvMod.Randomizer
         }
     }
 
-    [RiderHarmonyPatch(typeof(GaragePadlockUnlocker))]
+    [HarmonyPatch(typeof(GaragePadlockUnlocker))]
     public static class GaragePatcher {
-        [HarmonyPrefix, RiderHarmonyPatch("OnGarageUnlocked")]
+        [HarmonyPrefix, HarmonyPatch("OnGarageUnlocked")]
         public static void Prefix(GarageType_v2 unlockedGarageType) {
             if (Main.Player == null) return;
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault

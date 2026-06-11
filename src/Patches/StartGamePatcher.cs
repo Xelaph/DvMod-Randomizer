@@ -14,7 +14,7 @@ using UnityEngine.SceneManagement;
 namespace DvMod.Randomizer
 {
 
-    [RiderHarmonyPatch(typeof(StartGameData_FromSaveGame))]
+    [HarmonyPatch(typeof(StartGameData_FromSaveGame))]
     public class LoadingPatch {
         private static void ExitWithMessage(string message) {
             Main.Error(message);
@@ -23,16 +23,16 @@ namespace DvMod.Randomizer
             // ReSharper disable once NotResolvedInText
             SingletonBehaviour<CoroutineManager>.Instance.StopCoroutine("LoadingRoutine");
         }
-
-        [HarmonyPostfix, RiderHarmonyPatch("Initialize")]
-        public static void SaveLoadingEndPatch(SaveGameData ___saveGameData) {
-            RandoSaveData? data = ___saveGameData.GetObject<RandoSaveData>("RandoData");
+        
+        [HarmonyPostfix, HarmonyPatch("Initialize")]
+        public static void SaveLoadingEndPatch(StartGameData_FromSaveGame __instance) {
+            RandoSaveData? data = __instance.saveGameData.GetObject<RandoSaveData>("RandoData");
             if (data == null) {
                 Main.Log("Launching game in normal mode");
                 return;
             }
-            if (data.Version != Main.Version) {
-                ExitWithMessage($"Randomizer detected but versions do not match: Mod version = {Main.Version}/Save version = {data.Version}. Returning to main menu...");
+            if (data.Version != Main.VERSION) {
+                ExitWithMessage($"Randomizer detected but versions do not match: Mod version = {Main.VERSION}/Save version = {data.Version}. Returning to main menu...");
                 return;
             }
             try {
@@ -48,16 +48,16 @@ namespace DvMod.Randomizer
         }
 
     }    
-    [RiderHarmonyPatch(typeof(SaveGameManager))]
+    [HarmonyPatch(typeof(SaveGameManager))]
     public class SavingPatch {
-        [HarmonyPrefix, RiderHarmonyPatch("UpdateInternalData")]
+        [HarmonyPrefix, HarmonyPatch("UpdateInternalData")]
         public static void SavePrefix(SaveGameData ___data) {
             if (Main.Player == null) return;
             ___data.SetObject("RandoData", Main.Player.Data);
         }
     }
 
-    [RiderHarmonyPatch(typeof(StartGameData_NewCareer))]
+    [HarmonyPatch(typeof(StartGameData_NewCareer))]
     public class NewSavePatch {
         private static IEnumerator TeleportPlayer() {
             while (StationController.allStations == null || StationController.allStations.Count == 0)
@@ -76,7 +76,7 @@ namespace DvMod.Randomizer
             PlayerManager.TeleportPlayer(teleportAnchor.position, teleportAnchor.rotation, null, useRotation: true);
             Main.Settings.CreateAPSave = false;
         }
-        [HarmonyPrefix, RiderHarmonyPatch(nameof(StartGameData_NewCareer.PrepareNewSaveData))]
+        [HarmonyPrefix, HarmonyPatch(nameof(StartGameData_NewCareer.PrepareNewSaveData))]
         public static bool Prefix(StartGameData_NewCareer __instance, IGameSession session, IDifficulty difficultyParams) {
             if (!Main.Settings.CreateAPSave) return true;
             try {

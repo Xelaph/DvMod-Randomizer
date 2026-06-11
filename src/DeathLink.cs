@@ -2,14 +2,14 @@ using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using HarmonyLib;
 
 namespace DvMod.Randomizer {
-    [RiderHarmonyPatch(typeof(PlayerManager))]
+    [HarmonyPatch(typeof(PlayerManager))]
     public class DeathLinkPatch {
         private static void SendDeathLink(TrainCar _) =>
             Main.Player!.deathLinkService!.SendDeathLink(new DeathLink(Main.Player.Session.Players.ActivePlayer.Name, "derailed"));
         
         public static void Derail(DeathLink _) => PlayerManager.Car?.Derail();
         
-        [HarmonyPrefix, RiderHarmonyPatch(nameof(PlayerManager.SetCar))]
+        [HarmonyPrefix, HarmonyPatch(nameof(PlayerManager.SetCar))]
         public static void Prefix(TrainCar newCar) {
             if (Main.Player == null) return;
             if (newCar == PlayerManager.Car) return;

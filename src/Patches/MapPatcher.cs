@@ -5,14 +5,14 @@ using HarmonyLib;
 using UnityEngine;
 
 namespace DvMod.Randomizer {
-    [RiderHarmonyPatch(typeof(MapMarker))]
+    [HarmonyPatch(typeof(MapMarker))]
     public static class MapMarkerPatcher {
         private static readonly Color GotLicenseColor = new(0f,1f,0f);
         private static readonly Color NoLicenseColor = new(1f,0f,0f);
         private static readonly MapMarker[] AllMarkers = new MapMarker[20];
         private static readonly int ColorFieldName = Shader.PropertyToID("_Color");
 
-        [HarmonyPostfix, RiderHarmonyPatch(nameof(MapMarker.Init))]
+        [HarmonyPostfix, HarmonyPatch(nameof(MapMarker.Init))]
         public static void Postfix(MapMarker __instance) {
             if (Main.Player == null ||
                 __instance.fastTravelDestination.markerType != FastTravelDestination.MarkerType.Station) return;
