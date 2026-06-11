@@ -1,11 +1,8 @@
 using System;
 using System.Collections;
-using System.Linq;
-using DV;
 using DV.Common;
 using DV.JObjectExtstensions;
 using DV.Scenarios.Common;
-using DV.TerrainSystem;
 using DV.UI;
 using DV.UserManagement;
 using DV.Utils;
@@ -76,7 +73,7 @@ namespace DvMod.Randomizer
             PlayerManager.TeleportPlayer(teleportAnchor.position, teleportAnchor.rotation, null, useRotation: true);
             Main.settings!.CreateAPSave = false;
         }
-        public static bool Prefix(StartGameData_NewCareer __instance, ref SaveGameData saveGameData, IGameSession session, IDifficulty difficultyParams) {
+        public static bool Prefix(StartGameData_NewCareer __instance, IGameSession session, IDifficulty difficultyParams) {
             if (!Main.settings!.CreateAPSave) return true;
             try {
                 Main.player ??= new(null);
@@ -85,7 +82,7 @@ namespace DvMod.Randomizer
                 MainMenu.GoBackToMainMenu();
                 return false;
             }
-            saveGameData ??= SaveGameManager.MakeEmptySave();
+            SaveGameData saveGameData = SaveGameManager.MakeEmptySave();
             saveGameData.Clear();
             saveGameData.SetString("Game_mode", session.GameMode);
             saveGameData.SetString("World", session.World);
@@ -101,6 +98,7 @@ namespace DvMod.Randomizer
             saveGameData.SetBool("Tutorial_03_completed", value: true);
             saveGameData.SetInt("Starting_items", 0);
             session.GameData.SetBool("Difficulty_picked", value: true);
+            __instance.saveGameData = saveGameData;
             Main.player.InitGame();
             return false;
         }
