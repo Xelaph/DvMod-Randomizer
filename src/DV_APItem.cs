@@ -186,6 +186,7 @@ namespace DvMod.Randomizer {
                 if (controller.loco == null) return false;
                 if (controller.secondCarLivery != null)
                     controller.secondCar = SpawnOneRelic(controller.garageSpawner.locoSpawnPoint.transform.position, controller.secondCarLivery, controller.garageSpawner.flipSpawnLoco);
+                controller.saveData.SetString("loco", controller.loco.CarGUID);
                 controller.SetState(LocoRestorationController.RestorationState.S4_OnDestinationTrack);
                 controller.orderPartsModule.AddThingToCart();
                 controller.orderPartsModule.ThingBought += controller.OnPartsOrdered;
