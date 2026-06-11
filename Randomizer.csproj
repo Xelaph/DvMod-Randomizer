@@ -44,4 +44,8 @@
     <Reference Include="UnityEngine.ImageConversionModule" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Archipelago\custom_worlds\" />
+  </ItemGroup>
+
 </Project>

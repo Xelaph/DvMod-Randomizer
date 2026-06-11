@@ -3,10 +3,11 @@ using LocoSim.Implementations;
 
 
 namespace DvMod.Randomizer {
-    [HarmonyPatch(typeof(SimulationFlow), "Tick")]
+    [RiderHarmonyPatch(typeof(SimulationFlow))]
     public static class UpdatePatch {
+        [HarmonyPostfix, RiderHarmonyPatch("Tick")]
         public static void Postfix() {
-            Main.player?.CallUpdate();
+            Main.Player?.CallUpdate();
         }
     }
 }

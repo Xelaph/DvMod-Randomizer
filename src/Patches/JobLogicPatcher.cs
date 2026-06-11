@@ -1,19 +1,15 @@
 using System.Collections.Generic;
-using System.Drawing.Text;
 using DV;
-using DV.Logic.Job;
-using DV.ServicePenalty.UI;
 using DV.ThingTypes;
 using DV.ThingTypes.TransitionHelpers;
 using DV.UI;
 using DV.Utils;
 using HarmonyLib;
-using UnityEngine;
 
 namespace DvMod.Randomizer {
-    [HarmonyPatch(typeof(StationLocoSpawner), nameof(StationLocoSpawner.Update))]
+    [RiderHarmonyPatch(typeof(StationLocoSpawner))]
     public static class StationLocoSpawnPatch {
-        private static bool RefreshLocos = false;
+        private static bool RefreshLocos;
         public static void DoRefresh() {
             RefreshLocos = true;
         }
@@ -33,25 +29,23 @@ namespace DvMod.Randomizer {
             }
             return [TrainCarType.HandCar.ToV2()];
         }
-        [HarmonyPostfix]
+        [HarmonyPostfix, RiderHarmonyPatch(nameof(StationLocoSpawner.Update))]
         public static void RefreshPatch(StationLocoSpawner __instance) {
-            if (Main.player == null) return;
-            if(__instance.playerEnteredLocoSpawnRange && RefreshLocos) {
-                RefreshLocos = false;
-                List<TrainCarLivery> newLoco = GetRandomLicensedLoco();
-                SingletonBehaviour<CarSpawner>.Instance.DeleteTrainCarsFromTrack(__instance.locoSpawnTrack);
-                SingletonBehaviour<CarSpawner>.Instance.SpawnCarTypesOnTrack(newLoco, null, __instance.locoSpawnTrack, true, true, 0.0, __instance.spawnRotationFlipped);
-            }
+            if (Main.Player == null || !__instance.playerEnteredLocoSpawnRange || !RefreshLocos) return;
+            RefreshLocos = false;
+            List<TrainCarLivery> newLoco = GetRandomLicensedLoco();
+            SingletonBehaviour<CarSpawner>.Instance.DeleteTrainCarsFromTrack(__instance.locoSpawnTrack);
+            SingletonBehaviour<CarSpawner>.Instance.SpawnCarTypesOnTrack(newLoco, null, __instance.locoSpawnTrack, true, true, 0.0, __instance.spawnRotationFlipped);
         }
     }
 
-    [HarmonyPatch(typeof(SleepingUIController), "OnConfirmSleepClicked")]
+    [RiderHarmonyPatch(typeof(SleepingUIController))]
     public static class SleepPatcher {
-        
+        [HarmonyPrefix, RiderHarmonyPatch("OnConfirmSleepClicked")]
         public static void Prefix() {
-            if (Main.player == null) return;
-            StationController? NearestController = StationController.allStations.FindMin(cont => (PlayerManager.PlayerTransform.position - cont.transform.position).magnitude);
-            NearestController?.RegenerateJobs();
+            if (Main.Player == null) return;
+            StationController? nearestController = StationController.allStations.FindMin(cont => (PlayerManager.PlayerTransform.position - cont.transform.position).magnitude);
+            nearestController?.RegenerateJobs();
             StationLocoSpawnPatch.DoRefresh();
         }
     }

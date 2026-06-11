@@ -1,13 +1,19 @@
+using System;
 using DV.UI;
 using DV.Utils;
 using HarmonyLib;
+using JetBrains.Annotations;
 using UnityModManagerNet;
 
 
 namespace DvMod.Randomizer
 {
-
-    /*[HarmonyPatch(typeof(DevUtil), nameof(DevUtil.IsDevMachine))]
+    [MeansImplicitUse]
+    public class RiderHarmonyPatchAttribute : HarmonyPatch {
+        public RiderHarmonyPatchAttribute(Type t) : base(t) {}
+        public RiderHarmonyPatchAttribute(string n) : base(n) {}
+    }
+    /*[RiderHarmonyPatch(typeof(DevUtil), nameof(DevUtil.IsDevMachine))]
     public static class DevPatch {
         public static void Postfix(ref bool __result) => __result = true;
     }*/
@@ -24,25 +30,49 @@ namespace DvMod.Randomizer
         public void OnChange(){}
     }
 
-    public class Main {
-        public const int VERSION = 2;
-        public static Settings? settings;
-        public static UnityModManager.ModEntry? mod;
-        public static RandoPlayer? player;
+    /*[RiderHarmonyPatch(typeof(CarsSaveManager), nameof(CarsSaveManager.RestoreCarState))]
+    public class Poutou {
+        private static LocoRestorationController controller =>
+                LocoRestorationController.allLocoRestorationControllers.Find(
+                    c => c.locoLivery.v1 == TrainCarType.LocoDM3);
+
+        private static string guid;
+        public static void Postfix(TrainCar spawnedCar) {
+            if (spawnedCar.PaintExterior.CurrentTheme == controller.abandonedTheme && 
+                spawnedCar.carType == TrainCarType.LocoDM3) {
+                guid = spawnedCar.CarGUID;
+                Main.player!.UpdateEvent += RepairSavefile;
+            }
+        }
+
+        private static void RepairSavefile() {
+            if (controller == null || controller.saveData == null) return;
+            controller.saveData.SetString("loco", guid);
+            Main.player!.UpdateEvent -= RepairSavefile;
+        }
+    }*/
+
+    public static class Main {
+        public const int Version = 2;
+        public static Settings Settings = null!;
+        public static UnityModManager.ModEntry Mod = null!;
+        public static RandoPlayer? Player;
+        
+        [UsedImplicitly]
         public static void Load(UnityModManager.ModEntry modEntry)
         {
-            settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
-            mod = modEntry;
-            mod.OnToggle = OnToggle;
-            mod.OnGUI += OnGUI;
-            mod.OnSaveGUI += OnSaveGUI;
+            Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
+            Mod = modEntry;
+            Mod.OnToggle = OnToggle;
+            Mod.OnGUI += OnGUI;
+            Mod.OnSaveGUI += OnSaveGUI;
 
         }
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
-            settings!.Draw(modEntry);
+            Settings.Draw(modEntry);
         }
         public static void OnSaveGUI(UnityModManager.ModEntry modEntry) {
-            settings!.Save(modEntry);
+            Settings.Save(modEntry);
         }
 
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value)
@@ -61,10 +91,10 @@ namespace DvMod.Randomizer
         }
 
         public static void Log(string message) {
-            mod!.Logger.Log(message);
+            Mod.Logger.Log(message);
         }
         public static void Error(string message) {
-            mod!.Logger.Error(message);
+            Mod.Logger.Error(message);
         }
         public static void NotifyPlayer(string message) {
             SingletonBehaviour<ACanvasController<CanvasController.ElementType>>.Instance.NotificationManager.ShowNotification(
