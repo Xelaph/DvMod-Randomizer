@@ -42,13 +42,15 @@ namespace DvMod.Randomizer
                 return;
             }
             try {
-                Main.CreatePlayer(data);
+                Main.player ??= new(data);
             } catch (TimeoutException) {
                 ExitWithMessage($"Could not connect to server. Returning to main menu...");
-                Main.QuitGame();
+                Main.player = null;
                 return;
             }
-            Main.Player.InitGame();
+            Main.Log("Player created and session connected");
+            Main.player.InitGame();
+            Main.Log("Game initialized. Waiting for original game to finish...");
         }
 
     }    
@@ -56,8 +58,8 @@ namespace DvMod.Randomizer
     public class SavingPatch {
         [HarmonyPrefix, HarmonyPatch("UpdateInternalData")]
         public static void SavePrefix(SaveGameData ___data) {
-            if (!Main.PlayerExists) return;
-            ___data.SetObject("RandoData", Main.Player.Data);
+            if (Main.player == null) return;
+            ___data.SetObject("RandoData", Main.player.Data);
         }
     }
 
@@ -68,7 +70,7 @@ namespace DvMod.Randomizer
                 yield return WaitFor.Seconds(0.5f);
             Transform teleportAnchor = 
                     StationController.allStations
-                    .Find(sc => sc.stationInfo.YardID.Equals(Main.Player.SlotData.StartStation))
+                    .Find(sc => sc.stationInfo.YardID.Equals(Main.player!.SlotData.StartStation))
                     .stationRange
                     .stationCenterAnchor;
             PlayerManager.TeleportPlayer(teleportAnchor.position, teleportAnchor.rotation, null, useRotation: true);
@@ -78,13 +80,13 @@ namespace DvMod.Randomizer
                 Debug.LogWarning("Waiting terrains and streamers to finish loading");
             }
             PlayerManager.TeleportPlayer(teleportAnchor.position, teleportAnchor.rotation, null, useRotation: true);
-            Main.Settings.CreateAPSave = false;
+            Main.settings.CreateAPSave = false;
         }
         [HarmonyPrefix, HarmonyPatch(nameof(StartGameData_NewCareer.PrepareNewSaveData))]
         public static bool Prefix(StartGameData_NewCareer __instance, IGameSession session, IDifficulty difficultyParams) {
-            if (!Main.Settings.CreateAPSave) return true;
+            if (!Main.settings.CreateAPSave) return true;
             try {
-                Main.CreatePlayer(null);
+                Main.player ??= new RandoPlayer(null);
             } catch (TimeoutException) {
                 Main.Log("Tried, but failed. Sorry");
                 MainMenu.GoBackToMainMenu();
@@ -100,14 +102,14 @@ namespace DvMod.Randomizer
             session.PerformGameplayEntryDifficultyCheck(difficultyToUse);
             SingletonBehaviour<CoroutineManager>.Instance.Run(TeleportPlayer());
             //__instance.DifficultyToUse = DifficultyToUse;
-            saveGameData.SetFloat("Player_money", Main.Player.SlotData.Money);
+            saveGameData.SetFloat("Player_money", Main.player.SlotData.Money);
             saveGameData.SetBool("Tutorial_01_completed", value: true);
             saveGameData.SetBool("Tutorial_02_completed", value: true);
             saveGameData.SetBool("Tutorial_03_completed", value: true);
             saveGameData.SetInt("Starting_items", 0);
             session.GameData.SetBool("Difficulty_picked", value: true);
             __instance.saveGameData = saveGameData;
-            Main.Player.InitGame();
+            Main.player.InitGame();
             return false;
         }
     }

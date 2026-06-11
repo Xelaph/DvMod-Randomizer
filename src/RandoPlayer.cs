@@ -14,22 +14,35 @@ using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Threading;
+using WebSocketSharp;
 using System.Linq;
+using System.Runtime.InteropServices;
+using Archipelago.MultiClient.Net.DataPackage;
+using System.Deployment.Internal;
 using DV.UI;
+using DV.Teleporters;
 using System.Collections;
+using DV;
 using DV.OriginShift;
+using DV.Shops;
 using Archipelago.MultiClient.Net.Packets;
+using DV.Util.EventWrapper;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
+using DV.ServicePenalty.UI;
+using System.Data.Common;
+using System.Security.Principal;
 using DV.Common;
+using DV.JObjectExtstensions;
 
 namespace DvMod.Randomizer
 {
 
     public class JobFinishState {
         public bool HasWon;
-        public ItemInfo? ItemJob1;
-        public ItemInfo? ItemJob2;
-        public ItemInfo? ItemLoco;
+        public ItemInfo? Item_job1;
+        public ItemInfo? Item_job2;
+        public ItemInfo? Item_loco;
         public int RemainingForVictory;
         public int RemainingJobs;
         public int RemainingOtherJobs;
@@ -40,70 +53,57 @@ namespace DvMod.Randomizer
         public TrainCarType? LastCar;
         public int Tokens;
     }
-    // ReSharper disable once ClassNeverInstantiated.Global
-    public struct DVConfig(
-        int[] shuntThreshold, 
-        int[] freightThreshold, 
-        int[] locoJobsThreshold, 
-        int victory, 
-        int victoryThreshold, 
-        bool hintsOnLocoLicense, 
-        bool hintsOnStationLicense, 
-        bool deathLink) {
-                public readonly int[] ShuntThreshold = shuntThreshold;
-                public readonly int[] FreightThreshold = freightThreshold;
-                public readonly int[] LocoJobsThreshold = locoJobsThreshold;
-                public readonly int Victory=victory;
-                public readonly int VictoryThreshold = victoryThreshold;
-                public readonly bool HintsOnLocoLicense = hintsOnLocoLicense;
-                public readonly bool HintsOnStationLicense = hintsOnStationLicense;
-                public readonly bool DeathLink = deathLink;
+    public class DVConfig(int[] ShuntThreshold, int[] FreightThreshold, int[] LocoJobsThreshold, int Victory, int VictoryThreshold, bool HintsOnLocoLicense, bool HintsOnStationLicense, bool DeathLink) {
+                public int[] ShuntThreshold = ShuntThreshold;
+                public int[] FreightThreshold = FreightThreshold;
+                public int[] LocoJobsThreshold = LocoJobsThreshold;
+                public int Victory=Victory;
+                public int VictoryThreshold = VictoryThreshold;
+                public bool HintsOnLocoLicense = HintsOnLocoLicense;
+                public bool HintsOnStationLicense = HintsOnStationLicense;
+                public bool DeathLink = DeathLink;
             }
     public class RandoSaveData(
-        int version,
-        bool[] stationLicenses, 
-        bool[] hiddenGarages, 
-        bool[] jobLocations,
-        bool[] generalLocations,
-        bool[] locoLocations,
-        int[] receivedRelics, 
-        int index, 
-        int[] shunts, 
-        int[] freights, 
-        int[] locoJobs, 
-        bool alreadyWon,
-        HashSet<long> locationsChecked,
+        int Version,
+        bool[] StationLicenses, 
+        bool[] HiddenGarages, 
+        bool[] JobLocations,
+        bool[] GeneralLocations,
+        bool[] LocoLocations,
+        int[] ReceivedRelics, 
+        int Index, 
+        int[] Shunts, 
+        int[] Freights, 
+        int[] LocoJobs, 
+        bool AlreadyWon,
+        HashSet<long> LocationsChecked,
         DVConfig config,
-        int tokens,
-        string serverName,
-        int port,
-        string slotName,
-        string password
+        int Tokens,
+        string ServerName,
+        int Port,
+        string SlotName,
+        string Password
         ) {
             
-        public readonly bool[] StationLicenses = stationLicenses;
-        public readonly bool[] HiddenGarages = hiddenGarages;
-        public readonly bool[] JobLocations = jobLocations;
-        public readonly bool[] GeneralLocations = generalLocations;
-        public readonly bool[] LocoLocations = locoLocations;
-        public readonly int[] ReceivedRelics = receivedRelics;
-        public readonly int[] Shunts = shunts;
-        public int Index = index;
-        public readonly int[] Freights = freights;
-        public readonly int[] LocoJobs = locoJobs;
-        public bool AlreadyWon = alreadyWon;
-        public readonly int Version = version;
-        public readonly HashSet<long> LocationsChecked = locationsChecked;
-        public readonly DVConfig Config = config;
-        public int Tokens = tokens;
-        
-        // ReSharper disable UnusedMember.Global
-        public string ServerName = serverName;
-        public int Port = port;
-        public string SlotName = slotName;
-        public string Password = password;
-        // ReSharper restore UnusedMember.Global
-        
+        public bool[] StationLicenses = StationLicenses;
+        public bool[] HiddenGarages = HiddenGarages;
+        public bool[] JobLocations = JobLocations;
+        public bool[] GeneralLocations = GeneralLocations;
+        public bool[] LocoLocations = LocoLocations;
+        public int[] ReceivedRelics = ReceivedRelics;
+        public int[] Shunts = Shunts;
+        public int Index = Index;
+        public int[] Freights = Freights;
+        public int[] LocoJobs = LocoJobs;
+        public bool AlreadyWon = AlreadyWon;
+        public int Version = Version;
+        public HashSet<long> LocationsChecked = LocationsChecked;
+        public DVConfig Config = config;
+        public int Tokens = Tokens;
+        public string ServerName = ServerName;
+        public int Port = Port;
+        public string SlotName = SlotName;
+        public string Password = Password;
         public static RandoSaveData CreateSaveData(DVConfig config) => new(
             Main.VERSION,
             new bool[20],
@@ -120,40 +120,42 @@ namespace DvMod.Randomizer
             [],
             config,
             0,
-            Main.Settings.serverName,
-            Main.Settings.Port,
-            Main.Settings.User,
-            Main.Settings.Password
+            Main.settings!.serverName,
+            Main.settings.Port,
+            Main.settings.User,
+            Main.settings.Password
         );
     }
     
     public class RandoPlayer
     {
-        internal class DemoLocoListener(int idx, float spatialThreshold = 5f, float timeThreshold = 20f) {
-            private readonly Vector3 _locoPosition = RandoCommonData.GetInfoRestorationFromLocoLocationOrder(idx);
-            private readonly long _checkId = RandoCommonData.AP_ID.LOC_LOCO_RESTORATION + idx;
-            private float _lastTime;
+        internal class DemoLocoListener(int idx, float spatialthreshold = 5f, float timeThreshold = 20f) {
+            private readonly float SpatialThreshold = spatialthreshold;
+            private readonly float TimeThreshold = timeThreshold;
+            private Vector3 LocoPosition = RandoCommonData.GetInfoRestorationFromLocoLocationOrder(idx);
+            private readonly long CheckId = RandoCommonData.AP_ID.LOC_LOCO_RESTORATION + idx;
+            private float LastTime = 0f;
             public void CheckPosition() {
                 if (PlayerManager.PlayerTransform == null) return;
-                if (!(Time.time - _lastTime > timeThreshold) ||
-                    !((PlayerManager.PlayerTransform.AbsolutePosition() - _locoPosition).magnitude <
-                      spatialThreshold)) return;
-                string stationNeeded = RandoCommonData.GetStationFromLocoLocations(_locoPosition);
-                bool stationOk = Main.Player.GotStationLicense(stationNeeded);
-                bool museumOk = SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(GeneralLicenseType.MuseumCitySouth.ToV2());
-                if (stationOk && museumOk) {
-                    ItemInfo item = Main.Player.UnlockCheck(_checkId);
-                    Main.Player.CheckRestoLoco(_checkId);
-                    Main.NotifyPlayer($"You found a {item.ItemDisplayName} for {item.Player.Name} on the ground!");
-                    Main.Player.UpdateEvent -= CheckPosition;
-                } else{
-                    _lastTime = Time.time;
-                    if (stationOk && !museumOk)
-                        Main.NotifyPlayer("There is something here but you cannot take it... You need the museum license");
-                    else if (!stationOk && museumOk)
-                        Main.NotifyPlayer("There is something here but you cannot take it... You need the "+stationNeeded+" station license");
-                    else
-                        Main.NotifyPlayer("There is something here but you cannot take it... You need the museum license and the "+stationNeeded+" station license");
+                object x = 1;
+                if (Time.time - LastTime > TimeThreshold && (PlayerManager.PlayerTransform.AbsolutePosition() - LocoPosition).magnitude < SpatialThreshold) {
+                    string stationNeeded = RandoCommonData.GetStationFromLocoLocations(LocoPosition);
+                    bool StationOk = Main.player!.GotStationLicense(stationNeeded);
+                    bool MuseumOk = SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(GeneralLicenseType.MuseumCitySouth.ToV2());
+                    if (StationOk && MuseumOk) {
+                        ItemInfo item = Main.player.UnlockCheck(CheckId);
+                        Main.player.CheckRestoLoco(CheckId);
+                        Main.NotifyPlayer($"You found a {item.ItemDisplayName} for {item.Player.Name} on the ground!");
+                        Main.player.UpdateEvent -= CheckPosition;
+                    } else{
+                        LastTime = Time.time;
+                        if (StationOk && !MuseumOk)
+                            Main.NotifyPlayer("There is something here but you cannot take it... You need the museum license");
+                        else if (!StationOk && MuseumOk)
+                            Main.NotifyPlayer("There is something here but you cannot take it... You need the "+stationNeeded+" station license");
+                        else
+                            Main.NotifyPlayer("There is something here but you cannot take it... You need the museum license and the "+stationNeeded+" station license");
+                    }
                 }
             }
         }
@@ -162,32 +164,54 @@ namespace DvMod.Randomizer
         public Vector3 Position => PlayerManager.ActiveCamera.transform.position + PlayerManager.ActiveCamera.transform.forward * 0.5f;
         public Quaternion Rotation => PlayerManager.ActiveCamera.transform.rotation;
         public RandoSaveData Data {get;}
-        public DVConfig Config => Data.Config;
-        private readonly ConcurrentQueue<DV_APItem> _waitingQueue = new();
+        public DVConfig Config {get => Data.Config;}
+        private readonly ConcurrentQueue<DV_APItem> waitingQueue = new();
         private static PauseMenu Menu => UnityEngine.Object.FindObjectOfType<PauseMenu>();
         public ArchipelagoSession Session;
         public APSlotData SlotData {get;}
         public event Action? UpdateEvent;
-        public DeathLinkService? deathLinkService;
-        
-        public bool Exists { get; }
+        public DeathLinkService? deathLinkService = null;
         
 
         public bool AddLocation(long id) {
             return Data.LocationsChecked.Add(id);
         }
+
+        private void AddKeyBind() {
+            if (Input.GetKeyDown("[0]")) {
+                Input.ResetInputAxes();
+                Main.Log("Trying to fix savefile...");
+                LocoRestorationController controller = LocoRestorationController.allLocoRestorationControllers.First();
+                foreach (TrainCar car in SingletonBehaviour<CarSpawner>.Instance.allCars.Where(car => car.PaintExterior != null && car.PaintExterior.CurrentTheme == controller.abandonedTheme)) {
+                    Main.Log("Found loco: "+car.carType);
+                    LocoRestorationController thisController = LocoRestorationController.allLocoRestorationControllers.First(c =>
+                        c.locoLivery == car.carLivery);
+
+                    Main.Log("Main loco of controller");
+                    thisController.saveData.SetString("loco", car.CarGUID);
+                    thisController.loco = car;
+                    thisController.SetState(LocoRestorationController.RestorationState.S4_OnDestinationTrack);
+                    if (car.carType == TrainCarType.LocoSteamHeavy) {
+                        TrainCar tender = SingletonBehaviour<CarSpawner>.Instance.allCars.Where(c => c.carType == TrainCarType.Tender).FindMin(c =>
+                            (car.transform.position - c.transform.position).magnitude)!;
+                        Main.Log("Tender found");
+                        thisController.saveData.SetString("secondCar", tender.CarGUID);
+                        thisController.secondCar = tender;
+                    }
+                }
+            }
+        }
         public void InitGame() {
             //Check if we need to resync (items received while we were offline)
-            int itemNumberReceived = Session.Items.AllItemsReceived.Count;
-            if (Data.Index < itemNumberReceived) {
+            int ItemNumberReceived = Session.Items.AllItemsReceived.Count;
+            if (Data.Index < ItemNumberReceived) {
                 Main.Log($"Re-syncing...");
-                for (int id = Data.Index ; id < itemNumberReceived; id++) {
+                for (int id = Data.Index ; id < ItemNumberReceived; id++) {
                     DV_APItem item = RandoCommonData.GetAPItem(id, Session.Items.AllItemsReceived[id]);
-                    _waitingQueue.Enqueue(item);
+                    waitingQueue.Enqueue(item);
                 }
-                Data.Index = itemNumberReceived;
+                Data.Index = ItemNumberReceived;
             }
-            Main.Log("Items received");
             SetupListeners(true);
             UpdateEvent += ProcessItems;
             //Add prices for normally tutorial acquired licenses
@@ -195,50 +219,56 @@ namespace DvMod.Randomizer
             GeneralLicenseType.TrainDriver.ToV2().price = 1000;
             JobLicenses.FreightHaul.ToV2().price = 10000;
             TrainCarType.LocoShunter.ToV2().requiredLicense = GeneralLicenseType.DE2.ToV2();
-            Main.Log("Misc init done");
             //Set up demo loco locations
             for (int i = 0; i < Data.LocoLocations.Count(); i++) {
                 if (!Data.LocoLocations[i])
                     UpdateEvent += new DemoLocoListener(i).CheckPosition;
             }
-            Main.Log("Listeners for museum locations setup. Initialization done.");
+
+            UpdateEvent += AddKeyBind;
         }
         private IEnumerator Subscribe() {
             while (Menu == null) yield return null;
-            Menu.controller.ExitLevelRequested += Main.QuitGame;
-            Menu.controller.QuitGameRequested += Main.QuitGame;
+            Menu.controller.ExitLevelRequested += Dispose;
+            Menu.controller.QuitGameRequested += Dispose;
         }
         public RandoPlayer(RandoSaveData? saveData) {
-            (string server, string password, string slotName, int port) =
-                    (Main.Settings.serverName, Main.Settings.Password, Main.Settings.User, Main.Settings.Port);
-            Session = ArchipelagoSessionFactory.CreateSession(server, port);
-            LoginResult login = Session.TryConnectAndLogin("Derail Valley", slotName, ItemsHandlingFlags.AllItems, password: password);
+            bool UseGivenAuth = saveData == null || Main.settings!.ForceUseSave;
+            (string Server, string Password, string SlotName, int Port) = UseGivenAuth ?
+                    (Main.settings!.serverName, Main.settings.Password, Main.settings.User, Main.settings.Port):
+                    (saveData!.ServerName, saveData.Password, saveData.SlotName, saveData.Port);
+            Session = ArchipelagoSessionFactory.CreateSession(Server, Port);
+            LoginResult login = Session.TryConnectAndLogin("Derail Valley", SlotName, ItemsHandlingFlags.AllItems, password: Password);
             if (login is LoginFailure failLogin) {
                 Main.Log("Error! We got the following error while connecting: "+failLogin.Errors.Aggregate((acc, s) => acc+"/"+s));
-                Main.NotifyPlayer("Archipelago server connection failed. " +
-                                  "Please check that the server is up and running and " +
-                                  "that you provided the correct connection information.");
+                if (UseGivenAuth)
+                    Main.NotifyPlayer("Archipelago server connection failed. Please check that the server is up and running and that you provided the correct connection information.");
+                else
+                    Main.NotifyPlayer($"The stored connection information do not work. Please verify your server, if any connection data has changed, provide the correct ones in the mod menu options and press the \"Use the provided credential authentication\" button\nLast known information for this file: {Server}:{Port}, Slot Name: {SlotName}/Password: {Password}");
                 MainMenu.GoBackToMainMenu();
                 throw new Exception();
             }
             SlotData = ((LoginSuccessful)login).SlotData;
             SingletonBehaviour<CoroutineManager>.Instance.Run(Subscribe());
             Data = saveData ?? RandoSaveData.CreateSaveData(SlotData.Config);
-            if (!Data.Config.DeathLink) return;
-            deathLinkService = Session.CreateDeathLinkService();
-            deathLinkService.OnDeathLinkReceived += DeathLinkPatch.Derail;
-            deathLinkService.EnableDeathLink();
-            Exists = true;
+            Data.ServerName = Server;
+            Data.Password = Password;
+            Data.SlotName = SlotName;
+            Data.Port = Port;
+            if (Data.Config.DeathLink) {
+                deathLinkService = Session.CreateDeathLinkService();
+                deathLinkService.OnDeathLinkReceived += DeathLinkPatch.Derail;
+                deathLinkService.EnableDeathLink();
+            }
+
         }
-        public RandoPlayer() {
-            Data = RandoSaveData.CreateSaveData(new DVConfig());
-            Session = ArchipelagoSessionFactory.CreateSession("");
-            SlotData = new APSlotData();
-            Exists = false;
-        }
-        
         public void Dispose() {
-            Data.Index -= _waitingQueue.Count;
+            Main.player = null;
+        }
+        ~RandoPlayer() {
+            Menu.controller.ExitLevelRequested -= Dispose;
+            Menu.controller.QuitGameRequested -= Dispose;
+            Data.Index -= waitingQueue.Count;
             SetupListeners(false);
             deathLinkService = null;
             Session.Socket.DisconnectAsync();
@@ -250,33 +280,14 @@ namespace DvMod.Randomizer
     #endregion
     #region Network methods helpers
         public ItemInfo UnlockCheck(long checkId) {
-            Session.Locations.CompleteLocationChecks(checkId);
             var askTask = Session.Locations.ScoutLocationsAsync(checkId);
             askTask.Wait();
             return askTask.Result[checkId];
         }
-        private void SetupListeners(bool on) {
-            if (on) {
-                Session.Items.ItemReceived += ReceivedItem;
-                Session.MessageLog.OnMessageReceived += ReceivedMessage;
-                Session.Socket.ErrorReceived += ReceivedError;
-                Session.Socket.SocketClosed += SocketClosed;
-            } else {
-                Session.Items.ItemReceived -= ReceivedItem;
-                Session.MessageLog.OnMessageReceived -= ReceivedMessage;
-                Session.Socket.ErrorReceived -= ReceivedError;
-                Session.Socket.SocketClosed -= SocketClosed;
-            }
-        }
-        private void ProcessItems() {
-            if (_waitingQueue.TryDequeue(out DV_APItem item))
-                 item.Acquire().Wait();
-        }
-
         private void SocketClosed(string reason) {
             Main.Log("Socket unexpectedly closed: " + reason + "\nTrying to reconnect...");
             for (int i = 0; i < 5; i++) {
-                LoginResult login = Session.TryConnectAndLogin("Derail Valley", Main.Settings.User, ItemsHandlingFlags.AllItems, password: Main.Settings.Password);
+                LoginResult login = Session.TryConnectAndLogin("Derail Valley", Main.settings.User, ItemsHandlingFlags.AllItems, password: Main.settings.Password);
                 if (login is not LoginSuccessful) continue;
                 Main.Log("Reconnection successful");
                 return;
@@ -285,18 +296,37 @@ namespace DvMod.Randomizer
             SingletonBehaviour<SaveGameManager>.Instance.Save(SaveType.Auto);
             MainMenu.GoBackToMainMenu();
         }
-        private void ReceivedItem(ReceivedItemsHelper itemHelper) {
-            Queue<ItemInfo> currQueue = new();
-            while (itemHelper.Any()) {
-                currQueue.Enqueue(itemHelper.DequeueItem());
+        private void SetupListeners(bool on) {
+            if (on) {
+                Session.Items.ItemReceived += ReceivedItem;
+                Session.MessageLog.OnMessageReceived += ReceivedMessage;
+                Session.Socket.ErrorReceived += ReceivedError;
+                Session.Socket.SocketClosed += SocketClosed;
+                
+            } else {
+                Session.Items.ItemReceived -= ReceivedItem;
+                Session.MessageLog.OnMessageReceived -= ReceivedMessage;
+                Session.Socket.ErrorReceived -= ReceivedError;
+                Session.Socket.SocketClosed -= SocketClosed;
             }
-            if (itemHelper.Index == Data.Index + currQueue.Count) {
-                while (currQueue.Any()) {
-                    _waitingQueue.Enqueue(RandoCommonData.GetAPItem(Data.Index++, currQueue.Dequeue()));
+        }
+        private async void ProcessItems() {
+            if (waitingQueue.TryDequeue(out var item)){
+                await item.Acquire();
+            }
+        }
+        private void ReceivedItem(ReceivedItemsHelper itemHelper) {
+            Queue<ItemInfo> CurrQueue = new();
+            while (itemHelper.Any()) {
+                CurrQueue.Enqueue(itemHelper.DequeueItem());
+            }
+            if (itemHelper.Index == Data.Index + CurrQueue.Count) {
+                while (CurrQueue.Any()) {
+                    waitingQueue.Enqueue(RandoCommonData.GetAPItem(Data.Index++, CurrQueue.Dequeue()));
                 }
             } else {
                 while (Data.Index < itemHelper.Index)
-                    _waitingQueue.Enqueue(RandoCommonData.GetAPItem(Data.Index, itemHelper.AllItemsReceived[Data.Index++]));
+                    waitingQueue.Enqueue(RandoCommonData.GetAPItem(Data.Index, itemHelper.AllItemsReceived[Data.Index++]));
             }
         }
 
@@ -307,7 +337,7 @@ namespace DvMod.Randomizer
          public void ReceivedMessage(LogMessage message) {
             switch (message) {
                 case AdminCommandResultLogMessage:
-                Terminal.Log(TerminalLogType.Input, "[ADMIN] "+message);
+                Terminal.Log(TerminalLogType.Input, "[ADMIN] "+message.ToString());
                 break;
                 case ServerChatLogMessage:
                 Terminal.Log(TerminalLogType.Message, message.ToString());
@@ -316,7 +346,11 @@ namespace DvMod.Randomizer
                 Terminal.Log(TerminalLogType.Warning, message.ToString());
                 break;
                 case CommandResultLogMessage:
+                Terminal.Log(TerminalLogType.Input, message.ToString());
+                break;
                 case TutorialLogMessage:
+                Terminal.Log(TerminalLogType.Input, message.ToString());
+                break;
                 case CountdownLogMessage:
                 Terminal.Log(TerminalLogType.Input, message.ToString());
                 break;
@@ -336,140 +370,144 @@ namespace DvMod.Randomizer
         #endregion
         #region Acquiring items
         public JobFinishState FinishJob(Job_data data) {
-            string station = data.type switch {
+            string Station = data.type switch {
                 JobType.ShuntingUnload => data.chainDestinationStationInfo.YardID,
                 _ => data.chainOriginStationInfo.YardID
             };
-            bool isShunting = data.type is JobType.ShuntingLoad or JobType.ShuntingUnload;
-            long stOrder = RandoCommonData.GetOrderFromStationName(station);
-            if (!GotStationLicense(station)) {
-                return new JobFinishState {
+            bool IsShunting = data.type == JobType.ShuntingLoad || data.type == JobType.ShuntingUnload;
+            long StOrder = RandoCommonData.GetOrderFromStationName(Station);
+            if (!GotStationLicense(Station)) {
+                return new() {
                     HasWon = Data.AlreadyWon,
-                    ItemJob1 = null,
-                    ItemJob2 = null,
-                    ItemLoco = null,
-                    RemainingForVictory = Main.Player.Config.VictoryThreshold,
-                    RemainingLoco = Main.Player.Config.LocoJobsThreshold[0],
-                    IsShunting = isShunting,
+                    Item_job1 = null,
+                    Item_job2 = null,
+                    Item_loco = null,
+                    RemainingForVictory = Main.player!.Config.VictoryThreshold,
+                    RemainingLoco = Main.player!.Config.LocoJobsThreshold[0],
+                    IsShunting = IsShunting,
                     GotStationLicense = false,
-                    Station=station,
-                    RemainingJobs = (isShunting?Main.Player.Config.ShuntThreshold:Main.Player.Config.FreightThreshold)[stOrder],
-                    RemainingOtherJobs = (!isShunting?Main.Player.Config.ShuntThreshold:Main.Player.Config.FreightThreshold)[stOrder],
+                    Station=Station,
+                    RemainingJobs = (IsShunting?Main.player!.Config.ShuntThreshold:Main.player!.Config.FreightThreshold)[StOrder],
+                    RemainingOtherJobs = (!IsShunting?Main.player!.Config.ShuntThreshold:Main.player!.Config.FreightThreshold)[StOrder],
                     LastCar = null,
                     Tokens = Data.Tokens
                 };
             }
 
-            (int remaining, ItemInfo? item1) = isShunting ? FinishShunting(station) : FinishTransport(station);
-            (int otherRem, int otherMax) = isShunting ? GetTransportData(station) : GetShuntingData(station);
-            (int remainingLoco, ItemInfo? itemLoco) = FinishLoco(PlayerManager.LastLoco);
+            (int Remaining, ItemInfo? Item1) = IsShunting ? FinishShunting(Station) : FinishTransport(Station);
+            (int OtherRem, int otherMax) = IsShunting ? GetTransportData(Station) : GetShuntingData(Station);
+            (int RemainingLoco, ItemInfo? ItemLoco) = FinishLoco(PlayerManager.LastLoco);
 
-            ItemInfo? item2 = null;
-            ItemInfo? itemLoco2 = null;
-            int remainingForVictory = CheckVictory(station);
-            // ReSharper disable once InvertIf
-            if ((remaining > 0 || remainingLoco > 0 || remainingForVictory > 0) && Data.Tokens > 0) {
+            ItemInfo? Item2 = null;
+            ItemInfo? ItemLoco2 = null;
+            int RemainingForVictory = CheckVictory(Station);
+            if ((Remaining > 0 || RemainingLoco > 0 || RemainingForVictory > 0) && Data.Tokens > 0) {
                 Data.Tokens--;
-                (remaining, item2) = isShunting ? FinishShunting(station) : FinishTransport(station);
-                (remainingLoco, itemLoco2) = FinishLoco(PlayerManager.LastLoco);
-                remainingForVictory = CheckVictory(station);
+                (Remaining, Item2) = IsShunting ? FinishShunting(Station) : FinishTransport(Station);
+                (RemainingLoco, ItemLoco2) = FinishLoco(PlayerManager.LastLoco);
+                RemainingForVictory = CheckVictory(Station);
             }
-            return new JobFinishState {
+            return new() {
                 HasWon = Data.AlreadyWon,
-                ItemJob1 = item1,
-                ItemJob2 = item2,
-                ItemLoco = itemLoco ?? itemLoco2,
-                RemainingForVictory = remainingForVictory,
-                IsShunting = isShunting,
+                Item_job1 = Item1,
+                Item_job2 = Item2,
+                Item_loco = ItemLoco ?? ItemLoco2,
+                RemainingForVictory = RemainingForVictory,
+                IsShunting = IsShunting,
                 GotStationLicense = true,
-                RemainingJobs = remaining,
-                RemainingLoco = remainingLoco,
-                Station = station,
-                RemainingOtherJobs = Math.Max(0, otherMax - otherRem),
+                RemainingJobs = Remaining,
+                RemainingLoco = RemainingLoco,
+                Station = Station,
+                RemainingOtherJobs = Math.Max(0, otherMax - OtherRem),
                 LastCar = PlayerManager.LastLoco?.carType,
                 Tokens = Data.Tokens
             };
 
         }
-        public void BypassItem(DV_APItem item) => _waitingQueue.Enqueue(item);
-        public int CheckVictory(string station) {
+        public void BypassItem(DV_APItem item) => waitingQueue.Enqueue(item);
+        public int CheckVictory(string Station) {
             int toReturn = -1;
-            long stOrder = RandoCommonData.GetOrderFromStationName(station);
-            if (Data.AlreadyWon) return toReturn;
-            int stationFinished = 0;
-            for (int i = 0; i < 20; i++) {
-                int currRem = Data.Config.VictoryThreshold - (Data.Shunts[i] + Data.Freights[i]);
-                if (currRem <= 0) stationFinished++;
-                if (i == stOrder) toReturn = Math.Max(0, currRem);
+            long StOrder = RandoCommonData.GetOrderFromStationName(Station);
+            if (!Data.AlreadyWon) {
+                int StationFinished = 0;
+                for (int i = 0; i < 20; i++) {
+                    int currRem = Data.Config.VictoryThreshold - (Data.Shunts[i] + Data.Freights[i]);
+                    if (currRem <= 0) StationFinished++;
+                    if (i == StOrder) toReturn = Math.Max(0, currRem);
+                }
+                if (StationFinished >= Data.Config.Victory) {
+                    Terminal.Log(TerminalLogType.Warning, "You won the game!");
+                    Data.AlreadyWon = true;
+                    Session.SetGoalAchieved();
+                }
             }
-
-            if (stationFinished < Data.Config.Victory) return toReturn;
-            Terminal.Log(TerminalLogType.Warning, "You won the game!");
-            Data.AlreadyWon = true;
-            Session.SetGoalAchieved();
             return toReturn;
         }
         public void AddToken() => Data.Tokens++;
-        public int AddRelic(long id) => ++Data.ReceivedRelics[id-RandoCommonData.AP_ID.RELIC];
-        
-        public void AcquireLicense(string station) {
-            Data.StationLicenses[RandoCommonData.GetOrderFromStationName(station)] = true;
+        public int AddRelic(long id) {
+            return ++Data.ReceivedRelics[id-RandoCommonData.AP_ID.RELIC];
+        }
+        public void AcquireLicense(string Station) {
+            Data.StationLicenses[RandoCommonData.GetOrderFromStationName(Station)] = true;
         }
         public (int, ItemInfo?) FinishLoco(TrainCar car) {
+            if (car == null) return (-1, null);
             long locoIdx = RandoCommonData.GetOrderFromLocoType(car.carType);
-            if (locoIdx == -1) return (-1, null);
-            int remaining = Data.Config.LocoJobsThreshold[locoIdx] - ++Data.LocoJobs[locoIdx];
-            ItemInfo? item = remaining == 0 ? UnlockCheck(0x600+locoIdx) : null;
-            return (Math.Max(0, remaining), item);
+            int Remaining = Data.Config.LocoJobsThreshold[locoIdx] - ++Data.LocoJobs[locoIdx];
+            ItemInfo? item = Remaining == 0 ? UnlockCheck(0x600+locoIdx) : null;
+            return (Math.Max(0, Remaining), item);
         }
         public (int, int) GetShuntingData(string station) {
-            long stIdx = RandoCommonData.GetOrderFromStationName(station);
-            return (Data.Shunts[stIdx], Data.Config.ShuntThreshold[stIdx]);
+            long StIdx = RandoCommonData.GetOrderFromStationName(station);
+            return (Data.Shunts[StIdx], Data.Config.ShuntThreshold[StIdx]);
         }
         public (int, int) GetTransportData(string station) {
-            long stIdx = RandoCommonData.GetOrderFromStationName(station);
-            return (Data.Freights[stIdx], Data.Config.FreightThreshold[stIdx]);
+            long StIdx = RandoCommonData.GetOrderFromStationName(station);
+            return (Data.Freights[StIdx], Data.Config.FreightThreshold[StIdx]);
         }
         public (int, int) GetVictoryData(string station) {
-            long stIdx = RandoCommonData.GetOrderFromStationName(station);
-            return (Data.Freights[stIdx]+Data.Shunts[stIdx], Data.Config.VictoryThreshold);
+            long StIdx = RandoCommonData.GetOrderFromStationName(station);
+            return (Data.Freights[StIdx]+Data.Shunts[StIdx], Data.Config.VictoryThreshold);
         }
         public (int, ItemInfo?) FinishShunting(string station) {
-            long stOrder = RandoCommonData.GetOrderFromStationName(station);
-            Data.Shunts[stOrder] += 1;
-            int remaining = Data.Config.ShuntThreshold[stOrder] - Data.Shunts[stOrder];
-            return remaining >= 0 ?
-                (remaining, UnlockCheck(0x2000 + stOrder * 0x100 + Data.Shunts[stOrder] - 1)) : 
-                (Math.Max(remaining,0), null);
+            long StOrder = RandoCommonData.GetOrderFromStationName(station);
+            Data.Shunts[StOrder] += 1;
+            int Remaining = Data.Config.ShuntThreshold[StOrder] - Data.Shunts[StOrder];
+            if (Remaining >= 0) {
+                return (Remaining, UnlockCheck(0x2000 + StOrder * 0x100 + Data.Shunts[StOrder] - 1));
+            }
+            return (Math.Max(Remaining,0), null);
         }
         public (int, ItemInfo?) FinishTransport(string station) {
-            long stOrder = RandoCommonData.GetOrderFromStationName(station);
-            Data.Freights[stOrder] += 1;
-            int remaining = Data.Config.FreightThreshold[stOrder] - Data.Freights[stOrder];
-            return remaining >= 0 ?
-                (remaining, UnlockCheck(0x4000 + stOrder * 0x100 + Data.Freights[stOrder] - 1)) : 
-                (Math.Max(0,remaining), null);
+            long StOrder = RandoCommonData.GetOrderFromStationName(station);
+            Data.Freights[StOrder] += 1;
+            int Remaining = Data.Config.FreightThreshold[StOrder] - Data.Freights[StOrder];
+            if (Remaining >= 0) {
+                return (Remaining, UnlockCheck(0x4000 + StOrder * 0x100 + Data.Freights[StOrder] - 1));
+            }
+            return (Math.Max(0,Remaining), null);
         }
 
         #endregion
         #region Checking player possibilities
-        private static bool HasChecked<T>(Func<T, long> f, T value, bool[] map) {
+        private bool HasChecked<T>(Func<T, long> f, T value, bool[] map) {
             long id = f(value);
-            return id < 0 || map[id];
+            if (id < 0) return true;
+            return map[id];
         }
-        public bool HasChecked(Vector3 position) =>
-            HasChecked(RandoCommonData.GetIdFromLocoLocations, position, Data.LocoLocations);
-        
-        public bool HasChecked(JobLicenseType_v2 jobLicense) => 
-            HasChecked(x => RandoCommonData.GetIDFromJobLicense(x).Item2, jobLicense,  Data.JobLocations);
-        
-        public bool HasChecked(GeneralLicenseType_v2 generalLicense) =>
-            HasChecked(x => RandoCommonData.GetIDFromGeneralLicense(x).Item2, generalLicense, Data.GeneralLocations);
-        
+        public bool HasChecked(Vector3 position) {
+            return HasChecked(RandoCommonData.GetIdFromLocoLocations, position, Data.LocoLocations);
+        }
+        public bool HasChecked(JobLicenseType_v2 jobLicense) {
+            return HasChecked(x => RandoCommonData.GetIDFromJobLicense(x).Item2, jobLicense,  Data.JobLocations);
+        }
+        public bool HasChecked(GeneralLicenseType_v2 generalLicense) {
+            return HasChecked(x => RandoCommonData.GetIDFromGeneralLicense(x).Item2, generalLicense, Data.GeneralLocations);
+        }
 
-        public bool GotStationLicense(string name) =>
-            Data.StationLicenses[RandoCommonData.GetOrderFromStationName(name)];
-        
+        public bool GotStationLicense(string name) {
+            return Data.StationLicenses[RandoCommonData.GetOrderFromStationName(name)];
+        }
 
         
     
@@ -514,11 +552,11 @@ namespace DvMod.Randomizer
         public void CheckRestoLoco(long id) {
             Data.LocoLocations[id - RandoCommonData.AP_ID.LOC_LOCO_RESTORATION] = true;
         }
-        public void CheckGLicense(long id) {
-            Data.GeneralLocations[id - RandoCommonData.AP_ID.LOC_GENERAL_LICENSES] = true;
+        public void CheckGLicense(long Id) {
+            Data.GeneralLocations[Id - RandoCommonData.AP_ID.LOC_GENERAL_LICENSES] = true;
         }
-        public void CheckJLicense(long id) {
-            Data.JobLocations[id - RandoCommonData.AP_ID.LOC_JOB_LICENSES] = true;
+        public void CheckJLicense(long Id) {
+            Data.JobLocations[Id - RandoCommonData.AP_ID.LOC_JOB_LICENSES] = true;
         }
 
     }

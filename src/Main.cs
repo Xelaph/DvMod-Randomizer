@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using DV.JObjectExtstensions;
+using DV.LocoRestoration;
+using DV.ThingTypes;
 using DV.UI;
 using DV.Utils;
 using HarmonyLib;
-using JetBrains.Annotations;
 using UnityModManagerNet;
 
 
@@ -19,68 +23,33 @@ namespace DvMod.Randomizer
         [Draw("Port")] public int Port = 38281;
         [Draw("Slot name (Must correspond to the name given to the Archipelago Server)")] public string User="";
         [Draw("Password (leave blank if no password)")] public string Password = "";
-        [Draw("Create a new Archipelago save on new career save?")] public bool CreateAPSave = false;
+        [Draw("Create a new Archipelago save on new career save?")]public bool CreateAPSave = false;
+        [Draw("When continuing a file, connection information are stored in the file. Set this to true to use the provided authentication credentials instead.")]public bool ForceUseSave = false;
         public override void Save(UnityModManager.ModEntry mod){
             Save(this, mod);
         }
         public void OnChange(){}
     }
-
-    /*[HarmonyPatch(typeof(CarsSaveManager), nameof(CarsSaveManager.RestoreCarState))]
-    public class Poutou {
-        private static LocoRestorationController controller =>
-                LocoRestorationController.allLocoRestorationControllers.Find(
-                    c => c.locoLivery.v1 == TrainCarType.LocoDM3);
-
-        private static string guid;
-        public static void Postfix(TrainCar spawnedCar) {
-            if (spawnedCar.PaintExterior.CurrentTheme == controller.abandonedTheme && 
-                spawnedCar.carType == TrainCarType.LocoDM3) {
-                guid = spawnedCar.CarGUID;
-                Main.Player.UpdateEvent += RepairSavefile;
-            }
-        }
-
-        private static void RepairSavefile() {
-            if (controller == null || controller.saveData == null) return;
-            controller.saveData.SetString("loco", guid);
-            Main.Player.UpdateEvent -= RepairSavefile;
-        }
-    }*/
-
+    
     public static class Main {
         public const int VERSION = 2;
-        public static Settings Settings = null!;
-        public static UnityModManager.ModEntry Mod = null!;
-        // ReSharper disable once InconsistentNaming
-        private static RandoPlayer? _player;
-
-        public static RandoPlayer Player => PlayerExists ? _player! : throw new Exception("RandoPlayer does not exist");
-
-        public static bool PlayerExists { get; private set; } 
-        
-        [UsedImplicitly]
+        public static Settings? settings;
+        public static UnityModManager.ModEntry? mod;
+        public static RandoPlayer? player;
         public static void Load(UnityModManager.ModEntry modEntry)
         {
-            Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
-            Mod = modEntry;
-            Mod.OnToggle = OnToggle;
-            Mod.OnGUI += OnGUI;
-            Mod.OnSaveGUI += OnSaveGUI;
-        }
-        public static void CreatePlayer(RandoSaveData? saveData) {
-            PlayerExists = true;
-            _player = new RandoPlayer(saveData);
-        }
-        public static void QuitGame() {
-            PlayerExists = false;
-            _player?.Dispose();
+            settings = Settings.Load<Settings>(modEntry);
+            mod = modEntry;
+            mod.OnToggle = OnToggle;
+            mod.OnGUI += OnGUI;
+            mod.OnSaveGUI += OnSaveGUI;
+
         }
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
-            Settings.Draw(modEntry);
+            settings!.Draw(modEntry);
         }
         public static void OnSaveGUI(UnityModManager.ModEntry modEntry) {
-            Settings.Save(modEntry);
+            settings!.Save(modEntry);
         }
 
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value)
@@ -99,10 +68,10 @@ namespace DvMod.Randomizer
         }
 
         public static void Log(string message) {
-            Mod.Logger.Log(message);
+            mod!.Logger.Log(message);
         }
         public static void Error(string message) {
-            Mod.Logger.Error(message);
+            mod!.Logger.Error(message);
         }
         public static void NotifyPlayer(string message) {
             SingletonBehaviour<ACanvasController<CanvasController.ElementType>>.Instance.NotificationManager.ShowNotification(
