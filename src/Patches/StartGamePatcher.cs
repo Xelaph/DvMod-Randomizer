@@ -42,10 +42,10 @@ namespace DvMod.Randomizer
                 return;
             }
             try {
-                Main.Player ??= new(data);
+                Main.CreatePlayer(data);
             } catch (TimeoutException) {
                 ExitWithMessage($"Could not connect to server. Returning to main menu...");
-                Main.Player = null;
+                Main.QuitGame();
                 return;
             }
             Main.Log("Player created and session connected");
@@ -58,7 +58,7 @@ namespace DvMod.Randomizer
     public class SavingPatch {
         [HarmonyPrefix, HarmonyPatch("UpdateInternalData")]
         public static void SavePrefix(SaveGameData ___data) {
-            if (Main.Player == null) return;
+            if (!Main.Player.Exists) return;
             ___data.SetObject("RandoData", Main.Player.Data);
         }
     }
@@ -70,7 +70,7 @@ namespace DvMod.Randomizer
                 yield return WaitFor.Seconds(0.5f);
             Transform teleportAnchor = 
                     StationController.allStations
-                    .Find(sc => sc.stationInfo.YardID.Equals(Main.Player!.SlotData.StartStation))
+                    .Find(sc => sc.stationInfo.YardID.Equals(Main.Player.SlotData.StartStation))
                     .stationRange
                     .stationCenterAnchor;
             PlayerManager.TeleportPlayer(teleportAnchor.position, teleportAnchor.rotation, null, useRotation: true);
@@ -86,7 +86,7 @@ namespace DvMod.Randomizer
         public static bool Prefix(StartGameData_NewCareer __instance, IGameSession session, IDifficulty difficultyParams) {
             if (!Main.Settings.CreateAPSave) return true;
             try {
-                Main.Player ??= new RandoPlayer(null);
+                Main.CreatePlayer(null);
             } catch (TimeoutException) {
                 Main.Log("Tried, but failed. Sorry");
                 MainMenu.GoBackToMainMenu();

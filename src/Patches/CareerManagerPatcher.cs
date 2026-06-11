@@ -14,7 +14,7 @@ namespace DvMod.Randomizer;
 public static class CareerManagerLicensesPatcher {
     [HarmonyPostfix, HarmonyPatch(nameof(CareerManagerLicensesScreen.LicenseEntry.UpdateJobLicenseData))]
     public static void JobLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
-        if (Main.Player == null) return;
+        if (!Main.Player.Exists) return;
         __instance.IsAcquired = Main.Player.HasChecked(__instance.JobLicense);
         __instance.IsObtainable =
             (__instance.JobLicense.requiredGeneralLicense == null ||
@@ -32,7 +32,7 @@ public static class CareerManagerLicensesPatcher {
     }
     [HarmonyPostfix, HarmonyPatch(nameof(CareerManagerLicensesScreen.LicenseEntry.UpdateGeneralLicenseData))]
     public static void GeneralLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
-        if (Main.Player == null) return;
+        if (!Main.Player.Exists) return;
         __instance.IsAcquired = Main.Player.HasChecked(__instance.GeneralLicense);
         __instance.IsObtainable =
             (__instance.GeneralLicense.requiredGeneralLicense == null ||
@@ -55,7 +55,7 @@ public static class CareerManagerLicensePayPatcher {
     public static void NamePatcher(TextMeshPro ___licenseNameText) => ___licenseNameText.text += "?";
     [HarmonyPrefix, HarmonyPatch(nameof(CareerManagerLicensePayingScreen.HandleInputAction))]
     public static bool BuyingPatch(InputAction input, CareerManagerLicensePayingScreen __instance, JobLicenseType_v2 ___jobLicenseToBuy, GeneralLicenseType_v2 ___generalLicenseToBuy) {
-        if (Main.Player == null) return true;
+        if (!Main.Player.Exists) return true;
         if (input != InputAction.Confirm) return true;
         if (!__instance.cashReg.Buy()) return true;
         float price;

@@ -10,7 +10,7 @@ namespace DvMod.Randomizer
     public static class CrewCommsPatch {
         [HarmonyPostfix, HarmonyPatch("UpdateAvailableVehicles")]
         public static void CustomVehicles(CommsRadioCrewVehicle __instance) {
-            if (Main.Player == null) 
+            if (!Main.Player.Exists) 
                 return;
             __instance.availableVehiclesForSpawn.Clear();
             __instance.availableVehiclesForSpawn.AddRange(
@@ -25,7 +25,7 @@ namespace DvMod.Randomizer
     public static class GaragePatcher {
         [HarmonyPrefix, HarmonyPatch("OnGarageUnlocked")]
         public static void Prefix(GarageType_v2 unlockedGarageType) {
-            if (Main.Player == null) return;
+            if (!Main.Player.Exists) return;
             // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (unlockedGarageType.v1) {
                 case Garage.Caboose: Main.Player.UnlockCheck(0x691); break;

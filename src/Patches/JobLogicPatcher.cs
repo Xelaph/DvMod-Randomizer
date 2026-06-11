@@ -43,7 +43,7 @@ namespace DvMod.Randomizer {
     public static class SleepPatcher {
         [HarmonyPrefix, HarmonyPatch("OnConfirmSleepClicked")]
         public static void Prefix() {
-            if (Main.Player == null) return;
+            if (!Main.Player.Exists) return;
             StationController? nearestController = StationController.allStations.FindMin(cont => (PlayerManager.PlayerTransform.position - cont.transform.position).magnitude);
             nearestController?.RegenerateJobs();
             StationLocoSpawnPatch.DoRefresh();

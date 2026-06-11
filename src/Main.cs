@@ -1,4 +1,3 @@
-using System;
 using DV.UI;
 using DV.Utils;
 using HarmonyLib;
@@ -37,14 +36,14 @@ namespace DvMod.Randomizer
             if (spawnedCar.PaintExterior.CurrentTheme == controller.abandonedTheme && 
                 spawnedCar.carType == TrainCarType.LocoDM3) {
                 guid = spawnedCar.CarGUID;
-                Main.player!.UpdateEvent += RepairSavefile;
+                Main.Player.UpdateEvent += RepairSavefile;
             }
         }
 
         private static void RepairSavefile() {
             if (controller == null || controller.saveData == null) return;
             controller.saveData.SetString("loco", guid);
-            Main.player!.UpdateEvent -= RepairSavefile;
+            Main.Player.UpdateEvent -= RepairSavefile;
         }
     }*/
 
@@ -52,7 +51,9 @@ namespace DvMod.Randomizer
         public const int VERSION = 2;
         public static Settings Settings = null!;
         public static UnityModManager.ModEntry Mod = null!;
-        public static RandoPlayer? Player;
+        // ReSharper disable once InconsistentNaming
+        private static RandoPlayer? _player = null;
+        public static RandoPlayer Player => _player ?? new RandoPlayer();
         
         [UsedImplicitly]
         public static void Load(UnityModManager.ModEntry modEntry)
@@ -62,8 +63,9 @@ namespace DvMod.Randomizer
             Mod.OnToggle = OnToggle;
             Mod.OnGUI += OnGUI;
             Mod.OnSaveGUI += OnSaveGUI;
-
         }
+        public static void CreatePlayer(RandoSaveData? saveData) => _player = new RandoPlayer(saveData);
+        public static void QuitGame() => _player = null;
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
             Settings.Draw(modEntry);
         }

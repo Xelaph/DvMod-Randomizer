@@ -41,7 +41,7 @@ namespace DvMod.Randomizer
         public int Tokens;
     }
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class DVConfig(
+    public struct DVConfig(
         int[] shuntThreshold, 
         int[] freightThreshold, 
         int[] locoJobsThreshold, 
@@ -139,7 +139,7 @@ namespace DvMod.Randomizer
                     !((PlayerManager.PlayerTransform.AbsolutePosition() - _locoPosition).magnitude <
                       spatialThreshold)) return;
                 string stationNeeded = RandoCommonData.GetStationFromLocoLocations(_locoPosition);
-                bool stationOk = Main.Player!.GotStationLicense(stationNeeded);
+                bool stationOk = Main.Player.GotStationLicense(stationNeeded);
                 bool museumOk = SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(GeneralLicenseType.MuseumCitySouth.ToV2());
                 if (stationOk && museumOk) {
                     ItemInfo item = Main.Player.UnlockCheck(_checkId);
@@ -169,6 +169,8 @@ namespace DvMod.Randomizer
         public APSlotData SlotData {get;}
         public event Action? UpdateEvent;
         public DeathLinkService? deathLinkService;
+        
+        public bool Exists { get; }
         
 
         public bool AddLocation(long id) {
@@ -203,8 +205,8 @@ namespace DvMod.Randomizer
         }
         private IEnumerator Subscribe() {
             while (Menu == null) yield return null;
-            Menu.controller.ExitLevelRequested += Dispose;
-            Menu.controller.QuitGameRequested += Dispose;
+            Menu.controller.ExitLevelRequested += Main.QuitGame;
+            Menu.controller.QuitGameRequested += Main.QuitGame;
         }
         public RandoPlayer(RandoSaveData? saveData) {
             (string server, string password, string slotName, int port) =
@@ -226,13 +228,16 @@ namespace DvMod.Randomizer
             deathLinkService = Session.CreateDeathLinkService();
             deathLinkService.OnDeathLinkReceived += DeathLinkPatch.Derail;
             deathLinkService.EnableDeathLink();
+            Exists = true;
         }
-        public void Dispose() =>
-            Main.Player = null;
+        public RandoPlayer() {
+            Data = RandoSaveData.CreateSaveData(new DVConfig());
+            Session = ArchipelagoSessionFactory.CreateSession("");
+            SlotData = new APSlotData();
+            Exists = false;
+        }
         
         ~RandoPlayer() {
-            Menu.controller.ExitLevelRequested -= Dispose;
-            Menu.controller.QuitGameRequested -= Dispose;
             Data.Index -= _waitingQueue.Count;
             SetupListeners(false);
             deathLinkService = null;
@@ -343,7 +348,7 @@ namespace DvMod.Randomizer
                     ItemJob1 = null,
                     ItemJob2 = null,
                     ItemLoco = null,
-                    RemainingForVictory = Main.Player!.Config.VictoryThreshold,
+                    RemainingForVictory = Main.Player.Config.VictoryThreshold,
                     RemainingLoco = Main.Player.Config.LocoJobsThreshold[0],
                     IsShunting = isShunting,
                     GotStationLicense = false,

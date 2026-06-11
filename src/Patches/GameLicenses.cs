@@ -19,7 +19,7 @@ public static class LicenseManagerPatch {
     }
     [HarmonyPrefix, HarmonyPatch(nameof(LicenseManager.LoadData))]
     public static bool Prefix(SaveGameData data, LicenseManager __instance) {
-        if (Main.Player == null) return true;
+        if (!Main.Player.Exists) return true;
         ProcessListOfIDs(data.GetStringArray("Licenses_General"), Globals.G.Types.generalLicenses).ForEach(__instance.AcquireGeneralLicense);
 
         ProcessListOfIDs(data.GetStringArray("Licenses_Jobs"), Globals.G.Types.jobLicenses).ForEach(__instance.AcquireJobLicense);
@@ -33,7 +33,7 @@ public static class LicenseManagerPatch {
 public static class LocoHintPatcher {
     [HarmonyPostfix, HarmonyPatch(nameof(StaticLicenseBookletRender.GetStaticTemplatePaperData))]
     public static void Postfix(GeneralLicenseType_v2 ___generalLicense, ref TemplatePaperData[] __result) {
-        if (Main.Player == null) return;
+        if (!Main.Player.Exists) return;
         int order = RandoCommonData.GetOrderFromLocoLicense(___generalLicense);
         if (order < 0 || !Main.Player.Config.HintsOnLocoLicense) return;
         LicenseTemplatePaperData firstPage = (LicenseTemplatePaperData) __result[0];

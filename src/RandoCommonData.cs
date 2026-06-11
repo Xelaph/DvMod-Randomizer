@@ -657,7 +657,7 @@ namespace DvMod.Randomizer
         private static CashRegisterModule.CashRegisterModuleData GetFreightData(string name, int idx) => new() {
                 unitsToBuy=idx+1,
                 pricePerUnit=0,
-                resourceName="Freight n°"+(idx+1)+": "+Main.Player!.GetItemNameFromLocationId(0x4000+GetOrderFromStationName(name)*0x100+idx, true),
+                resourceName="Freight n°"+(idx+1)+": "+Main.Player.GetItemNameFromLocationId(0x4000+GetOrderFromStationName(name)*0x100+idx, true),
                 resourceIcon= TrainCarType.LocoDiesel.ToV2().icon,
                 car=null
             };
@@ -665,7 +665,7 @@ namespace DvMod.Randomizer
         private static CashRegisterModule.CashRegisterModuleData GetShuntingData(string name, int idx) => new() {
                 unitsToBuy=idx+1,
                 pricePerUnit=0,
-                resourceName="Shunting n°"+(idx+1)+": "+Main.Player!.GetItemNameFromLocationId(0x2000+GetOrderFromStationName(name)*0x100+idx, true),
+                resourceName="Shunting n°"+(idx+1)+": "+Main.Player.GetItemNameFromLocationId(0x2000+GetOrderFromStationName(name)*0x100+idx, true),
                 resourceIcon= TrainCarType.LocoShunter.ToV2().icon,
                 car=null
             };
@@ -678,7 +678,7 @@ namespace DvMod.Randomizer
                 resourceIcon=GetStationSprite(name),
                 car=null
             }];
-            if (!Main.Player!.Config.HintsOnStationLicense) return stationLicense;
+            if (!Main.Player.Config.HintsOnStationLicense) return stationLicense;
             long order = GetOrderFromStationName(name);
             for (int i = 0; i < Main.Player.Config.FreightThreshold[order]; i++)
                 stationLicense.Add(GetFreightData(name, i));
@@ -688,7 +688,7 @@ namespace DvMod.Randomizer
             
         }
         public static void AcquireStationLicense(string name) {
-            GameObject license = BookletCreator_CashRegisterReceipt.Create(GetStationLicenseData(name), Main.Player!.Position, Main.Player!.Rotation, WorldMover.OriginShiftParent);
+            GameObject license = BookletCreator_CashRegisterReceipt.Create(GetStationLicenseData(name), Main.Player.Position, Main.Player.Rotation, WorldMover.OriginShiftParent);
             license.name=name+"SL";
             InventoryItemSpec item = license.GetComponent<InventoryItemSpec>();
             item.BelongsToPlayer = true;

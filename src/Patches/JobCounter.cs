@@ -54,7 +54,7 @@ public class JobCounter {
 
     [HarmonyPatch(nameof(BookletCreator_JobReport.GetReportTemplateData))]
     public static void Postfix(ref List<TemplatePaperData> __result, Job_data data) {
-        if (Main.Player == null) return;
+        if (!Main.Player.Exists) return;
         if (data.state != JobState.Completed) return;
         JobFinishState jobState = Main.Player.FinishJob(data);
         List<JobReportTasksTemplatePaperData.JobReportEntry> toAdd = [];
