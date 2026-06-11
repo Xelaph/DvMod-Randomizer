@@ -8,37 +8,37 @@ using DV.CabControls;
 using DV.Customization.Paint;
 using DV.Damage;
 using DV.InventorySystem;
+using DV.JObjectExtstensions;
 using DV.LocoRestoration;
 using DV.Simulation.Cars;
 using DV.ThingTypes;
 using DV.Utils;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace DvMod.Randomizer {
+    // ReSharper disable file InconsistentNaming
     public abstract class DV_APItem(int idx, ItemInfo item) {
-        public int Idx {get;} = idx;
-        protected ItemInfo Item = item;
-        private readonly bool LocalItem = item.Player.Slot == Main.player!.Session.Players.ActivePlayer.Slot;
-        public long Id {get => Item.ItemId;}
-        public string LocationDisplayName {
-            get => Item.Player.Name + " ("+Item.LocationDisplayName+")";
-        }
+        [UsedImplicitly] public int Idx {get;} = idx;
+        protected readonly ItemInfo Item = item;
+        private readonly bool _localItem = item.Player.Slot == Main.player!.Session.Players.ActivePlayer.Slot;
+        public long Id => Item.ItemId;
+
+        public string LocationDisplayName => Item.Player.Name + " ("+Item.LocationDisplayName+")";
         protected abstract string Name {get;}
-        public string DisplayName {
-            get => Name+RandoCommonData.GetFromFlags(Item.Flags);
-        }
-        
+        public string DisplayName => Name+RandoCommonData.GetFromFlags(Item.Flags);
+
         public async Task Acquire() {
             if (IsObtainable){
-                bool GotItem;
+                bool gotItem;
                 do {
                     while (!WorldStreamingInit.IsLoaded) await Task.Yield();
-                    if (!LocalItem)
+                    if (!_localItem)
                         Main.NotifyPlayer($"You got a {DisplayName} from {LocationDisplayName}");
-                    GotItem = AcquireUnconditional();
+                    gotItem = AcquireUnconditional();
                     await Task.Yield();
-                } while (!GotItem);
-            } else if (!LocalItem)
+                } while (!gotItem);
+            } else if (!_localItem)
                 Main.NotifyPlayer($"You received a {DisplayName} from {LocationDisplayName}, but you cannot have anymore");
             
         }
@@ -58,10 +58,7 @@ namespace DvMod.Randomizer {
         }
         
         
-        public override bool IsObtainable
-        {
-            get => !Main.player!.GotStationLicense(Station);
-        }
+        public override bool IsObtainable => !Main.player!.GotStationLicense(Station);
     }
     public class AP_GeneralLicense : DV_APItem
     {
@@ -81,10 +78,7 @@ namespace DvMod.Randomizer {
             return true;
         }  
 
-        public override bool IsObtainable
-        {
-            get => !SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(License);
-        }
+        public override bool IsObtainable => !SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(License);
 
         protected override string Name => License.ToString();
     }
@@ -106,10 +100,7 @@ namespace DvMod.Randomizer {
             return true;
         }  
 
-        public override bool IsObtainable
-        {
-            get => !SingletonBehaviour<LicenseManager>.Instance.IsJobLicenseAcquired(License);
-        }
+        public override bool IsObtainable => !SingletonBehaviour<LicenseManager>.Instance.IsJobLicenseAcquired(License);
 
         protected override string Name => License.ToString();
     }
@@ -120,17 +111,14 @@ namespace DvMod.Randomizer {
         protected override bool AcquireUnconditional()
         {
             InventoryItemSpec spec = Globals.G.Items.items.Find(sc => sc.itemPrefabName.Equals(DisplayName));
-            InventoryItemSpec inventoryItemSpec = UnityEngine.Object.Instantiate(spec, Main.player!.Position, Main.player!.Rotation);
+            InventoryItemSpec inventoryItemSpec = UnityEngine.Object.Instantiate(spec, Main.player!.Position, Main.player.Rotation);
             inventoryItemSpec.BelongsToPlayer = true;
             ItemBase component = inventoryItemSpec.GetComponent<ItemBase>();
             SingletonBehaviour<StorageController>.Instance.AddItemToWorldStorage(component);
             return true;
         }
 
-        public override bool IsObtainable
-        {
-            get => true;
-        }
+        public override bool IsObtainable => true;
     }
     public class AP_DoubleToken(int idx, ItemInfo item) : DV_APItem(idx, item)
     {
@@ -153,10 +141,7 @@ namespace DvMod.Randomizer {
             SingletonBehaviour<Inventory>.Instance.AddMoney(5000);
             return true;
         }
-        public override bool IsObtainable
-        {
-            get => true;
-        }
+        public override bool IsObtainable => true;
     }
 
     public class AP_Nothing(int idx, ItemInfo item) : DV_APItem(idx, item)
@@ -166,20 +151,16 @@ namespace DvMod.Randomizer {
         {
             throw new ArgumentException("Cannot acquire a nothing item!");
         }
-        public override bool IsObtainable
-        {
-            get => false;
-        }
+        public override bool IsObtainable => false;
     }
     public class AP_RelicLoco(int idx, ItemInfo item) : DV_APItem(idx, item)
     {
-        private PaintTheme? AbandonedTheme => LocoRestorationController.allLocoRestorationControllers?[0]?.abandonedTheme;
+        private static PaintTheme? AbandonedTheme => LocoRestorationController.allLocoRestorationControllers?[0]?.abandonedTheme;
         protected override string Name => RandoCommonData.GetRelicNameFromId(Id)+" demo loco advancement";
         protected override bool AcquireUnconditional()
         {
-            int RelicLevel = Main.player!.AddRelic(Id);
             LocoRestorationController controller = RandoCommonData.GetLocoControllerFromId(Id);
-            switch (RelicLevel) {
+            switch (Main.player!.AddRelic(Id)) {
                 case 1:
                 //First level relic: Spawn relic in museum
                 controller.loco = SpawnOneRelic(controller.garageSpawner.locoSpawnPoint.transform.position, controller.locoLivery, controller.garageSpawner.flipSpawnLoco);
@@ -198,7 +179,7 @@ namespace DvMod.Randomizer {
                 }
                 break;
                 default:
-                throw new ArgumentException("Relic level not right: "+RelicLevel);
+                throw new ArgumentException("Relic level not right");
             }
             return true;
         }
@@ -230,10 +211,8 @@ namespace DvMod.Randomizer {
             car.preventDelete = true;
             return car;
         }
-        public override bool IsObtainable
-        {
-            get => !Main.player!.CanFinishRelic(Id);
-        }
+        public override bool IsObtainable => !Main.player!.CanFinishRelic(Id);
+        
     }
 
     public class AP_CrewVehicle(int idx, ItemInfo item) : DV_APItem(idx, item)
@@ -242,10 +221,8 @@ namespace DvMod.Randomizer {
             Main.player!.UnlockGarage(Id);
             return true;
         }
-        public override bool IsObtainable
-        {
-            get => !Main.player!.HasUnlocked(RandoCommonData.GetGarageFromId(Id));
-        }
+        public override bool IsObtainable => !Main.player!.HasUnlocked(RandoCommonData.GetGarageFromId(Id));
+        
         protected override string Name => RandoCommonData.GetNameFromGarageID(Id)+" spawn rights";
     }
 }

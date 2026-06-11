@@ -17,8 +17,7 @@ namespace DvMod.Randomizer
         [Draw("Port")] public int Port = 38281;
         [Draw("Slot name (Must correspond to the name given to the Archipelago Server)")] public string User="";
         [Draw("Password (leave blank if no password)")] public string Password = "";
-        [Draw("Create a new Archipelago save on new career save?")]public bool CreateAPSave = false;
-        [Draw("When continuing a file, connection information are stored in the file. Set this to true to use the provided authentication credentials instead.")]public bool ForceUseSave = false;
+        [Draw("Create a new Archipelago save on new career save?")] public bool CreateAPSave = false;
         public override void Save(UnityModManager.ModEntry mod){
             Save(this, mod);
         }
@@ -32,7 +31,7 @@ namespace DvMod.Randomizer
         public static RandoPlayer? player;
         public static void Load(UnityModManager.ModEntry modEntry)
         {
-            settings = Settings.Load<Settings>(modEntry);
+            settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
             mod = modEntry;
             mod.OnToggle = OnToggle;
             mod.OnGUI += OnGUI;

@@ -585,10 +585,8 @@ namespace DvMod.Randomizer
             }
             return TrainCarType.NotSet;
         }
-        public static int GetOrderFromLocoType(TrainCarType carType) {
-            if (carType == TrainCarType.LocoMicroshunter) carType = TrainCarType.LocoShunter;
-            else if (carType == TrainCarType.LocoDM1U) carType = TrainCarType.LocoDM3;
-            return TrainTypeOrder[carType];
+        public static int GetOrderFromLocoType(TrainCarType? carType) {
+            return TrainTypeOrder.TryGetValue(carType ?? TrainCarType.NotSet, out var value) ? value : -1;
         }
         public static GeneralLicenseType_v2[] GetGeneralLicenseFromId(long id) {
             try {

@@ -58,27 +58,28 @@ namespace DvMod.Randomizer
             List<JobReportTasksTemplatePaperData.JobReportEntry> ToAdd = [];
             string job = jobState.IsShunting?"shunting":"transport";
             string otherJob = !jobState.IsShunting?"shunting":"transport";
+            ToAdd.Add(new($"You have {jobState.Tokens} double jobs tokens remaining", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS));
             if (jobState.GotStationLicense){
-                if (jobState.Item_job1 != null) {
-                    ToAdd.Add(new($"You got a {jobState.Item_job1.ItemDisplayName} for {jobState.Item_job1.Player.Name} by {job} in {jobState.Station}.", "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
+                if (jobState.ItemJob1 != null) {
+                    ToAdd.Add(new($"You got a {jobState.ItemJob1.ItemDisplayName} for {jobState.ItemJob1.Player.Name} by {job} in {jobState.Station}.", "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
                 }
-                if (jobState.Item_job2 != null) {
-                    ToAdd.Add(new($"Doubled! You got a {jobState.Item_job2.ItemDisplayName} for {jobState.Item_job2.Player.Name} by {job} in {jobState.Station}.", "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
+                if (jobState.ItemJob2 != null) {
+                    ToAdd.Add(new($"Doubled! You got a {jobState.ItemJob2.ItemDisplayName} for {jobState.ItemJob2.Player.Name} by {job} in {jobState.Station}.", "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
                 }
                 if (jobState.RemainingJobs > 0) 
                     ToAdd.Add(new($"There are {jobState.RemainingJobs} rewards left for {job} in {jobState.Station}", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS));
                 else 
                     ToAdd.Add(new($"You got all rewards for {job} in {jobState.Station}", "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
                 if (jobState.RemainingOtherJobs > 0) 
-                    ToAdd.Add(new($"There are {jobState.RemainingJobs} rewards left for {otherJob} in {jobState.Station}", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS));
+                    ToAdd.Add(new($"There are {jobState.RemainingOtherJobs} rewards left for {otherJob} in {jobState.Station}", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS));
                 else 
                     ToAdd.Add(new($"You got all rewards for {otherJob} in {jobState.Station}", "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
                 if (jobState.LastCar == null)
                     ToAdd.Add(new("Could not find your last loco", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS_WITH_X_MARK));
                 else {
                     string LocoName = RandoCommonData.GetLocoNameFromType(jobState.LastCar.Value);
-                    if (jobState.Item_loco != null) 
-                        ToAdd.Add(new($"You got a {jobState.Item_loco.ItemDisplayName} for {jobState.Item_loco.Player.Name} for finishing enough jobs with a {LocoName}", "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
+                    if (jobState.ItemLoco != null) 
+                        ToAdd.Add(new($"You got a {jobState.ItemLoco.ItemDisplayName} for {jobState.ItemLoco.Player.Name} for finishing enough jobs with a {LocoName}", "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
                     else if (jobState.RemainingLoco == 0)
                         ToAdd.Add(new("You already got the reward for driving the "+LocoName, "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
                     else
