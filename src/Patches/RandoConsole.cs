@@ -8,7 +8,7 @@ namespace DvMod.Randomizer
         [HarmonyPrefix, HarmonyPatch("EnterCommand")]
         // ReSharper disable once InconsistentNaming
         public static bool TerminalPatch(ref string ___command_text) {
-            if (!Main.Player.Exists) return true;
+            if (!Main.PlayerExists) return true;
             if (___command_text.Equals("/slicenses")) {
                 Terminal.Log("Unlocked station licenses");
                 for (int stationOrder = 0; stationOrder < 20; stationOrder++) {

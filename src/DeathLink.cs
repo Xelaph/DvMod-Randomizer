@@ -11,7 +11,7 @@ namespace DvMod.Randomizer {
         
         [HarmonyPrefix, HarmonyPatch(nameof(PlayerManager.SetCar))]
         public static void Prefix(TrainCar newCar) {
-            if (!Main.Player.Exists) return;
+            if (!Main.PlayerExists) return;
             if (newCar == PlayerManager.Car) return;
             if (!Main.Player.Config.DeathLink) return;
             if (newCar != null)

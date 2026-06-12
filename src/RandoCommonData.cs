@@ -62,7 +62,7 @@ namespace DvMod.Randomizer
             }
             return elem;
         }
-
+        
         public static float DistanceTo(this Vector3 from, Vector3 to) => (to - from).magnitude;
         public static T[] CopyLast<T>(this T[] list) {
             if (!list.Any()) return [];

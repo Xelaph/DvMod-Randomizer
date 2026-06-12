@@ -48,9 +48,7 @@ namespace DvMod.Randomizer
                 Main.QuitGame();
                 return;
             }
-            Main.Log("Player created and session connected");
             Main.Player.InitGame();
-            Main.Log("Game initialized. Waiting for original game to finish...");
         }
 
     }    
@@ -58,7 +56,7 @@ namespace DvMod.Randomizer
     public class SavingPatch {
         [HarmonyPrefix, HarmonyPatch("UpdateInternalData")]
         public static void SavePrefix(SaveGameData ___data) {
-            if (!Main.Player.Exists) return;
+            if (!Main.PlayerExists) return;
             ___data.SetObject("RandoData", Main.Player.Data);
         }
     }

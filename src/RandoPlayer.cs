@@ -237,7 +237,7 @@ namespace DvMod.Randomizer
             Exists = false;
         }
         
-        ~RandoPlayer() {
+        public void Dispose() {
             Data.Index -= _waitingQueue.Count;
             SetupListeners(false);
             deathLinkService = null;

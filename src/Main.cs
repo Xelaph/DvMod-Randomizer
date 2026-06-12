@@ -1,3 +1,4 @@
+using System;
 using DV.UI;
 using DV.Utils;
 using HarmonyLib;
@@ -52,8 +53,11 @@ namespace DvMod.Randomizer
         public static Settings Settings = null!;
         public static UnityModManager.ModEntry Mod = null!;
         // ReSharper disable once InconsistentNaming
-        private static RandoPlayer? _player = null;
-        public static RandoPlayer Player => _player ?? new RandoPlayer();
+        private static RandoPlayer? _player;
+
+        public static RandoPlayer Player => PlayerExists ? _player! : throw new Exception("RandoPlayer does not exist");
+
+        public static bool PlayerExists { get; private set; } 
         
         [UsedImplicitly]
         public static void Load(UnityModManager.ModEntry modEntry)
@@ -64,8 +68,14 @@ namespace DvMod.Randomizer
             Mod.OnGUI += OnGUI;
             Mod.OnSaveGUI += OnSaveGUI;
         }
-        public static void CreatePlayer(RandoSaveData? saveData) => _player = new RandoPlayer(saveData);
-        public static void QuitGame() => _player = null;
+        public static void CreatePlayer(RandoSaveData? saveData) {
+            PlayerExists = true;
+            _player = new RandoPlayer(saveData);
+        }
+        public static void QuitGame() {
+            PlayerExists = false;
+            _player?.Dispose();
+        }
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
             Settings.Draw(modEntry);
         }
