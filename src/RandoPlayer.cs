@@ -178,7 +178,7 @@ namespace DvMod.Randomizer
         }
 
         private void AddKeyBind() {
-            if (Input.GetKeyDown("[0]")) {
+            /*if (Input.GetKeyDown("[0]")) {
                 Input.ResetInputAxes();
                 Main.Log("Trying to fix savefile...");
                 LocoRestorationController controller = LocoRestorationController.allLocoRestorationControllers.First();
@@ -199,7 +199,7 @@ namespace DvMod.Randomizer
                         thisController.secondCar = tender;
                     }
                 }
-            }
+            }*/
         }
         public void InitGame() {
             //Check if we need to resync (items received while we were offline)
