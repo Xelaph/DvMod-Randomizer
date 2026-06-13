@@ -251,6 +251,7 @@ namespace DvMod.Randomizer
     #endregion
     #region Network methods helpers
         public ItemInfo UnlockCheck(long checkId) {
+            Session.Locations.CompleteLocationChecks(checkId);
             var askTask = Session.Locations.ScoutLocationsAsync(checkId);
             askTask.Wait();
             return askTask.Result[checkId];
