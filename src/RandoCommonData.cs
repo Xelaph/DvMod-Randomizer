@@ -25,7 +25,7 @@ namespace DvMod.Randomizer
             public static long ITEMS = 0x100;
             public static long SLICENSES = 0x200;
             public static long GLICENSES = 0x300;
-            public static long JLICENSES = 0x310;
+            public static long Jlicenses = 0x310;
             public static long RELIC = 0x350;
             public static long GARAGES = 0x360;
             public static long LOC_RELIC_PARTS = 0x620;
@@ -40,7 +40,7 @@ namespace DvMod.Randomizer
             if (name.Equals("HMB")) name = "HB";
             else if (name.Equals("MFMB")) name = "MF";
             Texture2D icon = new(4,4);
-            ImageConversion.LoadImage(icon, File.ReadAllBytes(Path.Combine(Main.mod!.Path,"icons", $"icon_{name}.png")));
+            ImageConversion.LoadImage(icon, File.ReadAllBytes(Path.Combine(Main.Mod!.Path,"icons", $"icon_{name}.png")));
             return Sprite.Create(icon, new(0,0,256,256), new(0.5f, 0.5f));
         }
         private static readonly Dictionary<string, int> StationOrder = new() {{"CME", 0}, {"CMS",1}, {"CP",2}, {"CS",3}, {"CW",4}, {"FF",5}, {"FM",6}, {"FRC",7}, {"FRS",8}, {"GF",9}, {"HB",10}, {"HMB", 10}, {"IME",11}, {"IMW",12}, {"MB",13}, {"MF",14}, {"MFMB", 14}, {"OR",15}, {"OWC",16}, {"OWN",17}, {"SM",18}, {"SW",19}};
@@ -436,7 +436,7 @@ namespace DvMod.Randomizer
             public string Name {get;} = n;
             public Vector3 Position {get;} = p;
         }
-        private static readonly List<ShopLocationEntry> allShops = [
+        private static readonly List<ShopLocationEntry> AllShops = [
             new("shop_MF", new(2232.3f,159.3f,10833.6f)),
             new("shop_CW", new(1915.9f,122.3f,5784.7f)),
             new("shop_FF", new(9533.7f,119.3f,13419.2f)),
@@ -446,7 +446,7 @@ namespace DvMod.Randomizer
         public static string GetNearestShop(Vector3 position) {
             string shop = "";
             float distance = float.PositiveInfinity;
-            foreach (ShopLocationEntry entry in allShops) {
+            foreach (ShopLocationEntry entry in AllShops) {
                 if ((position-entry.Position).magnitude < distance) {
                     shop = entry.Name;
                 }
@@ -566,9 +566,9 @@ namespace DvMod.Randomizer
             [GeneralLicenseType.ManualService], 
             [GeneralLicenseType.ConcurrentJobs1, GeneralLicenseType.ConcurrentJobs2]
         ];
-        public static string GetStationNameFromOrder(long Order) {
+        public static string GetStationNameFromOrder(long order) {
             foreach (KeyValuePair<string, int> item in StationOrder) {
-                if (item.Value == Order) return item.Key;
+                if (item.Value == order) return item.Key;
             }
             return "";
         }
@@ -604,21 +604,21 @@ namespace DvMod.Randomizer
         
         public static JobLicenseType_v2[] GetJobLicenseFromId(long id) {
             try {
-                return [.. IdToJobLicense[id-AP_ID.JLICENSES].Select(l => l.ToV2())];
+                return [.. IdToJobLicense[id-AP_ID.Jlicenses].Select(l => l.ToV2())];
             } catch (IndexOutOfRangeException) {
                 return [];
             }
         }
-        public static GeneralLicenseType_v2 GetGeneralLicenseLocFromId(long Id) {
+        public static GeneralLicenseType_v2 GetGeneralLicenseLocFromId(long id) {
             foreach (KeyValuePair<GeneralLicenseType, int> x in GeneralLocationsToOrder) {
-                if (x.Value == (Id - AP_ID.LOC_GENERAL_LICENSES))
+                if (x.Value == (id - AP_ID.LOC_GENERAL_LICENSES))
                     return x.Key.ToV2();
             }
             return GeneralLicenseType.NotSet.ToV2();
         }
-        public static JobLicenseType_v2 GetJobLicenseLocFromId(long Id) {
+        public static JobLicenseType_v2 GetJobLicenseLocFromId(long id) {
             foreach (KeyValuePair<JobLicenses, int> x in JobLocationsToOrder) {
-                if (x.Value == (Id - AP_ID.LOC_GENERAL_LICENSES))
+                if (x.Value == (id - AP_ID.LOC_GENERAL_LICENSES))
                     return x.Key.ToV2();
             }
             return JobLicenses.Basic.ToV2();
@@ -682,7 +682,7 @@ namespace DvMod.Randomizer
             return new() {
                 unitsToBuy=idx+1,
                 pricePerUnit=0,
-                resourceName="Freight n°"+(idx+1)+": "+Main.player!.GetItemNameFromLocationId(0x4000+GetOrderFromStationName(name)*0x100+idx, true),
+                resourceName="Freight n°"+(idx+1)+": "+Main.Player!.GetItemNameFromLocationId(0x4000+GetOrderFromStationName(name)*0x100+idx, true),
                 resourceIcon= TrainCarType.LocoDiesel.ToV2().icon,
                 car=null
             };
@@ -691,31 +691,31 @@ namespace DvMod.Randomizer
             return new() {
                 unitsToBuy=idx+1,
                 pricePerUnit=0,
-                resourceName="Shunting n°"+(idx+1)+": "+Main.player!.GetItemNameFromLocationId(0x2000+GetOrderFromStationName(name)*0x100+idx, true),
+                resourceName="Shunting n°"+(idx+1)+": "+Main.Player!.GetItemNameFromLocationId(0x2000+GetOrderFromStationName(name)*0x100+idx, true),
                 resourceIcon= TrainCarType.LocoShunter.ToV2().icon,
                 car=null
             };
         }
         public static List<CashRegisterModule.CashRegisterModuleData> GetStationLicenseData(string name) {
-            List<CashRegisterModule.CashRegisterModuleData> StationLicense = [new() {
+            List<CashRegisterModule.CashRegisterModuleData> stationLicense = [new() {
                 unitsToBuy=1,
                 pricePerUnit=0,
                 resourceName=name+" station license",
                 resourceIcon=GetStationSprite(name),
                 car=null
             }];
-            if (Main.player!.Config.HintsOnStationLicense) {
-                int Order = GetOrderFromStationName(name);
-                for (int i = 0; i < Main.player.Config.FreightThreshold[Order]; i++)
-                    StationLicense.Add(GetFreightData(name, i));
-                for (int i = 0; i < Main.player.Config.ShuntThreshold[Order]; i++)
-                    StationLicense.Add(GetShuntingData(name, i));
+            if (Main.Player!.Config.HintsOnStationLicense) {
+                int order = GetOrderFromStationName(name);
+                for (int i = 0; i < Main.Player.Config.FreightThreshold[order]; i++)
+                    stationLicense.Add(GetFreightData(name, i));
+                for (int i = 0; i < Main.Player.Config.ShuntThreshold[order]; i++)
+                    stationLicense.Add(GetShuntingData(name, i));
             }
-            return StationLicense;
+            return stationLicense;
             
         }
         public static void AcquireStationLicense(string name) {
-            GameObject license = BookletCreator_CashRegisterReceipt.Create(GetStationLicenseData(name), Main.player!.Position, Main.player!.Rotation, WorldMover.OriginShiftParent);
+            GameObject license = BookletCreator_CashRegisterReceipt.Create(GetStationLicenseData(name), Main.Player!.Position, Main.Player!.Rotation, WorldMover.OriginShiftParent);
             license.name=name+"SL";
             InventoryItemSpec item = license.GetComponent<InventoryItemSpec>();
             item.BelongsToPlayer = true;
@@ -723,16 +723,16 @@ namespace DvMod.Randomizer
             ItemBase component = item.GetComponent<ItemBase>();
             SingletonBehaviour<StorageController>.Instance.AddItemToWorldStorage(component);
         }
-        public static string GetStationNameFromFinishingJobId(long Id) {
-            return GetStationNameFromOrder((Id & 0x1F00)>>8);
+        public static string GetStationNameFromFinishingJobId(long id) {
+            return GetStationNameFromOrder((id & 0x1F00)>>8);
         }
-        public static long ComputeCheckForJob(bool IsShunting, string Station, int nb) {
+        public static long ComputeCheckForJob(bool isShunting, string station, int nb) {
             long check = 0x2000;
-            if (!IsShunting)
+            if (!isShunting)
                 check += 0x2000;
-            return check + 0x100 * GetOrderFromStationName(Station) + nb;
+            return check + 0x100 * GetOrderFromStationName(station) + nb;
         }
-        public static DV_APItem GetAPItem(int idx, ItemInfo item) {
+        public static ArchipelagoItem GetAPItem(int idx, ItemInfo item) {
             return item.ItemId switch {
                 -1 => new AP_Nothing(idx, item),
                 1 => new AP_Money(idx, item),
@@ -746,8 +746,8 @@ namespace DvMod.Randomizer
                 _ => throw new ArgumentException($"Invalid item id: {item.ItemId}")
             };
         }
-        public static GarageType_v2 GetGarageFromId(long Id) {
-            return Id switch {
+        public static GarageType_v2 GetGarageFromId(long id) {
+            return id switch {
                 0x360 or 0x692 => Garage.Bob.ToV2(),
                 0x361 or 0x691=> Garage.Caboose.ToV2(),
                 0x362 or 0x690=> Garage.DE6_Slug.ToV2(),

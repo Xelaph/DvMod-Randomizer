@@ -33,23 +33,23 @@ namespace DvMod.Randomizer
     
     public static class Main {
         public const int VERSION = 2;
-        public static Settings? settings;
-        public static UnityModManager.ModEntry? mod;
-        public static RandoPlayer? player;
+        public static Settings? Settings;
+        public static UnityModManager.ModEntry? Mod;
+        public static RandoPlayer? Player;
         public static void Load(UnityModManager.ModEntry modEntry)
         {
-            settings = Settings.Load<Settings>(modEntry);
-            mod = modEntry;
-            mod.OnToggle = OnToggle;
-            mod.OnGUI += OnGUI;
-            mod.OnSaveGUI += OnSaveGUI;
+            Settings = Settings.Load<Settings>(modEntry);
+            Mod = modEntry;
+            Mod.OnToggle = OnToggle;
+            Mod.OnGUI += OnGUI;
+            Mod.OnSaveGUI += OnSaveGUI;
 
         }
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
-            settings!.Draw(modEntry);
+            Settings!.Draw(modEntry);
         }
         public static void OnSaveGUI(UnityModManager.ModEntry modEntry) {
-            settings!.Save(modEntry);
+            Settings!.Save(modEntry);
         }
 
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value)
@@ -68,10 +68,10 @@ namespace DvMod.Randomizer
         }
 
         public static void Log(string message) {
-            mod!.Logger.Log(message);
+            Mod!.Logger.Log(message);
         }
         public static void Error(string message) {
-            mod!.Logger.Error(message);
+            Mod!.Logger.Error(message);
         }
         public static void NotifyPlayer(string message) {
             SingletonBehaviour<ACanvasController<CanvasController.ElementType>>.Instance.NotificationManager.ShowNotification(

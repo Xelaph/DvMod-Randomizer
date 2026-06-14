@@ -14,11 +14,11 @@ namespace DvMod.Randomizer
     public static class CrewCommsPatch {
         [HarmonyPostfix, HarmonyPatch("UpdateAvailableVehicles")]
         public static void CustomVehicles(CommsRadioCrewVehicle __instance) {
-            if (Main.player == null) return;
+            if (Main.Player == null) return;
             __instance.availableVehiclesForSpawn.Clear(); 
             __instance.availableVehiclesForSpawn.AddRange( 
                     SingletonBehaviour<CarSpawner>.Instance.crewVehicleGarages
-                    .Where(Main.player!.HasUnlocked)
+                    .Where(Main.Player!.HasUnlocked)
                     .SelectMany(g => g.garageCarLiveries)
                     .ToList()
                     );
@@ -34,12 +34,12 @@ namespace DvMod.Randomizer
     [HarmonyPatch(typeof(GaragePadlockUnlocker), "OnGarageUnlocked")]
     public static class GaragePatcher {
         public static void Prefix(GarageType_v2 unlockedGarageType) {
-            if (Main.player == null) return;
+            if (Main.Player == null) return;
             switch (unlockedGarageType.v1) {
-                case Garage.Caboose: Main.player.UnlockCheck(0x691); break;
-                case Garage.DM1U: Main.player.UnlockCheck(0x693); break;
-                case Garage.Bob: Main.player.UnlockCheck(0x692); break;
-                case Garage.DE6_Slug: Main.player.UnlockCheck(0x690); break;
+                case Garage.Caboose: Main.Player.UnlockCheck(0x691); break;
+                case Garage.DM1U: Main.Player.UnlockCheck(0x693); break;
+                case Garage.Bob: Main.Player.UnlockCheck(0x692); break;
+                case Garage.DE6_Slug: Main.Player.UnlockCheck(0x690); break;
             }
         }
     }

@@ -35,7 +35,7 @@ namespace DvMod.Randomizer {
         }
         [HarmonyPostfix]
         public static void RefreshPatch(StationLocoSpawner __instance) {
-            if (Main.player == null) return;
+            if (Main.Player == null) return;
             if(__instance.playerEnteredLocoSpawnRange && RefreshLocos) {
                 RefreshLocos = false;
                 List<TrainCarLivery> newLoco = GetRandomLicensedLoco();
@@ -49,9 +49,9 @@ namespace DvMod.Randomizer {
     public static class SleepPatcher {
         
         public static void Prefix() {
-            if (Main.player == null) return;
-            StationController? NearestController = StationController.allStations.FindMin(cont => (PlayerManager.PlayerTransform.position - cont.transform.position).magnitude);
-            NearestController?.RegenerateJobs();
+            if (Main.Player == null) return;
+            StationController? nearestController = StationController.allStations.FindMin(cont => (PlayerManager.PlayerTransform.position - cont.transform.position).magnitude);
+            nearestController?.RegenerateJobs();
             StationLocoSpawnPatch.DoRefresh();
         }
     }

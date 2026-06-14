@@ -14,8 +14,8 @@ namespace DvMod.Randomizer
     public static class CareerManagerLicensesPatcher {
         [HarmonyPostfix, HarmonyPatch(nameof(CareerManagerLicensesScreen.LicenseEntry.UpdateJobLicenseData))]
         public static void JobLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
-            if (Main.player == null) return;
-            __instance.IsAcquired = Main.player.HasChecked(__instance.JobLicense);
+            if (Main.Player == null) return;
+            __instance.IsAcquired = Main.Player.HasChecked(__instance.JobLicense);
             __instance.IsObtainable =
                 (__instance.JobLicense.requiredGeneralLicense == null ||
                  SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(__instance.JobLicense
@@ -33,8 +33,8 @@ namespace DvMod.Randomizer
         }
         [HarmonyPostfix, HarmonyPatch(nameof(CareerManagerLicensesScreen.LicenseEntry.UpdateGeneralLicenseData))]
         public static void GeneralLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
-            if (Main.player == null) return;
-            __instance.IsAcquired = Main.player.HasChecked(__instance.GeneralLicense);
+            if (Main.Player == null) return;
+            __instance.IsAcquired = Main.Player.HasChecked(__instance.GeneralLicense);
             __instance.IsObtainable =
                     (__instance.GeneralLicense.requiredGeneralLicense == null ||
                         SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(__instance.GeneralLicense
@@ -57,28 +57,28 @@ namespace DvMod.Randomizer
         public static void NamePatcher(TextMeshPro ___licenseNameText) => ___licenseNameText.text += "?";
         [HarmonyPrefix, HarmonyPatch(nameof(CareerManagerLicensePayingScreen.HandleInputAction))]
         public static bool BuyingPatch(InputAction input, CareerManagerLicensePayingScreen __instance, JobLicenseType_v2 ___jobLicenseToBuy, GeneralLicenseType_v2 ___generalLicenseToBuy) {
-            if (Main.player == null) return true;
+            if (Main.Player == null) return true;
             if (input != InputAction.Confirm) return true;
             if (!__instance.cashReg.Buy()) return true;
             float price;
             ItemInfo item;
             if (___generalLicenseToBuy != null) {
-                (long Id, long _) = RandoCommonData.GetIDFromGeneralLicense(___generalLicenseToBuy);
-                item = Main.player.UnlockCheck(Id);
-                Main.player.CheckGLicense(Id);
+                (long id, long _) = RandoCommonData.GetIDFromGeneralLicense(___generalLicenseToBuy);
+                item = Main.Player.UnlockCheck(id);
+                Main.Player.CheckGLicense(id);
                 price = ___generalLicenseToBuy.price;
             } else {
-                (long Id, long _) = RandoCommonData.GetIDFromJobLicense(___jobLicenseToBuy);
-                item = Main.player.UnlockCheck(Id);
-                Main.player.CheckJLicense(Id);
+                (long id, long _) = RandoCommonData.GetIDFromJobLicense(___jobLicenseToBuy);
+                item = Main.Player.UnlockCheck(id);
+                Main.Player.CheckJLicense(id);
                 price = ___jobLicenseToBuy.price;
             }
-            CashRegisterModule ToPrint = new GenericThingCashRegisterModule();
+            CashRegisterModule toPrint = new GenericThingCashRegisterModule();
             string itemName = item.ItemDisplayName+" ("+item.Player.Name+")";
-            ToPrint.Data.unitsToBuy = 1;
-            ToPrint.Data.pricePerUnit = price;
-            ToPrint.Data.resourceName = itemName;
-            BookletCreator.CreateCashRegisterReceipt([ToPrint], __instance.licensePrinter.spawnAnchor.position, __instance.licensePrinter.spawnAnchor.rotation, WorldMover.OriginShiftParent);
+            toPrint.Data.unitsToBuy = 1;
+            toPrint.Data.pricePerUnit = price;
+            toPrint.Data.resourceName = itemName;
+            BookletCreator.CreateCashRegisterReceipt([toPrint], __instance.licensePrinter.spawnAnchor.position, __instance.licensePrinter.spawnAnchor.rotation, WorldMover.OriginShiftParent);
             __instance.licensePrinter.Print();
             __instance.screenSwitcher.SetActiveDisplay(__instance.licensesScreen);
             return false; 
