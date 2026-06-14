@@ -76,20 +76,12 @@ namespace WebSocketSharp.Net
 
     #region Internal Properties
 
-    internal IList<Cookie> List {
-      get {
-        return _list;
-      }
-    }
+    internal IList<Cookie> List => _list;
 
     internal bool ReadOnly {
-      get {
-        return _readOnly;
-      }
+      get => _readOnly;
 
-      set {
-        _readOnly = value;
-      }
+      set => _readOnly = value;
     }
 
     internal ICollection<Cookie> SortedList {
@@ -114,11 +106,7 @@ namespace WebSocketSharp.Net
     /// An <see cref="int"/> that represents the number of cookies in
     /// the collection.
     /// </value>
-    public int Count {
-      get {
-        return _list.Count;
-      }
-    }
+    public int Count => _list.Count;
 
     /// <summary>
     /// Gets a value indicating whether the collection is read-only.
@@ -131,11 +119,7 @@ namespace WebSocketSharp.Net
     ///   The default value is <c>false</c>.
     ///   </para>
     /// </value>
-    public bool IsReadOnly {
-      get {
-        return _readOnly;
-      }
-    }
+    public bool IsReadOnly => _readOnly;
 
     /// <summary>
     /// Gets a value indicating whether the access to the collection is
@@ -150,11 +134,7 @@ namespace WebSocketSharp.Net
     ///   The default value is <c>false</c>.
     ///   </para>
     /// </value>
-    public bool IsSynchronized {
-      get {
-        return false;
-      }
-    }
+    public bool IsSynchronized => false;
 
     /// <summary>
     /// Gets the cookie at the specified index from the collection.
@@ -217,11 +197,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// An <see cref="object"/> used to synchronize access to the collection.
     /// </value>
-    public object SyncRoot {
-      get {
-        return _syncRoot;
-      }
-    }
+    public object SyncRoot => _syncRoot;
 
     #endregion
 

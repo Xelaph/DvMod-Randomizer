@@ -37,7 +37,6 @@
  */
 #endregion
 
-using System;
 using System.Security.Principal;
 
 namespace WebSocketSharp.Net
@@ -71,11 +70,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="string"/> that represents the password.
     /// </value>
-    public virtual string Password {
-      get {
-        return _password;
-      }
-    }
+    public virtual string Password => _password;
 
     #endregion
   }

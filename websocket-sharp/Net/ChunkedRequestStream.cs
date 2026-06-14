@@ -85,11 +85,7 @@ namespace WebSocketSharp.Net
 
     #region Internal Properties
 
-    internal bool HasRemainingBuffer {
-      get {
-        return _decoder.Count + Count > 0;
-      }
-    }
+    internal bool HasRemainingBuffer => _decoder.Count + Count > 0;
 
     internal byte[] RemainingBuffer {
       get {

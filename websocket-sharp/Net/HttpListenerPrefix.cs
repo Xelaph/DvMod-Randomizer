@@ -71,47 +71,19 @@ namespace WebSocketSharp.Net
 
     #region Public Properties
 
-    public string Host {
-      get {
-        return _host;
-      }
-    }
+    public string Host => _host;
 
-    public bool IsSecure {
-      get {
-        return _isSecure;
-      }
-    }
+    public bool IsSecure => _isSecure;
 
-    public HttpListener Listener {
-      get {
-        return _listener;
-      }
-    }
+    public HttpListener Listener => _listener;
 
-    public string Original {
-      get {
-        return _original;
-      }
-    }
+    public string Original => _original;
 
-    public string Path {
-      get {
-        return _path;
-      }
-    }
+    public string Path => _path;
 
-    public string Port {
-      get {
-        return _port;
-      }
-    }
+    public string Port => _port;
 
-    public string Scheme {
-      get {
-        return _scheme;
-      }
-    }
+    public string Scheme => _scheme;
 
     #endregion
 

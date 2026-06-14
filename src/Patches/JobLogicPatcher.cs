@@ -1,14 +1,10 @@
 using System.Collections.Generic;
-using System.Drawing.Text;
 using DV;
-using DV.Logic.Job;
-using DV.ServicePenalty.UI;
 using DV.ThingTypes;
 using DV.ThingTypes.TransitionHelpers;
 using DV.UI;
 using DV.Utils;
 using HarmonyLib;
-using UnityEngine;
 
 namespace DvMod.Randomizer {
     [HarmonyPatch(typeof(StationLocoSpawner), nameof(StationLocoSpawner.Update))]

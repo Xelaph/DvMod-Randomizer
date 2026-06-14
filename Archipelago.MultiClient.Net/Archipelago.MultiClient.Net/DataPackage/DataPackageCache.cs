@@ -1,6 +1,5 @@
 ﻿using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.Packets;
-using DV.UserManagement.Data;
 using System.Collections.Generic;
 using System.Linq;
 

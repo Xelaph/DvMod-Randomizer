@@ -96,30 +96,18 @@ namespace WebSocketSharp.Net
     }
 
     internal bool EndCalled {
-      get {
-        return _endCalled;
-      }
+      get => _endCalled;
 
-      set {
-        _endCalled = value;
-      }
+      set => _endCalled = value;
     }
 
-    internal object SyncRoot {
-      get {
-        return _sync;
-      }
-    }
+    internal object SyncRoot => _sync;
 
     #endregion
 
     #region Public Properties
 
-    public object AsyncState {
-      get {
-        return _state;
-      }
-    }
+    public object AsyncState => _state;
 
     public WaitHandle AsyncWaitHandle {
       get {
@@ -132,11 +120,7 @@ namespace WebSocketSharp.Net
       }
     }
 
-    public bool CompletedSynchronously {
-      get {
-        return _completedSynchronously;
-      }
-    }
+    public bool CompletedSynchronously => _completedSynchronously;
 
     public bool IsCompleted {
       get {

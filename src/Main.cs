@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using DV.JObjectExtstensions;
-using DV.LocoRestoration;
-using DV.ThingTypes;
 using DV.UI;
 using DV.Utils;
 using HarmonyLib;
@@ -45,12 +39,12 @@ namespace DvMod.Randomizer
             Mod.OnSaveGUI += OnSaveGUI;
 
         }
-        public static void OnGUI(UnityModManager.ModEntry modEntry) {
+        public static void OnGUI(UnityModManager.ModEntry modEntry) =>
             Settings!.Draw(modEntry);
-        }
-        public static void OnSaveGUI(UnityModManager.ModEntry modEntry) {
+        
+        public static void OnSaveGUI(UnityModManager.ModEntry modEntry) =>
             Settings!.Save(modEntry);
-        }
+        
 
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value)
         {
@@ -67,19 +61,19 @@ namespace DvMod.Randomizer
             return true;
         }
 
-        public static void Log(string message) {
+        public static void Log(string message) =>
             Mod!.Logger.Log(message);
-        }
-        public static void Error(string message) {
+        
+        public static void Error(string message) =>
             Mod!.Logger.Error(message);
-        }
-        public static void NotifyPlayer(string message) {
+        
+        public static void NotifyPlayer(string message) =>
             SingletonBehaviour<ACanvasController<CanvasController.ElementType>>.Instance.NotificationManager.ShowNotification(
                 message,
                 duration: 5f,
                 localize: false
             );
-        }
+        
     }
 
 

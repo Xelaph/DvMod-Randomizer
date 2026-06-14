@@ -74,66 +74,38 @@ namespace WebSocketSharp.Net
     #region Internal Properties
 
     internal byte[] Buffer {
-      get {
-        return _buffer;
-      }
+      get => _buffer;
 
-      set {
-        _buffer = value;
-      }
+      set => _buffer = value;
     }
 
     internal int Count {
-      get {
-        return _count;
-      }
+      get => _count;
 
-      set {
-        _count = value;
-      }
+      set => _count = value;
     }
 
-    internal Exception Exception {
-      get {
-        return _exception;
-      }
-    }
+    internal Exception Exception => _exception;
 
-    internal bool HasException {
-      get {
-        return _exception != null;
-      }
-    }
+    internal bool HasException => _exception != null;
 
     internal int Offset {
-      get {
-        return _offset;
-      }
+      get => _offset;
 
-      set {
-        _offset = value;
-      }
+      set => _offset = value;
     }
 
     internal int SyncRead {
-      get {
-        return _syncRead;
-      }
+      get => _syncRead;
 
-      set {
-        _syncRead = value;
-      }
+      set => _syncRead = value;
     }
 
     #endregion
 
     #region Public Properties
 
-    public object AsyncState {
-      get {
-        return _state;
-      }
-    }
+    public object AsyncState => _state;
 
     public WaitHandle AsyncWaitHandle {
       get {
@@ -146,11 +118,7 @@ namespace WebSocketSharp.Net
       }
     }
 
-    public bool CompletedSynchronously {
-      get {
-        return _syncRead == _count;
-      }
-    }
+    public bool CompletedSynchronously => _syncRead == _count;
 
     public bool IsCompleted {
       get {

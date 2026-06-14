@@ -36,11 +36,7 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Net.Sockets;
-using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
@@ -312,11 +308,7 @@ namespace WebSocketSharp.Server
     /// A <see cref="System.Net.IPAddress"/> that represents the local IP
     /// address on which to listen for incoming requests.
     /// </value>
-    public System.Net.IPAddress Address {
-      get {
-        return _address;
-      }
-    }
+    public System.Net.IPAddress Address => _address;
 
     /// <summary>
     /// Gets or sets the scheme used to authenticate the clients.
@@ -339,9 +331,7 @@ namespace WebSocketSharp.Server
     ///   </para>
     /// </value>
     public AuthenticationSchemes AuthenticationSchemes {
-      get {
-        return _listener.AuthenticationSchemes;
-      }
+      get => _listener.AuthenticationSchemes;
 
       set {
         lock (_sync) {
@@ -393,9 +383,7 @@ namespace WebSocketSharp.Server
     /// The value specified for a set operation is <see langword="null"/>.
     /// </exception>
     public string DocumentRootPath {
-      get {
-        return _docRootPath;
-      }
+      get => _docRootPath;
 
       set {
         if (value == null)
@@ -447,11 +435,7 @@ namespace WebSocketSharp.Server
     /// <value>
     /// <c>true</c> if the server has started; otherwise, <c>false</c>.
     /// </value>
-    public bool IsListening {
-      get {
-        return _state == ServerState.Start;
-      }
-    }
+    public bool IsListening => _state == ServerState.Start;
 
     /// <summary>
     /// Gets a value indicating whether the server provides secure connections.
@@ -460,11 +444,7 @@ namespace WebSocketSharp.Server
     /// <c>true</c> if the server provides secure connections; otherwise,
     /// <c>false</c>.
     /// </value>
-    public bool IsSecure {
-      get {
-        return _isSecure;
-      }
-    }
+    public bool IsSecure => _isSecure;
 
     /// <summary>
     /// Gets or sets a value indicating whether the server cleans up
@@ -484,13 +464,9 @@ namespace WebSocketSharp.Server
     ///   </para>
     /// </value>
     public bool KeepClean {
-      get {
-        return _services.KeepClean;
-      }
+      get => _services.KeepClean;
 
-      set {
-        _services.KeepClean = value;
-      }
+      set => _services.KeepClean = value;
     }
 
     /// <summary>
@@ -502,11 +478,7 @@ namespace WebSocketSharp.Server
     /// <value>
     /// A <see cref="Logger"/> that provides the logging function.
     /// </value>
-    public Logger Log {
-      get {
-        return _log;
-      }
-    }
+    public Logger Log => _log;
 
     /// <summary>
     /// Gets the port of the server.
@@ -515,11 +487,7 @@ namespace WebSocketSharp.Server
     /// An <see cref="int"/> that represents the number of the port on which
     /// to listen for incoming requests.
     /// </value>
-    public int Port {
-      get {
-        return _port;
-      }
-    }
+    public int Port => _port;
 
     /// <summary>
     /// Gets or sets the name of the realm associated with the server.
@@ -541,9 +509,7 @@ namespace WebSocketSharp.Server
     ///   </para>
     /// </value>
     public string Realm {
-      get {
-        return _listener.Realm;
-      }
+      get => _listener.Realm;
 
       set {
         lock (_sync) {
@@ -579,9 +545,7 @@ namespace WebSocketSharp.Server
     ///   </para>
     /// </value>
     public bool ReuseAddress {
-      get {
-        return _listener.ReuseAddress;
-      }
+      get => _listener.ReuseAddress;
 
       set {
         lock (_sync) {
@@ -648,9 +612,7 @@ namespace WebSocketSharp.Server
     ///   </para>
     /// </value>
     public Func<IIdentity, NetworkCredential> UserCredentialsFinder {
-      get {
-        return _listener.UserCredentialsFinder;
-      }
+      get => _listener.UserCredentialsFinder;
 
       set {
         lock (_sync) {
@@ -683,13 +645,9 @@ namespace WebSocketSharp.Server
     /// The value specified for a set operation is zero or less.
     /// </exception>
     public TimeSpan WaitTime {
-      get {
-        return _services.WaitTime;
-      }
+      get => _services.WaitTime;
 
-      set {
-        _services.WaitTime = value;
-      }
+      set => _services.WaitTime = value;
     }
 
     /// <summary>
@@ -700,11 +658,7 @@ namespace WebSocketSharp.Server
     /// A <see cref="WebSocketServiceManager"/> that manages the WebSocket
     /// services provided by the server.
     /// </value>
-    public WebSocketServiceManager WebSocketServices {
-      get {
-        return _services;
-      }
-    }
+    public WebSocketServiceManager WebSocketServices => _services;
 
     #endregion
 

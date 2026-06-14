@@ -108,23 +108,11 @@ namespace WebSocketSharp.Net.WebSockets
 
     #region Internal Properties
 
-    internal Logger Log {
-      get {
-        return _log;
-      }
-    }
+    internal Logger Log => _log;
 
-    internal Socket Socket {
-      get {
-        return _tcpClient.Client;
-      }
-    }
+    internal Socket Socket => _tcpClient.Client;
 
-    internal Stream Stream {
-      get {
-        return _stream;
-      }
-    }
+    internal Stream Stream => _stream;
 
     #endregion
 
@@ -142,11 +130,7 @@ namespace WebSocketSharp.Net.WebSockets
     ///   An empty collection if not included.
     ///   </para>
     /// </value>
-    public override CookieCollection CookieCollection {
-      get {
-        return _request.Cookies;
-      }
-    }
+    public override CookieCollection CookieCollection => _request.Cookies;
 
     /// <summary>
     /// Gets the HTTP headers included in the handshake request.
@@ -154,11 +138,7 @@ namespace WebSocketSharp.Net.WebSockets
     /// <value>
     /// A <see cref="NameValueCollection"/> that contains the headers.
     /// </value>
-    public override NameValueCollection Headers {
-      get {
-        return _request.Headers;
-      }
-    }
+    public override NameValueCollection Headers => _request.Headers;
 
     /// <summary>
     /// Gets the value of the Host header included in the handshake request.
@@ -172,11 +152,7 @@ namespace WebSocketSharp.Net.WebSockets
     ///   It includes the port number if provided.
     ///   </para>
     /// </value>
-    public override string Host {
-      get {
-        return _request.Headers["Host"];
-      }
-    }
+    public override string Host => _request.Headers["Host"];
 
     /// <summary>
     /// Gets a value indicating whether the client is authenticated.
@@ -184,11 +160,7 @@ namespace WebSocketSharp.Net.WebSockets
     /// <value>
     /// <c>true</c> if the client is authenticated; otherwise, <c>false</c>.
     /// </value>
-    public override bool IsAuthenticated {
-      get {
-        return _user != null;
-      }
-    }
+    public override bool IsAuthenticated => _user != null;
 
     /// <summary>
     /// Gets a value indicating whether the handshake request is sent from
@@ -198,11 +170,7 @@ namespace WebSocketSharp.Net.WebSockets
     /// <c>true</c> if the handshake request is sent from the same computer
     /// as the server; otherwise, <c>false</c>.
     /// </value>
-    public override bool IsLocal {
-      get {
-        return UserEndPoint.Address.IsLocal ();
-      }
-    }
+    public override bool IsLocal => UserEndPoint.Address.IsLocal ();
 
     /// <summary>
     /// Gets a value indicating whether a secure connection is used to send
@@ -211,11 +179,7 @@ namespace WebSocketSharp.Net.WebSockets
     /// <value>
     /// <c>true</c> if the connection is secure; otherwise, <c>false</c>.
     /// </value>
-    public override bool IsSecureConnection {
-      get {
-        return _isSecureConnection;
-      }
-    }
+    public override bool IsSecureConnection => _isSecureConnection;
 
     /// <summary>
     /// Gets a value indicating whether the request is a WebSocket handshake
@@ -225,11 +189,7 @@ namespace WebSocketSharp.Net.WebSockets
     /// <c>true</c> if the request is a WebSocket handshake request; otherwise,
     /// <c>false</c>.
     /// </value>
-    public override bool IsWebSocketRequest {
-      get {
-        return _request.IsWebSocketRequest;
-      }
-    }
+    public override bool IsWebSocketRequest => _request.IsWebSocketRequest;
 
     /// <summary>
     /// Gets the value of the Origin header included in the handshake request.
@@ -242,11 +202,7 @@ namespace WebSocketSharp.Net.WebSockets
     ///   <see langword="null"/> if not included.
     ///   </para>
     /// </value>
-    public override string Origin {
-      get {
-        return _request.Headers["Origin"];
-      }
-    }
+    public override string Origin => _request.Headers["Origin"];
 
     /// <summary>
     /// Gets the query string included in the handshake request.
@@ -316,11 +272,7 @@ namespace WebSocketSharp.Net.WebSockets
     ///   <see langword="null"/> if not included.
     ///   </para>
     /// </value>
-    public override string SecWebSocketKey {
-      get {
-        return _request.Headers["Sec-WebSocket-Key"];
-      }
-    }
+    public override string SecWebSocketKey => _request.Headers["Sec-WebSocket-Key"];
 
     /// <summary>
     /// Gets the names of the subprotocols from the Sec-WebSocket-Protocol
@@ -367,11 +319,7 @@ namespace WebSocketSharp.Net.WebSockets
     ///   <see langword="null"/> if not included.
     ///   </para>
     /// </value>
-    public override string SecWebSocketVersion {
-      get {
-        return _request.Headers["Sec-WebSocket-Version"];
-      }
-    }
+    public override string SecWebSocketVersion => _request.Headers["Sec-WebSocket-Version"];
 
     /// <summary>
     /// Gets the endpoint to which the handshake request is sent.
@@ -380,11 +328,7 @@ namespace WebSocketSharp.Net.WebSockets
     /// A <see cref="System.Net.IPEndPoint"/> that represents the server
     /// IP address and port number.
     /// </value>
-    public override System.Net.IPEndPoint ServerEndPoint {
-      get {
-        return (System.Net.IPEndPoint) _tcpClient.Client.LocalEndPoint;
-      }
-    }
+    public override System.Net.IPEndPoint ServerEndPoint => (System.Net.IPEndPoint) _tcpClient.Client.LocalEndPoint;
 
     /// <summary>
     /// Gets the client information.
@@ -398,11 +342,7 @@ namespace WebSocketSharp.Net.WebSockets
     ///   <see langword="null"/> if the client is not authenticated.
     ///   </para>
     /// </value>
-    public override IPrincipal User {
-      get {
-        return _user;
-      }
-    }
+    public override IPrincipal User => _user;
 
     /// <summary>
     /// Gets the endpoint from which the handshake request is sent.
@@ -411,11 +351,7 @@ namespace WebSocketSharp.Net.WebSockets
     /// A <see cref="System.Net.IPEndPoint"/> that represents the client
     /// IP address and port number.
     /// </value>
-    public override System.Net.IPEndPoint UserEndPoint {
-      get {
-        return (System.Net.IPEndPoint) _tcpClient.Client.RemoteEndPoint;
-      }
-    }
+    public override System.Net.IPEndPoint UserEndPoint => (System.Net.IPEndPoint) _tcpClient.Client.RemoteEndPoint;
 
     /// <summary>
     /// Gets the WebSocket interface used for two-way communication between
@@ -424,11 +360,7 @@ namespace WebSocketSharp.Net.WebSockets
     /// <value>
     /// A <see cref="WebSocketSharp.WebSocket"/> that represents the interface.
     /// </value>
-    public override WebSocket WebSocket {
-      get {
-        return _websocket;
-      }
-    }
+    public override WebSocket WebSocket => _websocket;
 
     #endregion
 

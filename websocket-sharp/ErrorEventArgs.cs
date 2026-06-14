@@ -92,11 +92,7 @@ namespace WebSocketSharp
     ///   <see langword="null"/> if not present.
     ///   </para>
     /// </value>
-    public Exception Exception {
-      get {
-        return _exception;
-      }
-    }
+    public Exception Exception => _exception;
 
     /// <summary>
     /// Gets the error message.
@@ -104,11 +100,7 @@ namespace WebSocketSharp
     /// <value>
     /// A <see cref="string"/> that represents the error message.
     /// </value>
-    public string Message {
-      get {
-        return _message;
-      }
-    }
+    public string Message => _message;
 
     #endregion
   }

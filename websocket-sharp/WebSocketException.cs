@@ -118,11 +118,7 @@ namespace WebSocketSharp
     ///   It is one of the status codes for the WebSocket connection close.
     ///   </para>
     /// </value>
-    public ushort Code {
-      get {
-        return _code;
-      }
-    }
+    public ushort Code => _code;
 
     #endregion
   }

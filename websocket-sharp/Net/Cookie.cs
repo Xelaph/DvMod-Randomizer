@@ -318,11 +318,7 @@ namespace WebSocketSharp.Net
 
     #region Internal Properties
 
-    internal bool ExactDomain {
-      get {
-        return _domain.Length == 0 || _domain[0] != '.';
-      }
-    }
+    internal bool ExactDomain => _domain.Length == 0 || _domain[0] != '.';
 
     internal int MaxAge {
       get {
@@ -340,27 +336,18 @@ namespace WebSocketSharp.Net
                : 0;
       }
 
-      set {
+      set =>
         _expires = value > 0
-                   ? DateTime.Now.AddSeconds ((double) value)
-                   : DateTime.Now;
-      }
+          ? DateTime.Now.AddSeconds ((double) value)
+          : DateTime.Now;
     }
 
-    internal int[] Ports {
-      get {
-        return _ports ?? _emptyPorts;
-      }
-    }
+    internal int[] Ports => _ports ?? _emptyPorts;
 
     internal string SameSite {
-      get {
-        return _sameSite;
-      }
+      get => _sameSite;
 
-      set {
-        _sameSite = value;
-      }
+      set => _sameSite = value;
     }
 
     #endregion
@@ -383,13 +370,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public string Comment {
-      get {
-        return _comment;
-      }
+      get => _comment;
 
-      internal set {
-        _comment = value;
-      }
+      internal set => _comment = value;
     }
 
     /// <summary>
@@ -408,13 +391,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public Uri CommentUri {
-      get {
-        return _commentUri;
-      }
+      get => _commentUri;
 
-      internal set {
-        _commentUri = value;
-      }
+      internal set => _commentUri = value;
     }
 
     /// <summary>
@@ -431,13 +410,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public bool Discard {
-      get {
-        return _discard;
-      }
+      get => _discard;
 
-      internal set {
-        _discard = value;
-      }
+      internal set => _discard = value;
     }
 
     /// <summary>
@@ -453,13 +428,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public string Domain {
-      get {
-        return _domain;
-      }
+      get => _domain;
 
-      set {
-        _domain = value ?? String.Empty;
-      }
+      set => _domain = value ?? String.Empty;
     }
 
     /// <summary>
@@ -474,13 +445,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public bool Expired {
-      get {
-        return _expires != DateTime.MinValue && _expires <= DateTime.Now;
-      }
+      get => _expires != DateTime.MinValue && _expires <= DateTime.Now;
 
-      set {
-        _expires = value ? DateTime.Now : DateTime.MinValue;
-      }
+      set => _expires = value ? DateTime.Now : DateTime.MinValue;
     }
 
     /// <summary>
@@ -499,13 +466,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public DateTime Expires {
-      get {
-        return _expires;
-      }
+      get => _expires;
 
-      set {
-        _expires = value;
-      }
+      set => _expires = value;
     }
 
     /// <summary>
@@ -522,13 +485,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public bool HttpOnly {
-      get {
-        return _httpOnly;
-      }
+      get => _httpOnly;
 
-      set {
-        _httpOnly = value;
-      }
+      set => _httpOnly = value;
     }
 
     /// <summary>
@@ -565,9 +524,7 @@ namespace WebSocketSharp.Net
     /// The value specified for a set operation is <see langword="null"/>.
     /// </exception>
     public string Name {
-      get {
-        return _name;
-      }
+      get => _name;
 
       set {
         if (value == null)
@@ -600,13 +557,9 @@ namespace WebSocketSharp.Net
     /// the origin server that the cookie applies to.
     /// </value>
     public string Path {
-      get {
-        return _path;
-      }
+      get => _path;
 
-      set {
-        _path = value ?? String.Empty;
-      }
+      set => _path = value ?? String.Empty;
     }
 
     /// <summary>
@@ -625,9 +578,7 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public string Port {
-      get {
-        return _port;
-      }
+      get => _port;
 
       internal set {
         int[] ports;
@@ -658,13 +609,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public bool Secure {
-      get {
-        return _secure;
-      }
+      get => _secure;
 
-      set {
-        _secure = value;
-      }
+      set => _secure = value;
     }
 
     /// <summary>
@@ -674,11 +621,7 @@ namespace WebSocketSharp.Net
     /// A <see cref="DateTime"/> that represents the time when
     /// the cookie was issued.
     /// </value>
-    public DateTime TimeStamp {
-      get {
-        return _timeStamp;
-      }
-    }
+    public DateTime TimeStamp => _timeStamp;
 
     /// <summary>
     /// Gets or sets the value of the cookie.
@@ -691,9 +634,7 @@ namespace WebSocketSharp.Net
     /// double quotes although it contains a reserved character.
     /// </exception>
     public string Value {
-      get {
-        return _value;
-      }
+      get => _value;
 
       set {
         if (value == null)
@@ -730,9 +671,7 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public int Version {
-      get {
-        return _version;
-      }
+      get => _version;
 
       internal set {
         if (value < 0 || value > 1)

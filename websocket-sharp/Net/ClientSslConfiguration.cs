@@ -128,13 +128,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public bool CheckCertificateRevocation {
-      get {
-        return _checkCertRevocation;
-      }
+      get => _checkCertRevocation;
 
-      set {
-        _checkCertRevocation = value;
-      }
+      set => _checkCertRevocation = value;
     }
 
     /// <summary>
@@ -154,13 +150,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public X509CertificateCollection ClientCertificates {
-      get {
-        return _clientCerts;
-      }
+      get => _clientCerts;
 
-      set {
-        _clientCerts = value;
-      }
+      set => _clientCerts = value;
     }
 
     /// <summary>
@@ -191,9 +183,7 @@ namespace WebSocketSharp.Net
         return _clientCertSelectionCallback;
       }
 
-      set {
-        _clientCertSelectionCallback = value;
-      }
+      set => _clientCertSelectionCallback = value;
     }
 
     /// <summary>
@@ -211,13 +201,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public SslProtocols EnabledSslProtocols {
-      get {
-        return _enabledSslProtocols;
-      }
+      get => _enabledSslProtocols;
 
-      set {
-        _enabledSslProtocols = value;
-      }
+      set => _enabledSslProtocols = value;
     }
 
     /// <summary>
@@ -247,9 +233,7 @@ namespace WebSocketSharp.Net
         return _serverCertValidationCallback;
       }
 
-      set {
-        _serverCertValidationCallback = value;
-      }
+      set => _serverCertValidationCallback = value;
     }
 
     /// <summary>
@@ -266,9 +250,7 @@ namespace WebSocketSharp.Net
     /// The value specified for a set operation is <see langword="null"/>.
     /// </exception>
     public string TargetHost {
-      get {
-        return _targetHost;
-      }
+      get => _targetHost;
 
       set {
         if (value == null)

@@ -73,111 +73,490 @@ namespace Archipelago.MultiClient.Net.Models
 		}
 
 #pragma warning disable CS1591
-		public static DataStorageElement operator ++(DataStorageElement a) => new DataStorageElement(a, OperationType.Add, 1);
-        public static DataStorageElement operator --(DataStorageElement a) => new DataStorageElement(a, OperationType.Add, -1);
-		public static DataStorageElement operator +(DataStorageElement a, int b) => new DataStorageElement(a, OperationType.Add, b);
-        public static DataStorageElement operator +(DataStorageElement a, long b) => new DataStorageElement(a, OperationType.Add, b);
-		public static DataStorageElement operator +(DataStorageElement a, float b) => new DataStorageElement(a, OperationType.Add, b);
-        public static DataStorageElement operator +(DataStorageElement a, double b) => new DataStorageElement(a, OperationType.Add, b);
-        public static DataStorageElement operator +(DataStorageElement a, decimal b) => new DataStorageElement(a, OperationType.Add, b);
-		public static DataStorageElement operator +(DataStorageElement a, string b) => new DataStorageElement(a, OperationType.Add, b);
-		public static DataStorageElement operator +(DataStorageElement a, JToken b) => new DataStorageElement(a, OperationType.Add, b);
-		public static DataStorageElement operator +(DataStorageElement a, IEnumerable b) => new DataStorageElement(a, OperationType.Add, JArray.FromObject(b));
-        public static DataStorageElement operator +(DataStorageElement a, OperationSpecification s) => new DataStorageElement(a, s.OperationType, s.Value);
-        public static DataStorageElement operator +(DataStorageElement a, Callback c) => new DataStorageElement(a, c);
-        public static DataStorageElement operator +(DataStorageElement a, AdditionalArgument arg) => new DataStorageElement(a, arg);
-		public static DataStorageElement operator *(DataStorageElement a, int b) => new DataStorageElement(a, OperationType.Mul, b);
-        public static DataStorageElement operator *(DataStorageElement a, long b) => new DataStorageElement(a, OperationType.Mul, b);
-        public static DataStorageElement operator *(DataStorageElement a, float b) => new DataStorageElement(a, OperationType.Mul, b);
-        public static DataStorageElement operator *(DataStorageElement a, double b) => new DataStorageElement(a, OperationType.Mul, b);
-        public static DataStorageElement operator *(DataStorageElement a, decimal b) => new DataStorageElement(a, OperationType.Mul, b);
-		public static DataStorageElement operator %(DataStorageElement a, int b) => new DataStorageElement(a, OperationType.Mod, b);
-        public static DataStorageElement operator %(DataStorageElement a, long b) => new DataStorageElement(a, OperationType.Mod, b);
-        public static DataStorageElement operator %(DataStorageElement a, float b) => new DataStorageElement(a, OperationType.Mod, b);
-        public static DataStorageElement operator %(DataStorageElement a, double b) => new DataStorageElement(a, OperationType.Mod, b);
-        public static DataStorageElement operator %(DataStorageElement a, decimal b) => new DataStorageElement(a, OperationType.Mod, b);
-		public static DataStorageElement operator ^(DataStorageElement a, int b) => new DataStorageElement(a, OperationType.Pow, b);
-		public static DataStorageElement operator ^(DataStorageElement a, long b) => new DataStorageElement(a, OperationType.Pow, b);
-		public static DataStorageElement operator ^(DataStorageElement a, float b) => new DataStorageElement(a, OperationType.Pow, b);
-		public static DataStorageElement operator ^(DataStorageElement a, double b) => new DataStorageElement(a, OperationType.Pow, b);
-		public static DataStorageElement operator ^(DataStorageElement a, decimal b) => new DataStorageElement(a, OperationType.Pow, b);
-        public static DataStorageElement operator -(DataStorageElement a, int b) => new DataStorageElement(a, OperationType.Add, JToken.FromObject(-b));
-        public static DataStorageElement operator -(DataStorageElement a, long b) => new DataStorageElement(a, OperationType.Add, JToken.FromObject(-b));
-        public static DataStorageElement operator -(DataStorageElement a, float b) => new DataStorageElement(a, OperationType.Add, JToken.FromObject(-b));
-        public static DataStorageElement operator -(DataStorageElement a, double b) => new DataStorageElement(a, OperationType.Add, JToken.FromObject(-b));
-        public static DataStorageElement operator -(DataStorageElement a, decimal b) => new DataStorageElement(a, OperationType.Add, JToken.FromObject(-b));
-        public static DataStorageElement operator /(DataStorageElement a, int b) => new DataStorageElement(a, OperationType.Mul, JToken.FromObject(1m / b));
-        public static DataStorageElement operator /(DataStorageElement a, long b) => new DataStorageElement(a, OperationType.Mul, JToken.FromObject(1m / b));
-        public static DataStorageElement operator /(DataStorageElement a, float b) => new DataStorageElement(a, OperationType.Mul, JToken.FromObject(1d / b));
-        public static DataStorageElement operator /(DataStorageElement a, double b) => new DataStorageElement(a, OperationType.Mul, JToken.FromObject(1d / b));
-        public static DataStorageElement operator /(DataStorageElement a, decimal b) => new DataStorageElement(a, OperationType.Mul, JToken.FromObject(1m / b));
-        
-		public static implicit operator DataStorageElement(bool b) => new DataStorageElement(OperationType.Replace, b);
-		public static implicit operator DataStorageElement(int i) => new DataStorageElement(OperationType.Replace, i);
-		public static implicit operator DataStorageElement(long l) => new DataStorageElement(OperationType.Replace, l);
-		public static implicit operator DataStorageElement(decimal m) => new DataStorageElement(OperationType.Replace, m);
-		public static implicit operator DataStorageElement(double d) => new DataStorageElement(OperationType.Replace, d);
-		public static implicit operator DataStorageElement(float f) => new DataStorageElement(OperationType.Replace, f);
-		public static implicit operator DataStorageElement(string s) => s == null ? new DataStorageElement(OperationType.Replace, JValue.CreateNull()) : new DataStorageElement(OperationType.Replace, s);
-		public static implicit operator DataStorageElement(JToken o) => new DataStorageElement(OperationType.Replace, o);
-		public static implicit operator DataStorageElement(Array a) => new DataStorageElement(OperationType.Replace, JArray.FromObject(a));
-		public static implicit operator DataStorageElement(List<bool> l) => new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
-		public static implicit operator DataStorageElement(List<int> l) => new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
-		public static implicit operator DataStorageElement(List<long> l) => new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
-		public static implicit operator DataStorageElement(List<decimal> l) => new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
-		public static implicit operator DataStorageElement(List<double> l) => new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
-		public static implicit operator DataStorageElement(List<float> l) => new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
-		public static implicit operator DataStorageElement(List<string> l) => new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
-		public static implicit operator DataStorageElement(List<object> l) => new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
+		public static DataStorageElement operator ++(DataStorageElement a)
+		{
+			return new DataStorageElement(a, OperationType.Add, 1);
+		}
 
-		public static implicit operator bool(DataStorageElement e) => RetrieveAndReturnBoolValue<bool>(e);
-		public static implicit operator bool?(DataStorageElement e) => RetrieveAndReturnBoolValue<bool?>(e);
-		public static implicit operator int(DataStorageElement e) => RetrieveAndReturnDecimalValue<int>(e);
-		public static implicit operator int?(DataStorageElement e) => RetrieveAndReturnDecimalValue<int?>(e);
-		public static implicit operator long(DataStorageElement e) => RetrieveAndReturnDecimalValue<long>(e);
-		public static implicit operator long?(DataStorageElement e) => RetrieveAndReturnDecimalValue<long?>(e);
-		public static implicit operator float(DataStorageElement e) => RetrieveAndReturnDecimalValue<float>(e);
-		public static implicit operator float?(DataStorageElement e) => RetrieveAndReturnDecimalValue<float?>(e);
-		public static implicit operator double(DataStorageElement e) => RetrieveAndReturnDecimalValue<double>(e);
-		public static implicit operator double?(DataStorageElement e) => RetrieveAndReturnDecimalValue<double?>(e);
-		public static implicit operator decimal(DataStorageElement e) => RetrieveAndReturnDecimalValue<decimal>(e);
-		public static implicit operator decimal?(DataStorageElement e) => RetrieveAndReturnDecimalValue<decimal?>(e);
-		public static implicit operator string(DataStorageElement e) => RetrieveAndReturnStringValue(e);
-		public static implicit operator bool[](DataStorageElement e) => RetrieveAndReturnArrayValue<bool[]>(e);
-		public static implicit operator int[](DataStorageElement e) => RetrieveAndReturnArrayValue<int[]>(e);
-		public static implicit operator long[](DataStorageElement e) => RetrieveAndReturnArrayValue<long[]>(e);
-		public static implicit operator decimal[](DataStorageElement e) => RetrieveAndReturnArrayValue<decimal[]>(e);
-		public static implicit operator double[](DataStorageElement e) => RetrieveAndReturnArrayValue<double[]>(e);
-		public static implicit operator float[](DataStorageElement e) => RetrieveAndReturnArrayValue<float[]>(e);
-		public static implicit operator string[](DataStorageElement e) => RetrieveAndReturnArrayValue<string[]>(e);
-		public static implicit operator object[](DataStorageElement e) => RetrieveAndReturnArrayValue<object[]>(e);
-		public static implicit operator List<bool>(DataStorageElement e) => RetrieveAndReturnArrayValue<List<bool>>(e);
-		public static implicit operator List<int>(DataStorageElement e) => RetrieveAndReturnArrayValue<List<int>>(e);
-		public static implicit operator List<long>(DataStorageElement e) => RetrieveAndReturnArrayValue<List<long>>(e);
-		public static implicit operator List<decimal>(DataStorageElement e) => RetrieveAndReturnArrayValue<List<decimal>>(e);
-		public static implicit operator List<double>(DataStorageElement e) => RetrieveAndReturnArrayValue<List<double>>(e);
-		public static implicit operator List<float>(DataStorageElement e) => RetrieveAndReturnArrayValue<List<float>>(e);
-		public static implicit operator List<string>(DataStorageElement e) => RetrieveAndReturnArrayValue<List<string>>(e);
-		public static implicit operator List<object>(DataStorageElement e) => RetrieveAndReturnArrayValue<List<object>>(e);
-		public static implicit operator Array(DataStorageElement e) => RetrieveAndReturnArrayValue<Array>(e);
-		public static implicit operator JArray(DataStorageElement e) => RetrieveAndReturnArrayValue<JArray>(e);
-		public static implicit operator JToken(DataStorageElement e) => e.Context.GetData(e.Context.Key);
+		public static DataStorageElement operator --(DataStorageElement a)
+		{
+			return new DataStorageElement(a, OperationType.Add, -1);
+		}
+
+		public static DataStorageElement operator +(DataStorageElement a, int b)
+		{
+			return new DataStorageElement(a, OperationType.Add, b);
+		}
+
+		public static DataStorageElement operator +(DataStorageElement a, long b)
+		{
+			return new DataStorageElement(a, OperationType.Add, b);
+		}
+
+		public static DataStorageElement operator +(DataStorageElement a, float b)
+		{
+			return new DataStorageElement(a, OperationType.Add, b);
+		}
+
+		public static DataStorageElement operator +(DataStorageElement a, double b)
+		{
+			return new DataStorageElement(a, OperationType.Add, b);
+		}
+
+		public static DataStorageElement operator +(DataStorageElement a, decimal b)
+		{
+			return new DataStorageElement(a, OperationType.Add, b);
+		}
+
+		public static DataStorageElement operator +(DataStorageElement a, string b)
+		{
+			return new DataStorageElement(a, OperationType.Add, b);
+		}
+
+		public static DataStorageElement operator +(DataStorageElement a, JToken b)
+		{
+			return new DataStorageElement(a, OperationType.Add, b);
+		}
+
+		public static DataStorageElement operator +(DataStorageElement a, IEnumerable b)
+		{
+			return new DataStorageElement(a, OperationType.Add, JArray.FromObject(b));
+		}
+
+		public static DataStorageElement operator +(DataStorageElement a, OperationSpecification s)
+		{
+			return new DataStorageElement(a, s.OperationType, s.Value);
+		}
+
+		public static DataStorageElement operator +(DataStorageElement a, Callback c)
+		{
+			return new DataStorageElement(a, c);
+		}
+
+		public static DataStorageElement operator +(DataStorageElement a, AdditionalArgument arg)
+		{
+			return new DataStorageElement(a, arg);
+		}
+
+		public static DataStorageElement operator *(DataStorageElement a, int b)
+		{
+			return new DataStorageElement(a, OperationType.Mul, b);
+		}
+
+		public static DataStorageElement operator *(DataStorageElement a, long b)
+		{
+			return new DataStorageElement(a, OperationType.Mul, b);
+		}
+
+		public static DataStorageElement operator *(DataStorageElement a, float b)
+		{
+			return new DataStorageElement(a, OperationType.Mul, b);
+		}
+
+		public static DataStorageElement operator *(DataStorageElement a, double b)
+		{
+			return new DataStorageElement(a, OperationType.Mul, b);
+		}
+
+		public static DataStorageElement operator *(DataStorageElement a, decimal b)
+		{
+			return new DataStorageElement(a, OperationType.Mul, b);
+		}
+
+		public static DataStorageElement operator %(DataStorageElement a, int b)
+		{
+			return new DataStorageElement(a, OperationType.Mod, b);
+		}
+
+		public static DataStorageElement operator %(DataStorageElement a, long b)
+		{
+			return new DataStorageElement(a, OperationType.Mod, b);
+		}
+
+		public static DataStorageElement operator %(DataStorageElement a, float b)
+		{
+			return new DataStorageElement(a, OperationType.Mod, b);
+		}
+
+		public static DataStorageElement operator %(DataStorageElement a, double b)
+		{
+			return new DataStorageElement(a, OperationType.Mod, b);
+		}
+
+		public static DataStorageElement operator %(DataStorageElement a, decimal b)
+		{
+			return new DataStorageElement(a, OperationType.Mod, b);
+		}
+
+		public static DataStorageElement operator ^(DataStorageElement a, int b)
+		{
+			return new DataStorageElement(a, OperationType.Pow, b);
+		}
+
+		public static DataStorageElement operator ^(DataStorageElement a, long b)
+		{
+			return new DataStorageElement(a, OperationType.Pow, b);
+		}
+
+		public static DataStorageElement operator ^(DataStorageElement a, float b)
+		{
+			return new DataStorageElement(a, OperationType.Pow, b);
+		}
+
+		public static DataStorageElement operator ^(DataStorageElement a, double b)
+		{
+			return new DataStorageElement(a, OperationType.Pow, b);
+		}
+
+		public static DataStorageElement operator ^(DataStorageElement a, decimal b)
+		{
+			return new DataStorageElement(a, OperationType.Pow, b);
+		}
+
+		public static DataStorageElement operator -(DataStorageElement a, int b)
+		{
+			return new DataStorageElement(a, OperationType.Add, JToken.FromObject(-b));
+		}
+
+		public static DataStorageElement operator -(DataStorageElement a, long b)
+		{
+			return new DataStorageElement(a, OperationType.Add, JToken.FromObject(-b));
+		}
+
+		public static DataStorageElement operator -(DataStorageElement a, float b)
+		{
+			return new DataStorageElement(a, OperationType.Add, JToken.FromObject(-b));
+		}
+
+		public static DataStorageElement operator -(DataStorageElement a, double b)
+		{
+			return new DataStorageElement(a, OperationType.Add, JToken.FromObject(-b));
+		}
+
+		public static DataStorageElement operator -(DataStorageElement a, decimal b)
+		{
+			return new DataStorageElement(a, OperationType.Add, JToken.FromObject(-b));
+		}
+
+		public static DataStorageElement operator /(DataStorageElement a, int b)
+		{
+			return new DataStorageElement(a, OperationType.Mul, JToken.FromObject(1m / b));
+		}
+
+		public static DataStorageElement operator /(DataStorageElement a, long b)
+		{
+			return new DataStorageElement(a, OperationType.Mul, JToken.FromObject(1m / b));
+		}
+
+		public static DataStorageElement operator /(DataStorageElement a, float b)
+		{
+			return new DataStorageElement(a, OperationType.Mul, JToken.FromObject(1d / b));
+		}
+
+		public static DataStorageElement operator /(DataStorageElement a, double b)
+		{
+			return new DataStorageElement(a, OperationType.Mul, JToken.FromObject(1d / b));
+		}
+
+		public static DataStorageElement operator /(DataStorageElement a, decimal b)
+		{
+			return new DataStorageElement(a, OperationType.Mul, JToken.FromObject(1m / b));
+		}
+
+		public static implicit operator DataStorageElement(bool b)
+		{
+			return new DataStorageElement(OperationType.Replace, b);
+		}
+
+		public static implicit operator DataStorageElement(int i)
+		{
+			return new DataStorageElement(OperationType.Replace, i);
+		}
+
+		public static implicit operator DataStorageElement(long l)
+		{
+			return new DataStorageElement(OperationType.Replace, l);
+		}
+
+		public static implicit operator DataStorageElement(decimal m)
+		{
+			return new DataStorageElement(OperationType.Replace, m);
+		}
+
+		public static implicit operator DataStorageElement(double d)
+		{
+			return new DataStorageElement(OperationType.Replace, d);
+		}
+
+		public static implicit operator DataStorageElement(float f)
+		{
+			return new DataStorageElement(OperationType.Replace, f);
+		}
+
+		public static implicit operator DataStorageElement(string s)
+		{
+			return s == null
+				? new DataStorageElement(OperationType.Replace, JValue.CreateNull())
+				: new DataStorageElement(OperationType.Replace, s);
+		}
+
+		public static implicit operator DataStorageElement(JToken o)
+		{
+			return new DataStorageElement(OperationType.Replace, o);
+		}
+
+		public static implicit operator DataStorageElement(Array a)
+		{
+			return new DataStorageElement(OperationType.Replace, JArray.FromObject(a));
+		}
+
+		public static implicit operator DataStorageElement(List<bool> l)
+		{
+			return new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
+		}
+
+		public static implicit operator DataStorageElement(List<int> l)
+		{
+			return new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
+		}
+
+		public static implicit operator DataStorageElement(List<long> l)
+		{
+			return new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
+		}
+
+		public static implicit operator DataStorageElement(List<decimal> l)
+		{
+			return new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
+		}
+
+		public static implicit operator DataStorageElement(List<double> l)
+		{
+			return new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
+		}
+
+		public static implicit operator DataStorageElement(List<float> l)
+		{
+			return new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
+		}
+
+		public static implicit operator DataStorageElement(List<string> l)
+		{
+			return new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
+		}
+
+		public static implicit operator DataStorageElement(List<object> l)
+		{
+			return new DataStorageElement(OperationType.Replace, JArray.FromObject(l));
+		}
+
+		public static implicit operator bool(DataStorageElement e)
+		{
+			return RetrieveAndReturnBoolValue<bool>(e);
+		}
+
+		public static implicit operator bool?(DataStorageElement e)
+		{
+			return RetrieveAndReturnBoolValue<bool?>(e);
+		}
+
+		public static implicit operator int(DataStorageElement e)
+		{
+			return RetrieveAndReturnDecimalValue<int>(e);
+		}
+
+		public static implicit operator int?(DataStorageElement e)
+		{
+			return RetrieveAndReturnDecimalValue<int?>(e);
+		}
+
+		public static implicit operator long(DataStorageElement e)
+		{
+			return RetrieveAndReturnDecimalValue<long>(e);
+		}
+
+		public static implicit operator long?(DataStorageElement e)
+		{
+			return RetrieveAndReturnDecimalValue<long?>(e);
+		}
+
+		public static implicit operator float(DataStorageElement e)
+		{
+			return RetrieveAndReturnDecimalValue<float>(e);
+		}
+
+		public static implicit operator float?(DataStorageElement e)
+		{
+			return RetrieveAndReturnDecimalValue<float?>(e);
+		}
+
+		public static implicit operator double(DataStorageElement e)
+		{
+			return RetrieveAndReturnDecimalValue<double>(e);
+		}
+
+		public static implicit operator double?(DataStorageElement e)
+		{
+			return RetrieveAndReturnDecimalValue<double?>(e);
+		}
+
+		public static implicit operator decimal(DataStorageElement e)
+		{
+			return RetrieveAndReturnDecimalValue<decimal>(e);
+		}
+
+		public static implicit operator decimal?(DataStorageElement e)
+		{
+			return RetrieveAndReturnDecimalValue<decimal?>(e);
+		}
+
+		public static implicit operator string(DataStorageElement e)
+		{
+			return RetrieveAndReturnStringValue(e);
+		}
+
+		public static implicit operator bool[](DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<bool[]>(e);
+		}
+
+		public static implicit operator int[](DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<int[]>(e);
+		}
+
+		public static implicit operator long[](DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<long[]>(e);
+		}
+
+		public static implicit operator decimal[](DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<decimal[]>(e);
+		}
+
+		public static implicit operator double[](DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<double[]>(e);
+		}
+
+		public static implicit operator float[](DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<float[]>(e);
+		}
+
+		public static implicit operator string[](DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<string[]>(e);
+		}
+
+		public static implicit operator object[](DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<object[]>(e);
+		}
+
+		public static implicit operator List<bool>(DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<List<bool>>(e);
+		}
+
+		public static implicit operator List<int>(DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<List<int>>(e);
+		}
+
+		public static implicit operator List<long>(DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<List<long>>(e);
+		}
+
+		public static implicit operator List<decimal>(DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<List<decimal>>(e);
+		}
+
+		public static implicit operator List<double>(DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<List<double>>(e);
+		}
+
+		public static implicit operator List<float>(DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<List<float>>(e);
+		}
+
+		public static implicit operator List<string>(DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<List<string>>(e);
+		}
+
+		public static implicit operator List<object>(DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<List<object>>(e);
+		}
+
+		public static implicit operator Array(DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<Array>(e);
+		}
+
+		public static implicit operator JArray(DataStorageElement e)
+		{
+			return RetrieveAndReturnArrayValue<JArray>(e);
+		}
+
+		public static implicit operator JToken(DataStorageElement e)
+		{
+			return e.Context.GetData(e.Context.Key);
+		}
 
 #if !NET35
-		public static DataStorageElement operator +(DataStorageElement a, BigInteger b) => new DataStorageElement(a, OperationType.Add, JToken.Parse(b.ToString()));
-		public static DataStorageElement operator *(DataStorageElement a, BigInteger b) => new DataStorageElement(a, OperationType.Mul, JToken.Parse(b.ToString()));
-		public static DataStorageElement operator %(DataStorageElement a, BigInteger b) => new DataStorageElement(a, OperationType.Mod, JToken.Parse(b.ToString()));
-		public static DataStorageElement operator ^(DataStorageElement a, BigInteger b) => new DataStorageElement(a, OperationType.Pow, JToken.Parse(b.ToString()));
-		public static DataStorageElement operator -(DataStorageElement a, BigInteger b) => new DataStorageElement(a, OperationType.Add, JToken.Parse((-b).ToString()));
-		public static DataStorageElement operator /(DataStorageElement a, BigInteger b) =>
+		public static DataStorageElement operator +(DataStorageElement a, BigInteger b)
+		{
+			return new DataStorageElement(a, OperationType.Add, JToken.Parse(b.ToString()));
+		}
+
+		public static DataStorageElement operator *(DataStorageElement a, BigInteger b)
+		{
+			return new DataStorageElement(a, OperationType.Mul, JToken.Parse(b.ToString()));
+		}
+
+		public static DataStorageElement operator %(DataStorageElement a, BigInteger b)
+		{
+			return new DataStorageElement(a, OperationType.Mod, JToken.Parse(b.ToString()));
+		}
+
+		public static DataStorageElement operator ^(DataStorageElement a, BigInteger b)
+		{
+			return new DataStorageElement(a, OperationType.Pow, JToken.Parse(b.ToString()));
+		}
+
+		public static DataStorageElement operator -(DataStorageElement a, BigInteger b)
+		{
+			return new DataStorageElement(a, OperationType.Add, JToken.Parse((-b).ToString()));
+		}
+
+		public static DataStorageElement operator /(DataStorageElement a, BigInteger b)
+		{
 			throw new InvalidOperationException(
 				"DataStorage[Key] / BigInterger is not supported, due to loss of precision when using integer division");
+		}
 
-		public static implicit operator DataStorageElement(BigInteger bi) => new DataStorageElement(OperationType.Replace, JToken.Parse(bi.ToString()));
+		public static implicit operator DataStorageElement(BigInteger bi)
+		{
+			return new DataStorageElement(OperationType.Replace, JToken.Parse(bi.ToString()));
+		}
 
-		public static implicit operator BigInteger(DataStorageElement e) => RetrieveAndReturnBigIntegerValue<BigInteger>(e);
-		public static implicit operator BigInteger?(DataStorageElement e) => RetrieveAndReturnBigIntegerValue<BigInteger?>(e);
-		
+		public static implicit operator BigInteger(DataStorageElement e)
+		{
+			return RetrieveAndReturnBigIntegerValue<BigInteger>(e);
+		}
+
+		public static implicit operator BigInteger?(DataStorageElement e)
+		{
+			return RetrieveAndReturnBigIntegerValue<BigInteger?>(e);
+		}
+
 		static T RetrieveAndReturnBigIntegerValue<T>(DataStorageElement e)
 		{
 			if (e.cachedValue != null)

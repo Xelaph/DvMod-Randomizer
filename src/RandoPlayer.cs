@@ -14,26 +14,13 @@ using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Threading;
-using WebSocketSharp;
 using System.Linq;
-using System.Runtime.InteropServices;
-using Archipelago.MultiClient.Net.DataPackage;
-using System.Deployment.Internal;
 using DV.UI;
-using DV.Teleporters;
 using System.Collections;
-using DV;
 using DV.OriginShift;
-using DV.Shops;
 using Archipelago.MultiClient.Net.Packets;
-using DV.Util.EventWrapper;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
-using DV.ServicePenalty.UI;
-using System.Data.Common;
-using System.Security.Principal;
 using DV.Common;
-using DV.JObjectExtstensions;
 
 namespace DvMod.Randomizer
 {
@@ -164,7 +151,7 @@ namespace DvMod.Randomizer
         public Vector3 Position => PlayerManager.ActiveCamera.transform.position + PlayerManager.ActiveCamera.transform.forward * 0.5f;
         public Quaternion Rotation => PlayerManager.ActiveCamera.transform.rotation;
         public RandoSaveData Data {get;}
-        public DVConfig Config {get => Data.Config;}
+        public DVConfig Config => Data.Config;
         private readonly ConcurrentQueue<ArchipelagoItem> _waitingQueue = new();
         private static PauseMenu Menu => UnityEngine.Object.FindObjectOfType<PauseMenu>();
         public ArchipelagoSession Session;
@@ -500,38 +487,38 @@ namespace DvMod.Randomizer
             if (id < 0) return true;
             return map[id];
         }
-        public bool HasChecked(Vector3 position) {
-            return HasChecked(RandoCommonData.GetIdFromLocoLocations, position, Data.LocoLocations);
-        }
-        public bool HasChecked(JobLicenseType_v2 jobLicense) {
-            return HasChecked(x => RandoCommonData.GetIDFromJobLicense(x).Item2, jobLicense,  Data.JobLocations);
-        }
-        public bool HasChecked(GeneralLicenseType_v2 generalLicense) {
-            return HasChecked(x => RandoCommonData.GetIDFromGeneralLicense(x).Item2, generalLicense, Data.GeneralLocations);
-        }
+        public bool HasChecked(Vector3 position) =>
+            HasChecked(RandoCommonData.GetIdFromLocoLocations, position, Data.LocoLocations);
+        
+        public bool HasChecked(JobLicenseType_v2 jobLicense) =>
+            HasChecked(x => RandoCommonData.GetIDFromJobLicense(x).Item2, jobLicense,  Data.JobLocations);
+        
+        public bool HasChecked(GeneralLicenseType_v2 generalLicense) =>
+            HasChecked(x => RandoCommonData.GetIDFromGeneralLicense(x).Item2, generalLicense, Data.GeneralLocations);
+        
 
-        public bool GotStationLicense(string name) {
-            return Data.StationLicenses[RandoCommonData.GetOrderFromStationName(name)];
-        }
+        public bool GotStationLicense(string name) =>
+            Data.StationLicenses[RandoCommonData.GetOrderFromStationName(name)];
+        
 
         
     
 
-        public bool GotRestorationLoco(long id) {
-            return Data.ReceivedRelics[id-RandoCommonData.AP_ID.RELIC] > 0;
-        }
-        public bool GotRestorationLoco(TrainCarType carType) {
-            return Data.ReceivedRelics[RandoCommonData.GetOrderFromLocoType(carType)] > 0;
-        }
-        public bool CanFinishRelic(long id) {
-            return Data.ReceivedRelics[id-RandoCommonData.AP_ID.RELIC] > 1;
-        }
-        public bool CanFinishRelic(TrainCarType carType) {
-            return Data.ReceivedRelics[RandoCommonData.GetOrderFromLocoType(carType)] == 2;
-        }
+        public bool GotRestorationLoco(long id) =>
+            Data.ReceivedRelics[id-RandoCommonData.AP_ID.RELIC] > 0;
+        
+        public bool GotRestorationLoco(TrainCarType carType) =>
+            Data.ReceivedRelics[RandoCommonData.GetOrderFromLocoType(carType)] > 0;
+        
+        public bool CanFinishRelic(long id) =>
+            Data.ReceivedRelics[id-RandoCommonData.AP_ID.RELIC] > 1;
+        
+        public bool CanFinishRelic(TrainCarType carType) =>
+            Data.ReceivedRelics[RandoCommonData.GetOrderFromLocoType(carType)] == 2;
+        
     
-        public bool HasUnlocked(GarageType_v2 g) {
-            return g.v1 switch
+        public bool HasUnlocked(GarageType_v2 g) =>
+            g.v1 switch
             {
                 Garage.Bob => Data.HiddenGarages[0],
                 Garage.Caboose => Data.HiddenGarages[1],
@@ -543,26 +530,26 @@ namespace DvMod.Randomizer
                  || (RandoCommonData.GetState(g.garageCarLiveries[0].v1) == LocoRestorationController.RestorationState.S10_PaintJobDone),
                 _ => false
             };
-        }
         
-        public bool IsJobLicenseAcquired(JobLicenseType_v2 jobLicense) {
-            return Data.JobLocations[RandoCommonData.GetIDFromJobLicense(jobLicense).Item2];
-        }
-        public bool IsGeneralLicenseAcquired(GeneralLicenseType_v2 jobLicense) {
-            return Data.GeneralLocations[RandoCommonData.GetIDFromGeneralLicense(jobLicense).Item2];
-        }
-        public void UnlockGarage(long id) {
+        
+        public bool IsJobLicenseAcquired(JobLicenseType_v2 jobLicense) =>
+            Data.JobLocations[RandoCommonData.GetIDFromJobLicense(jobLicense).Item2];
+        
+        public bool IsGeneralLicenseAcquired(GeneralLicenseType_v2 jobLicense) =>
+            Data.GeneralLocations[RandoCommonData.GetIDFromGeneralLicense(jobLicense).Item2];
+        
+        public void UnlockGarage(long id) =>
             Data.HiddenGarages[id-RandoCommonData.AP_ID.GARAGES] = true;
-        }
-        public void CheckRestoLoco(long id) {
+        
+        public void CheckRestoLoco(long id) =>
             Data.LocoLocations[id - RandoCommonData.AP_ID.LOC_LOCO_RESTORATION] = true;
-        }
-        public void CheckGLicense(long id) {
+        
+        public void CheckGLicense(long id) =>
             Data.GeneralLocations[id - RandoCommonData.AP_ID.LOC_GENERAL_LICENSES] = true;
-        }
-        public void CheckJLicense(long id) {
+        
+        public void CheckJLicense(long id) =>
             Data.JobLocations[id - RandoCommonData.AP_ID.LOC_JOB_LICENSES] = true;
-        }
+        
 
     }
 #endregion

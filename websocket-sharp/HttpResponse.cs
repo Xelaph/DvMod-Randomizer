@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Specialized;
 using System.IO;
-using System.Text;
 using WebSocketSharp.Net;
 
 namespace WebSocketSharp
@@ -91,24 +90,21 @@ namespace WebSocketSharp
 
     #region Internal Properties
 
-    internal string StatusLine {
-      get {
-        return _reason != null
-               ? String.Format (
-                   "HTTP/{0} {1} {2}{3}",
-                   ProtocolVersion,
-                   _code,
-                   _reason,
-                   CrLf
-                 )
-               : String.Format (
-                   "HTTP/{0} {1}{2}",
-                   ProtocolVersion,
-                   _code,
-                   CrLf
-                 );
-      }
-    }
+    internal string StatusLine =>
+      _reason != null
+        ? String.Format (
+          "HTTP/{0} {1} {2}{3}",
+          ProtocolVersion,
+          _code,
+          _reason,
+          CrLf
+        )
+        : String.Format (
+          "HTTP/{0} {1}{2}",
+          ProtocolVersion,
+          _code,
+          CrLf
+        );
 
     #endregion
 
@@ -122,61 +118,26 @@ namespace WebSocketSharp
       }
     }
 
-    public CookieCollection Cookies {
-      get {
-        return Headers.GetCookies (true);
-      }
-    }
+    public CookieCollection Cookies => Headers.GetCookies (true);
 
-    public bool IsProxyAuthenticationRequired {
-      get {
-        return _code == 407;
-      }
-    }
+    public bool IsProxyAuthenticationRequired => _code == 407;
 
-    public bool IsRedirect {
-      get {
-        return _code == 301 || _code == 302;
-      }
-    }
+    public bool IsRedirect => _code == 301 || _code == 302;
 
-    public bool IsSuccess {
-      get {
-        return _code >= 200 && _code <= 299;
-      }
-    }
+    public bool IsSuccess => _code >= 200 && _code <= 299;
 
-    public bool IsUnauthorized {
-      get {
-        return _code == 401;
-      }
-    }
+    public bool IsUnauthorized => _code == 401;
 
-    public bool IsWebSocketResponse {
-      get {
-        return ProtocolVersion > HttpVersion.Version10
-               && _code == 101
-               && Headers.Upgrades ("websocket");
-      }
-    }
+    public bool IsWebSocketResponse =>
+      ProtocolVersion > HttpVersion.Version10
+      && _code == 101
+      && Headers.Upgrades ("websocket");
 
-    public override string MessageHeader {
-      get {
-        return StatusLine + HeaderSection;
-      }
-    }
+    public override string MessageHeader => StatusLine + HeaderSection;
 
-    public string Reason {
-      get {
-        return _reason;
-      }
-    }
+    public string Reason => _reason;
 
-    public int StatusCode {
-      get {
-        return _code;
-      }
-    }
+    public int StatusCode => _code;
 
     #endregion
 

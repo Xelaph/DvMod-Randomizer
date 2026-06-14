@@ -75,63 +75,27 @@ namespace WebSocketSharp.Net
 
     #region Internal Properties
 
-    internal NameValueCollection Parameters {
-      get {
-        return _parameters;
-      }
-    }
+    internal NameValueCollection Parameters => _parameters;
 
     #endregion
 
     #region Public Properties
 
-    public string Algorithm {
-      get {
-        return _parameters["algorithm"];
-      }
-    }
+    public string Algorithm => _parameters["algorithm"];
 
-    public string Domain {
-      get {
-        return _parameters["domain"];
-      }
-    }
+    public string Domain => _parameters["domain"];
 
-    public string Nonce {
-      get {
-        return _parameters["nonce"];
-      }
-    }
+    public string Nonce => _parameters["nonce"];
 
-    public string Opaque {
-      get {
-        return _parameters["opaque"];
-      }
-    }
+    public string Opaque => _parameters["opaque"];
 
-    public string Qop {
-      get {
-        return _parameters["qop"];
-      }
-    }
+    public string Qop => _parameters["qop"];
 
-    public string Realm {
-      get {
-        return _parameters["realm"];
-      }
-    }
+    public string Realm => _parameters["realm"];
 
-    public AuthenticationSchemes Scheme {
-      get {
-        return _scheme;
-      }
-    }
+    public AuthenticationSchemes Scheme => _scheme;
 
-    public string Stale {
-      get {
-        return _parameters["stale"];
-      }
-    }
+    public string Stale => _parameters["stale"];
 
     #endregion
 

@@ -43,14 +43,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.IO;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using DvMod.Randomizer;
 using WebSocketSharp.Net;
 using WebSocketSharp.Net.WebSockets;
 
@@ -307,35 +305,23 @@ namespace WebSocketSharp
 
     // As server
     internal Func<WebSocketContext, string> CustomHandshakeRequestChecker {
-      get {
-        return _handshakeRequestChecker;
-      }
+      get => _handshakeRequestChecker;
 
-      set {
-        _handshakeRequestChecker = value;
-      }
+      set => _handshakeRequestChecker = value;
     }
 
     // As server
     internal Action<WebSocketContext> CustomHandshakeRequestResponder {
-      get {
-        return _handshakeRequestResponder;
-      }
+      get => _handshakeRequestResponder;
 
-      set {
-        _handshakeRequestResponder = value;
-      }
+      set => _handshakeRequestResponder = value;
     }
 
     // As server
     internal bool IgnoreExtensions {
-      get {
-        return _ignoreExtensions;
-      }
+      get => _ignoreExtensions;
 
-      set {
-        _ignoreExtensions = value;
-      }
+      set => _ignoreExtensions = value;
     }
 
     internal WebHeaderCollection UserHeaders {
@@ -384,9 +370,7 @@ namespace WebSocketSharp
     ///   </para>
     /// </exception>
     public CompressionMethod Compression {
-      get {
-        return _compression;
-      }
+      get => _compression;
 
       set {
         if (!_client) {
@@ -419,11 +403,7 @@ namespace WebSocketSharp
     ///   The default value is <see langword="null"/>.
     ///   </para>
     /// </value>
-    public NetworkCredential Credentials {
-      get {
-        return _credentials;
-      }
-    }
+    public NetworkCredential Credentials => _credentials;
 
     /// <summary>
     /// Gets or sets a value indicating whether the interface emits
@@ -443,9 +423,7 @@ namespace WebSocketSharp
     /// the interface is neither New nor Closed.
     /// </exception>
     public bool EmitOnPing {
-      get {
-        return _emitOnPing;
-      }
+      get => _emitOnPing;
 
       set {
         lock (_forState) {
@@ -487,9 +465,7 @@ namespace WebSocketSharp
     ///   </para>
     /// </exception>
     public bool EnableRedirection {
-      get {
-        return _enableRedirection;
-      }
+      get => _enableRedirection;
 
       set {
         if (!_client) {
@@ -522,11 +498,7 @@ namespace WebSocketSharp
     ///   An empty string if not specified or selected.
     ///   </para>
     /// </value>
-    public string Extensions {
-      get {
-        return _extensions ?? String.Empty;
-      }
-    }
+    public string Extensions => _extensions ?? String.Empty;
 
     /// <summary>
     /// Gets the HTTP cookies included in the handshake response.
@@ -630,11 +602,7 @@ namespace WebSocketSharp
     /// <value>
     /// <c>true</c> if the communication is possible; otherwise, <c>false</c>.
     /// </value>
-    public bool IsAlive {
-      get {
-        return ping (_emptyBytes);
-      }
-    }
+    public bool IsAlive => ping (_emptyBytes);
 
     /// <summary>
     /// Gets a value indicating whether the connection is secure.
@@ -642,11 +610,7 @@ namespace WebSocketSharp
     /// <value>
     /// <c>true</c> if the connection is secure; otherwise, <c>false</c>.
     /// </value>
-    public bool IsSecure {
-      get {
-        return _secure;
-      }
-    }
+    public bool IsSecure => _secure;
 
     /// <summary>
     /// Gets the logging function.
@@ -672,9 +636,7 @@ namespace WebSocketSharp
         return _log;
       }
 
-      internal set {
-        _log = value;
-      }
+      internal set => _log = value;
     }
 
     /// <summary>
@@ -695,9 +657,7 @@ namespace WebSocketSharp
     /// the interface is neither New nor Closed.
     /// </exception>
     public bool NoDelay {
-      get {
-        return _noDelay;
-      }
+      get => _noDelay;
 
       set {
         lock (_forState) {
@@ -763,9 +723,7 @@ namespace WebSocketSharp
     ///   </para>
     /// </exception>
     public string Origin {
-      get {
-        return _origin;
-      }
+      get => _origin;
 
       set {
         if (!_client) {
@@ -817,13 +775,9 @@ namespace WebSocketSharp
     ///   </para>
     /// </value>
     public string Protocol {
-      get {
-        return _protocol ?? String.Empty;
-      }
+      get => _protocol ?? String.Empty;
 
-      internal set {
-        _protocol = value;
-      }
+      internal set => _protocol = value;
     }
 
     /// <summary>
@@ -840,11 +794,7 @@ namespace WebSocketSharp
     ///   The default value is <see cref="WebSocketState.New"/>.
     ///   </para>
     /// </value>
-    public WebSocketState ReadyState {
-      get {
-        return _readyState;
-      }
-    }
+    public WebSocketState ReadyState => _readyState;
 
     /// <summary>
     /// Gets the configuration for secure connection.
@@ -900,11 +850,7 @@ namespace WebSocketSharp
     ///   is for the server.
     ///   </para>
     /// </value>
-    public Uri Url {
-      get {
-        return _client ? _uri : _context.RequestUri;
-      }
-    }
+    public Uri Url => _client ? _uri : _context.RequestUri;
 
     /// <summary>
     /// Gets or sets the time to wait for the response to the ping or close.
@@ -927,9 +873,7 @@ namespace WebSocketSharp
     /// the interface is neither New nor Closed.
     /// </exception>
     public TimeSpan WaitTime {
-      get {
-        return _waitTime;
-      }
+      get => _waitTime;
 
       set {
         if (value <= TimeSpan.Zero) {

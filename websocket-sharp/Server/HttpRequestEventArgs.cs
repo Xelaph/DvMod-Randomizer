@@ -83,11 +83,7 @@ namespace WebSocketSharp.Server
     /// A <see cref="HttpListenerRequest"/> that provides the methods and
     /// properties for the request data.
     /// </value>
-    public HttpListenerRequest Request {
-      get {
-        return _context.Request;
-      }
-    }
+    public HttpListenerRequest Request => _context.Request;
 
     /// <summary>
     /// Gets the response data to return to the client.
@@ -96,11 +92,7 @@ namespace WebSocketSharp.Server
     /// A <see cref="HttpListenerResponse"/> that provides the methods and
     /// properties for the response data.
     /// </value>
-    public HttpListenerResponse Response {
-      get {
-        return _context.Response;
-      }
-    }
+    public HttpListenerResponse Response => _context.Response;
 
     /// <summary>
     /// Gets the information for the client.
@@ -114,11 +106,7 @@ namespace WebSocketSharp.Server
     ///   <see langword="null"/> if the client is not authenticated.
     ///   </para>
     /// </value>
-    public IPrincipal User {
-      get {
-        return _context.User;
-      }
-    }
+    public IPrincipal User => _context.User;
 
     #endregion
 

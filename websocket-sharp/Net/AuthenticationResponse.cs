@@ -103,93 +103,37 @@ namespace WebSocketSharp.Net
 
     #region Internal Properties
 
-    internal uint NonceCount {
-      get {
-        return _nonceCount < UInt32.MaxValue ? _nonceCount : 0;
-      }
-    }
+    internal uint NonceCount => _nonceCount < UInt32.MaxValue ? _nonceCount : 0;
 
-    internal NameValueCollection Parameters {
-      get {
-        return _parameters;
-      }
-    }
+    internal NameValueCollection Parameters => _parameters;
 
     #endregion
 
     #region Public Properties
 
-    public string Algorithm {
-      get {
-        return _parameters["algorithm"];
-      }
-    }
+    public string Algorithm => _parameters["algorithm"];
 
-    public string Cnonce {
-      get {
-        return _parameters["cnonce"];
-      }
-    }
+    public string Cnonce => _parameters["cnonce"];
 
-    public string Nc {
-      get {
-        return _parameters["nc"];
-      }
-    }
+    public string Nc => _parameters["nc"];
 
-    public string Nonce {
-      get {
-        return _parameters["nonce"];
-      }
-    }
+    public string Nonce => _parameters["nonce"];
 
-    public string Opaque {
-      get {
-        return _parameters["opaque"];
-      }
-    }
+    public string Opaque => _parameters["opaque"];
 
-    public string Password {
-      get {
-        return _parameters["password"];
-      }
-    }
+    public string Password => _parameters["password"];
 
-    public string Qop {
-      get {
-        return _parameters["qop"];
-      }
-    }
+    public string Qop => _parameters["qop"];
 
-    public string Realm {
-      get {
-        return _parameters["realm"];
-      }
-    }
+    public string Realm => _parameters["realm"];
 
-    public string Response {
-      get {
-        return _parameters["response"];
-      }
-    }
+    public string Response => _parameters["response"];
 
-    public AuthenticationSchemes Scheme {
-      get {
-        return _scheme;
-      }
-    }
+    public AuthenticationSchemes Scheme => _scheme;
 
-    public string Uri {
-      get {
-        return _parameters["uri"];
-      }
-    }
+    public string Uri => _parameters["uri"];
 
-    public string UserName {
-      get {
-        return _parameters["username"];
-      }
-    }
+    public string UserName => _parameters["username"];
 
     #endregion
 

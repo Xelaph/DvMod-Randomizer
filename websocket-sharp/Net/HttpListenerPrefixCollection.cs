@@ -79,11 +79,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// An <see cref="int"/> that represents the number of prefixes.
     /// </value>
-    public int Count {
-      get {
-        return _prefixes.Count;
-      }
-    }
+    public int Count => _prefixes.Count;
 
     /// <summary>
     /// Gets a value indicating whether the access to the collection is
@@ -92,11 +88,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// Always returns <c>false</c>.
     /// </value>
-    public bool IsReadOnly {
-      get {
-        return false;
-      }
-    }
+    public bool IsReadOnly => false;
 
     /// <summary>
     /// Gets a value indicating whether the access to the collection is
@@ -105,11 +97,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// Always returns <c>false</c>.
     /// </value>
-    public bool IsSynchronized {
-      get {
-        return false;
-      }
-    }
+    public bool IsSynchronized => false;
 
     #endregion
 

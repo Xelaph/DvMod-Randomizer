@@ -26,8 +26,6 @@
  */
 #endregion
 
-using System;
-
 namespace WebSocketSharp.Net
 {
   internal class HttpHeaderInfo
@@ -71,17 +69,9 @@ namespace WebSocketSharp.Net
 
     #region Public Properties
 
-    public string HeaderName {
-      get {
-        return _headerName;
-      }
-    }
+    public string HeaderName => _headerName;
 
-    public HttpHeaderType HeaderType {
-      get {
-        return _headerType;
-      }
-    }
+    public HttpHeaderType HeaderType => _headerType;
 
     public bool IsRequest {
       get {

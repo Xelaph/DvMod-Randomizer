@@ -81,46 +81,26 @@ namespace WebSocketSharp.Net
 
     #region Internal Properties
 
-    internal HttpConnection Connection {
-      get {
-        return _connection;
-      }
-    }
+    internal HttpConnection Connection => _connection;
 
     internal string ErrorMessage {
-      get {
-        return _errorMessage;
-      }
+      get => _errorMessage;
 
-      set {
-        _errorMessage = value;
-      }
+      set => _errorMessage = value;
     }
 
     internal int ErrorStatusCode {
-      get {
-        return _errorStatusCode;
-      }
+      get => _errorStatusCode;
 
-      set {
-        _errorStatusCode = value;
-      }
+      set => _errorStatusCode = value;
     }
 
-    internal bool HasErrorMessage {
-      get {
-        return _errorMessage != null;
-      }
-    }
+    internal bool HasErrorMessage => _errorMessage != null;
 
     internal HttpListener Listener {
-      get {
-        return _listener;
-      }
+      get => _listener;
 
-      set {
-        _listener = value;
-      }
+      set => _listener = value;
     }
 
     #endregion
@@ -133,11 +113,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="HttpListenerRequest"/> that represents the client request.
     /// </value>
-    public HttpListenerRequest Request {
-      get {
-        return _request;
-      }
-    }
+    public HttpListenerRequest Request => _request;
 
     /// <summary>
     /// Gets the HTTP response object used to send a response to the client.
@@ -146,11 +122,7 @@ namespace WebSocketSharp.Net
     /// A <see cref="HttpListenerResponse"/> that represents a response to
     /// the client request.
     /// </value>
-    public HttpListenerResponse Response {
-      get {
-        return _response;
-      }
-    }
+    public HttpListenerResponse Response => _response;
 
     /// <summary>
     /// Gets the client information.
@@ -164,11 +136,7 @@ namespace WebSocketSharp.Net
     ///   <see langword="null"/> if the client is not authenticated.
     ///   </para>
     /// </value>
-    public IPrincipal User {
-      get {
-        return _user;
-      }
-    }
+    public IPrincipal User => _user;
 
     #endregion
 

@@ -109,13 +109,9 @@ namespace WebSocketSharp.Net
     #region Internal Properties
 
     internal bool CloseConnection {
-      get {
-        return _closeConnection;
-      }
+      get => _closeConnection;
 
-      set {
-        _closeConnection = value;
-      }
+      set => _closeConnection = value;
     }
 
     internal WebHeaderCollection FullHeaders {
@@ -199,20 +195,12 @@ namespace WebSocketSharp.Net
     }
 
     internal bool HeadersSent {
-      get {
-        return _headersSent;
-      }
+      get => _headersSent;
 
-      set {
-        _headersSent = value;
-      }
+      set => _headersSent = value;
     }
 
-    internal string ObjectName {
-      get {
-        return GetType ().ToString ();
-      }
-    }
+    internal string ObjectName => GetType ().ToString ();
 
     internal string StatusLine {
       get {
@@ -249,9 +237,7 @@ namespace WebSocketSharp.Net
     /// This instance is closed.
     /// </exception>
     public Encoding ContentEncoding {
-      get {
-        return _contentEncoding;
-      }
+      get => _contentEncoding;
 
       set {
         if (_disposed)
@@ -293,9 +279,7 @@ namespace WebSocketSharp.Net
     /// This instance is closed.
     /// </exception>
     public long ContentLength64 {
-      get {
-        return _contentLength;
-      }
+      get => _contentLength;
 
       set {
         if (_disposed)
@@ -355,9 +339,7 @@ namespace WebSocketSharp.Net
     /// This instance is closed.
     /// </exception>
     public string ContentType {
-      get {
-        return _contentType;
-      }
+      get => _contentType;
 
       set {
         if (_disposed)
@@ -403,9 +385,7 @@ namespace WebSocketSharp.Net
         return _cookies;
       }
 
-      set {
-        _cookies = value;
-      }
+      set => _cookies = value;
     }
 
     /// <summary>
@@ -463,9 +443,7 @@ namespace WebSocketSharp.Net
     /// This instance is closed.
     /// </exception>
     public bool KeepAlive {
-      get {
-        return _keepAlive;
-      }
+      get => _keepAlive;
 
       set {
         if (_disposed)
@@ -515,11 +493,7 @@ namespace WebSocketSharp.Net
     ///   Always returns same as 1.1.
     ///   </para>
     /// </value>
-    public Version ProtocolVersion {
-      get {
-        return _version;
-      }
-    }
+    public Version ProtocolVersion => _version;
 
     /// <summary>
     /// Gets or sets the URL to which the client is redirected to locate
@@ -558,11 +532,10 @@ namespace WebSocketSharp.Net
     /// This instance is closed.
     /// </exception>
     public string RedirectLocation {
-      get {
-        return _redirectLocation != null
-               ? _redirectLocation.OriginalString
-               : null;
-      }
+      get =>
+        _redirectLocation != null
+          ? _redirectLocation.OriginalString
+          : null;
 
       set {
         if (_disposed)
@@ -615,9 +588,7 @@ namespace WebSocketSharp.Net
     /// This instance is closed.
     /// </exception>
     public bool SendChunked {
-      get {
-        return _sendChunked;
-      }
+      get => _sendChunked;
 
       set {
         if (_disposed)
@@ -661,9 +632,7 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </exception>
     public int StatusCode {
-      get {
-        return _statusCode;
-      }
+      get => _statusCode;
 
       set {
         if (_disposed)
@@ -718,9 +687,7 @@ namespace WebSocketSharp.Net
     /// This instance is closed.
     /// </exception>
     public string StatusDescription {
-      get {
-        return _statusDescription;
-      }
+      get => _statusDescription;
 
       set {
         if (_disposed)

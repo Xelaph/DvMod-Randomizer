@@ -630,11 +630,7 @@ namespace WebSocketSharp.Net
 
     #region Internal Properties
 
-    internal HttpHeaderType State {
-      get {
-        return _state;
-      }
-    }
+    internal HttpHeaderType State => _state;
 
     #endregion
 
@@ -647,11 +643,7 @@ namespace WebSocketSharp.Net
     /// An array of <see cref="string"/> that contains all header names in
     /// the collection.
     /// </value>
-    public override string[] AllKeys {
-      get {
-        return base.AllKeys;
-      }
-    }
+    public override string[] AllKeys => base.AllKeys;
 
     /// <summary>
     /// Gets the number of headers in the collection.
@@ -660,11 +652,7 @@ namespace WebSocketSharp.Net
     /// An <see cref="int"/> that represents the number of headers in
     /// the collection.
     /// </value>
-    public override int Count {
-      get {
-        return base.Count;
-      }
-    }
+    public override int Count => base.Count;
 
     /// <summary>
     /// Gets or sets the specified request header.
@@ -706,9 +694,7 @@ namespace WebSocketSharp.Net
         return Get (name);
       }
 
-      set {
-        Add (header, value);
-      }
+      set => Add (header, value);
     }
 
     /// <summary>
@@ -751,9 +737,7 @@ namespace WebSocketSharp.Net
         return Get (name);
       }
 
-      set {
-        Add (header, value);
-      }
+      set => Add (header, value);
     }
 
     /// <summary>
@@ -763,11 +747,7 @@ namespace WebSocketSharp.Net
     /// A <see cref="NameObjectCollectionBase.KeysCollection"/> that contains
     /// all header names in the collection.
     /// </value>
-    public override NameObjectCollectionBase.KeysCollection Keys {
-      get {
-        return base.Keys;
-      }
-    }
+    public override NameObjectCollectionBase.KeysCollection Keys => base.Keys;
 
     #endregion
 

@@ -99,48 +99,24 @@ namespace WebSocketSharp.Net
 
     #region Internal Properties
 
-    internal string ObjectName {
-      get {
-        return GetType ().ToString ();
-      }
-    }
+    internal string ObjectName => GetType ().ToString ();
 
     #endregion
 
     #region Public Properties
 
-    public override bool CanRead {
-      get {
-        return false;
-      }
-    }
+    public override bool CanRead => false;
 
-    public override bool CanSeek {
-      get {
-        return false;
-      }
-    }
+    public override bool CanSeek => false;
 
-    public override bool CanWrite {
-      get {
-        return !_disposed;
-      }
-    }
+    public override bool CanWrite => !_disposed;
 
-    public override long Length {
-      get {
-        throw new NotSupportedException ();
-      }
-    }
+    public override long Length => throw new NotSupportedException ();
 
     public override long Position {
-      get {
-        throw new NotSupportedException ();
-      }
+      get => throw new NotSupportedException ();
 
-      set {
-        throw new NotSupportedException ();
-      }
+      set => throw new NotSupportedException ();
     }
 
     #endregion

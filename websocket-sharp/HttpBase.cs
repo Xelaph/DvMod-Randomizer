@@ -82,11 +82,7 @@ namespace WebSocketSharp
 
     #region Internal Properties
 
-    internal byte[] MessageBodyData {
-      get {
-        return _messageBodyData;
-      }
-    }
+    internal byte[] MessageBodyData => _messageBodyData;
 
     #endregion
 
@@ -111,17 +107,9 @@ namespace WebSocketSharp
 
     #region Public Properties
 
-    public bool HasMessageBody {
-      get {
-        return _messageBodyData != null;
-      }
-    }
+    public bool HasMessageBody => _messageBodyData != null;
 
-    public NameValueCollection Headers {
-      get {
-        return _headers;
-      }
-    }
+    public NameValueCollection Headers => _headers;
 
     public string MessageBody {
       get {
@@ -134,11 +122,7 @@ namespace WebSocketSharp
 
     public abstract string MessageHeader { get; }
 
-    public Version ProtocolVersion {
-      get {
-        return _version;
-      }
-    }
+    public Version ProtocolVersion => _version;
 
     #endregion
 

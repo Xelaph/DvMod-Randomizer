@@ -82,11 +82,7 @@ namespace WebSocketSharp.Server
 
     #region Internal Properties
 
-    internal ServerState State {
-      get {
-        return _sessions.State;
-      }
-    }
+    internal ServerState State => _sessions.State;
 
     #endregion
 
@@ -98,11 +94,7 @@ namespace WebSocketSharp.Server
     /// <value>
     /// A <see cref="Logger"/> that provides the logging function.
     /// </value>
-    protected Logger Log {
-      get {
-        return _log;
-      }
-    }
+    protected Logger Log => _log;
 
     #endregion
 
@@ -121,13 +113,9 @@ namespace WebSocketSharp.Server
     /// 60 seconds; otherwise, <c>false</c>.
     /// </value>
     public bool KeepClean {
-      get {
-        return _sessions.KeepClean;
-      }
+      get => _sessions.KeepClean;
 
-      set {
-        _sessions.KeepClean = value;
-      }
+      set => _sessions.KeepClean = value;
     }
 
     /// <summary>
@@ -137,11 +125,7 @@ namespace WebSocketSharp.Server
     /// A <see cref="string"/> that represents the absolute path to
     /// the service.
     /// </value>
-    public string Path {
-      get {
-        return _path;
-      }
-    }
+    public string Path => _path;
 
     /// <summary>
     /// Gets the management function for the sessions in the service.
@@ -150,11 +134,7 @@ namespace WebSocketSharp.Server
     /// A <see cref="WebSocketSessionManager"/> that manages the sessions in
     /// the service.
     /// </value>
-    public WebSocketSessionManager Sessions {
-      get {
-        return _sessions;
-      }
-    }
+    public WebSocketSessionManager Sessions => _sessions;
 
     /// <summary>
     /// Gets the type of the behavior of the service.
@@ -181,13 +161,9 @@ namespace WebSocketSharp.Server
     /// The value specified for a set operation is zero or less.
     /// </exception>
     public TimeSpan WaitTime {
-      get {
-        return _sessions.WaitTime;
-      }
+      get => _sessions.WaitTime;
 
-      set {
-        _sessions.WaitTime = value;
-      }
+      set => _sessions.WaitTime = value;
     }
 
     #endregion

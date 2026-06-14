@@ -76,11 +76,7 @@ namespace WebSocketSharp
     ///   1005 (no status) if not present.
     ///   </para>
     /// </value>
-    public ushort Code {
-      get {
-        return _payloadData.Code;
-      }
-    }
+    public ushort Code => _payloadData.Code;
 
     /// <summary>
     /// Gets the reason for the connection close.
@@ -94,11 +90,7 @@ namespace WebSocketSharp
     ///   An empty string if not present.
     ///   </para>
     /// </value>
-    public string Reason {
-      get {
-        return _payloadData.Reason;
-      }
-    }
+    public string Reason => _payloadData.Reason;
 
     /// <summary>
     /// Gets a value indicating whether the connection has been closed cleanly.
@@ -107,11 +99,7 @@ namespace WebSocketSharp
     /// <c>true</c> if the connection has been closed cleanly; otherwise,
     /// <c>false</c>.
     /// </value>
-    public bool WasClean {
-      get {
-        return _wasClean;
-      }
-    }
+    public bool WasClean => _wasClean;
 
     #endregion
   }

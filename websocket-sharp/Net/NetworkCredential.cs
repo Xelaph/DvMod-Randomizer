@@ -142,13 +142,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public string Domain {
-      get {
-        return _domain ?? String.Empty;
-      }
+      get => _domain ?? String.Empty;
 
-      internal set {
-        _domain = value;
-      }
+      internal set => _domain = value;
     }
 
     /// <summary>
@@ -164,13 +160,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public string Password {
-      get {
-        return _password ?? String.Empty;
-      }
+      get => _password ?? String.Empty;
 
-      internal set {
-        _password = value;
-      }
+      internal set => _password = value;
     }
 
     /// <summary>
@@ -187,13 +179,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public string[] Roles {
-      get {
-        return _roles ?? _noRoles;
-      }
+      get => _roles ?? _noRoles;
 
-      internal set {
-        _roles = value;
-      }
+      internal set => _roles = value;
     }
 
     /// <summary>
@@ -203,13 +191,9 @@ namespace WebSocketSharp.Net
     /// A <see cref="string"/> that represents the username.
     /// </value>
     public string Username {
-      get {
-        return _username;
-      }
+      get => _username;
 
-      internal set {
-        _username = value;
-      }
+      internal set => _username = value;
     }
 
     #endregion

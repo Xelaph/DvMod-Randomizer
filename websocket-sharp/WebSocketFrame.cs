@@ -141,172 +141,75 @@ namespace WebSocketSharp
 
     #region Internal Properties
 
-    internal ulong ExactPayloadLength {
-      get {
-        return _payloadLength < 126
-               ? (ulong) _payloadLength
-               : _payloadLength == 126
-                 ? _extPayloadLength.ToUInt16 (ByteOrder.Big)
-                 : _extPayloadLength.ToUInt64 (ByteOrder.Big);
-      }
-    }
+    internal ulong ExactPayloadLength =>
+      _payloadLength < 126
+        ? (ulong) _payloadLength
+        : _payloadLength == 126
+          ? _extPayloadLength.ToUInt16 (ByteOrder.Big)
+          : _extPayloadLength.ToUInt64 (ByteOrder.Big);
 
-    internal int ExtendedPayloadLengthWidth {
-      get {
-        return _payloadLength < 126
-               ? 0
-               : _payloadLength == 126
-                 ? 2
-                 : 8;
-      }
-    }
+    internal int ExtendedPayloadLengthWidth =>
+      _payloadLength < 126
+        ? 0
+        : _payloadLength == 126
+          ? 2
+          : 8;
 
     #endregion
 
     #region Public Properties
 
-    public byte[] ExtendedPayloadLength {
-      get {
-        return _extPayloadLength;
-      }
-    }
+    public byte[] ExtendedPayloadLength => _extPayloadLength;
 
-    public Fin Fin {
-      get {
-        return _fin;
-      }
-    }
+    public Fin Fin => _fin;
 
-    public bool IsBinary {
-      get {
-        return _opcode == Opcode.Binary;
-      }
-    }
+    public bool IsBinary => _opcode == Opcode.Binary;
 
-    public bool IsClose {
-      get {
-        return _opcode == Opcode.Close;
-      }
-    }
+    public bool IsClose => _opcode == Opcode.Close;
 
-    public bool IsCompressed {
-      get {
-        return _rsv1 == Rsv.On;
-      }
-    }
+    public bool IsCompressed => _rsv1 == Rsv.On;
 
-    public bool IsContinuation {
-      get {
-        return _opcode == Opcode.Cont;
-      }
-    }
+    public bool IsContinuation => _opcode == Opcode.Cont;
 
-    public bool IsControl {
-      get {
-        return _opcode >= Opcode.Close;
-      }
-    }
+    public bool IsControl => _opcode >= Opcode.Close;
 
-    public bool IsData {
-      get {
-        return _opcode == Opcode.Text || _opcode == Opcode.Binary;
-      }
-    }
+    public bool IsData => _opcode == Opcode.Text || _opcode == Opcode.Binary;
 
-    public bool IsFinal {
-      get {
-        return _fin == Fin.Final;
-      }
-    }
+    public bool IsFinal => _fin == Fin.Final;
 
-    public bool IsFragment {
-      get {
-        return _fin == Fin.More || _opcode == Opcode.Cont;
-      }
-    }
+    public bool IsFragment => _fin == Fin.More || _opcode == Opcode.Cont;
 
-    public bool IsMasked {
-      get {
-        return _mask == Mask.On;
-      }
-    }
+    public bool IsMasked => _mask == Mask.On;
 
-    public bool IsPing {
-      get {
-        return _opcode == Opcode.Ping;
-      }
-    }
+    public bool IsPing => _opcode == Opcode.Ping;
 
-    public bool IsPong {
-      get {
-        return _opcode == Opcode.Pong;
-      }
-    }
+    public bool IsPong => _opcode == Opcode.Pong;
 
-    public bool IsText {
-      get {
-        return _opcode == Opcode.Text;
-      }
-    }
+    public bool IsText => _opcode == Opcode.Text;
 
-    public ulong Length {
-      get {
-        return (ulong) (
-                 _defaultHeaderLength
-                 + _extPayloadLength.Length
-                 + _maskingKey.Length
-               )
-               + _payloadData.Length;
-      }
-    }
+    public ulong Length =>
+      (ulong) (
+        _defaultHeaderLength
+        + _extPayloadLength.Length
+        + _maskingKey.Length
+      )
+      + _payloadData.Length;
 
-    public Mask Mask {
-      get {
-        return _mask;
-      }
-    }
+    public Mask Mask => _mask;
 
-    public byte[] MaskingKey {
-      get {
-        return _maskingKey;
-      }
-    }
+    public byte[] MaskingKey => _maskingKey;
 
-    public Opcode Opcode {
-      get {
-        return _opcode;
-      }
-    }
+    public Opcode Opcode => _opcode;
 
-    public PayloadData PayloadData {
-      get {
-        return _payloadData;
-      }
-    }
+    public PayloadData PayloadData => _payloadData;
 
-    public int PayloadLength {
-      get {
-        return _payloadLength;
-      }
-    }
+    public int PayloadLength => _payloadLength;
 
-    public Rsv Rsv1 {
-      get {
-        return _rsv1;
-      }
-    }
+    public Rsv Rsv1 => _rsv1;
 
-    public Rsv Rsv2 {
-      get {
-        return _rsv2;
-      }
-    }
+    public Rsv Rsv2 => _rsv2;
 
-    public Rsv Rsv3 {
-      get {
-        return _rsv3;
-      }
-    }
+    public Rsv Rsv3 => _rsv3;
 
     #endregion
 

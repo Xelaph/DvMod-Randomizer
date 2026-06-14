@@ -76,66 +76,30 @@ namespace WebSocketSharp.Net
 
     #region Internal Properties
 
-    internal int Count {
-      get {
-        return _count;
-      }
-    }
+    internal int Count => _count;
 
-    internal byte[] InitialBuffer {
-      get {
-        return _initialBuffer;
-      }
-    }
+    internal byte[] InitialBuffer => _initialBuffer;
 
-    internal string ObjectName {
-      get {
-        return GetType ().ToString ();
-      }
-    }
+    internal string ObjectName => GetType ().ToString ();
 
-    internal int Offset {
-      get {
-        return _offset;
-      }
-    }
+    internal int Offset => _offset;
 
     #endregion
 
     #region Public Properties
 
-    public override bool CanRead {
-      get {
-        return true;
-      }
-    }
+    public override bool CanRead => true;
 
-    public override bool CanSeek {
-      get {
-        return false;
-      }
-    }
+    public override bool CanSeek => false;
 
-    public override bool CanWrite {
-      get {
-        return false;
-      }
-    }
+    public override bool CanWrite => false;
 
-    public override long Length {
-      get {
-        throw new NotSupportedException ();
-      }
-    }
+    public override long Length => throw new NotSupportedException ();
 
     public override long Position {
-      get {
-        throw new NotSupportedException ();
-      }
+      get => throw new NotSupportedException ();
 
-      set {
-        throw new NotSupportedException ();
-      }
+      set => throw new NotSupportedException ();
     }
 
     #endregion

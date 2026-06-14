@@ -142,29 +142,13 @@ namespace WebSocketSharp.Net
 
     #region Public Properties
 
-    public IPAddress Address {
-      get {
-        return _endpoint.Address;
-      }
-    }
+    public IPAddress Address => _endpoint.Address;
 
-    public bool IsSecure {
-      get {
-        return _secure;
-      }
-    }
+    public bool IsSecure => _secure;
 
-    public int Port {
-      get {
-        return _endpoint.Port;
-      }
-    }
+    public int Port => _endpoint.Port;
 
-    public ServerSslConfiguration SslConfiguration {
-      get {
-        return _sslConfig;
-      }
-    }
+    public ServerSslConfiguration SslConfiguration => _sslConfig;
 
     #endregion
 

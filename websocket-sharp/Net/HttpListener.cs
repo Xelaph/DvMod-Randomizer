@@ -47,9 +47,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
-using System.Threading;
 
 // TODO: Logging.
 namespace WebSocketSharp.Net
@@ -123,20 +121,12 @@ namespace WebSocketSharp.Net
 
     #region Internal Properties
 
-    internal string ObjectName {
-      get {
-        return GetType ().ToString ();
-      }
-    }
+    internal string ObjectName => GetType ().ToString ();
 
     internal bool ReuseAddress {
-      get {
-        return _reuseAddress;
-      }
+      get => _reuseAddress;
 
-      set {
-        _reuseAddress = value;
-      }
+      set => _reuseAddress = value;
     }
 
     #endregion
@@ -315,11 +305,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// <c>true</c> if the listener has been started; otherwise, <c>false</c>.
     /// </value>
-    public bool IsListening {
-      get {
-        return _isListening;
-      }
-    }
+    public bool IsListening => _isListening;
 
     /// <summary>
     /// Gets a value indicating whether the listener can be used with
@@ -328,11 +314,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// <c>true</c>.
     /// </value>
-    public static bool IsSupported {
-      get {
-        return true;
-      }
-    }
+    public static bool IsSupported => true;
 
     /// <summary>
     /// Gets the logging functions.
@@ -453,13 +435,9 @@ namespace WebSocketSharp.Net
     /// Any use of this property.
     /// </exception>
     public bool UnsafeConnectionNtlmAuthentication {
-      get {
-        throw new NotSupportedException ();
-      }
+      get => throw new NotSupportedException ();
 
-      set {
-        throw new NotSupportedException ();
-      }
+      set => throw new NotSupportedException ();
     }
 
     /// <summary>

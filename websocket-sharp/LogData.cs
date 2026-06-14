@@ -68,11 +68,7 @@ namespace WebSocketSharp
     /// A <see cref="StackFrame"/> that provides the information of
     /// the logging method caller.
     /// </value>
-    public StackFrame Caller {
-      get {
-        return _caller;
-      }
-    }
+    public StackFrame Caller => _caller;
 
     /// <summary>
     /// Gets the date and time when the log data was created.
@@ -81,11 +77,7 @@ namespace WebSocketSharp
     /// A <see cref="DateTime"/> that represents the date and time when
     /// the log data was created.
     /// </value>
-    public DateTime Date {
-      get {
-        return _date;
-      }
-    }
+    public DateTime Date => _date;
 
     /// <summary>
     /// Gets the logging level of the log data.
@@ -98,11 +90,7 @@ namespace WebSocketSharp
     ///   It represents the logging level of the log data.
     ///   </para>
     /// </value>
-    public LogLevel Level {
-      get {
-        return _level;
-      }
-    }
+    public LogLevel Level => _level;
 
     /// <summary>
     /// Gets the message of the log data.
@@ -110,11 +98,7 @@ namespace WebSocketSharp
     /// <value>
     /// A <see cref="string"/> that represents the message of the log data.
     /// </value>
-    public string Message {
-      get {
-        return _message;
-      }
-    }
+    public string Message => _message;
 
     #endregion
 

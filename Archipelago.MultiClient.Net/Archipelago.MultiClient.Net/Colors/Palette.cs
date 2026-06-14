@@ -89,9 +89,6 @@ namespace Archipelago.MultiClient.Net.Colors
 		/// is preserved.
 		/// </summary>
 		/// <param name="paletteEdits">A mapping specifying colors to replace</param>
-		public Palette<T> Edit(Dictionary<PaletteColor, T> paletteEdits)
-		{
-			return Edit(DefaultColor, paletteEdits);
-		}
+		public Palette<T> Edit(Dictionary<PaletteColor, T> paletteEdits) => Edit(DefaultColor, paletteEdits);
 	}
 }

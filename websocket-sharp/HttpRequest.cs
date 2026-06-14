@@ -110,31 +110,16 @@ namespace WebSocketSharp
       }
     }
 
-    public string HttpMethod {
-      get {
-        return _method;
-      }
-    }
+    public string HttpMethod => _method;
 
-    public bool IsWebSocketRequest {
-      get {
-        return _method == "GET"
-               && ProtocolVersion > HttpVersion.Version10
-               && Headers.Upgrades ("websocket");
-      }
-    }
+    public bool IsWebSocketRequest =>
+      _method == "GET"
+      && ProtocolVersion > HttpVersion.Version10
+      && Headers.Upgrades ("websocket");
 
-    public override string MessageHeader {
-      get {
-        return RequestLine + HeaderSection;
-      }
-    }
+    public override string MessageHeader => RequestLine + HeaderSection;
 
-    public string RequestTarget {
-      get {
-        return _target;
-      }
-    }
+    public string RequestTarget => _target;
 
     #endregion
 

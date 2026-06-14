@@ -108,13 +108,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public bool CheckCertificateRevocation {
-      get {
-        return _checkCertRevocation;
-      }
+      get => _checkCertRevocation;
 
-      set {
-        _checkCertRevocation = value;
-      }
+      set => _checkCertRevocation = value;
     }
 
     /// <summary>
@@ -131,13 +127,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public bool ClientCertificateRequired {
-      get {
-        return _clientCertRequired;
-      }
+      get => _clientCertRequired;
 
-      set {
-        _clientCertRequired = value;
-      }
+      set => _clientCertRequired = value;
     }
 
     /// <summary>
@@ -167,9 +159,7 @@ namespace WebSocketSharp.Net
         return _clientCertValidationCallback;
       }
 
-      set {
-        _clientCertValidationCallback = value;
-      }
+      set => _clientCertValidationCallback = value;
     }
 
     /// <summary>
@@ -187,13 +177,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public SslProtocols EnabledSslProtocols {
-      get {
-        return _enabledSslProtocols;
-      }
+      get => _enabledSslProtocols;
 
-      set {
-        _enabledSslProtocols = value;
-      }
+      set => _enabledSslProtocols = value;
     }
 
     /// <summary>
@@ -211,13 +197,9 @@ namespace WebSocketSharp.Net
     ///   </para>
     /// </value>
     public X509Certificate2 ServerCertificate {
-      get {
-        return _serverCert;
-      }
+      get => _serverCert;
 
-      set {
-        _serverCert = value;
-      }
+      set => _serverCert = value;
     }
 
     #endregion

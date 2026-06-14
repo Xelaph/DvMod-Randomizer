@@ -142,53 +142,21 @@ namespace WebSocketSharp.Net
 
     #region Public Properties
 
-    public bool IsClosed {
-      get {
-        return _socket == null;
-      }
-    }
+    public bool IsClosed => _socket == null;
 
-    public bool IsLocal {
-      get {
-        return ((IPEndPoint) _remoteEndPoint).Address.IsLocal ();
-      }
-    }
+    public bool IsLocal => ((IPEndPoint) _remoteEndPoint).Address.IsLocal ();
 
-    public bool IsSecure {
-      get {
-        return _secure;
-      }
-    }
+    public bool IsSecure => _secure;
 
-    public IPEndPoint LocalEndPoint {
-      get {
-        return (IPEndPoint) _localEndPoint;
-      }
-    }
+    public IPEndPoint LocalEndPoint => (IPEndPoint) _localEndPoint;
 
-    public IPEndPoint RemoteEndPoint {
-      get {
-        return (IPEndPoint) _remoteEndPoint;
-      }
-    }
+    public IPEndPoint RemoteEndPoint => (IPEndPoint) _remoteEndPoint;
 
-    public int Reuses {
-      get {
-        return _reuses;
-      }
-    }
+    public int Reuses => _reuses;
 
-    public Socket Socket {
-      get {
-        return _socket;
-      }
-    }
+    public Socket Socket => _socket;
 
-    public Stream Stream {
-      get {
-        return _stream;
-      }
-    }
+    public Stream Stream => _stream;
 
     #endregion
 

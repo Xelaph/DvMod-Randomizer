@@ -38,7 +38,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
@@ -149,11 +148,7 @@ namespace WebSocketSharp.Net
     /// <exception cref="NotSupportedException">
     /// This property is not supported.
     /// </exception>
-    public int ClientCertificateError {
-      get {
-        throw new NotSupportedException ();
-      }
-    }
+    public int ClientCertificateError => throw new NotSupportedException ();
 
     /// <summary>
     /// Gets the encoding for the entity body data included in the request.
@@ -189,11 +184,7 @@ namespace WebSocketSharp.Net
     ///   -1 if the header is not present.
     ///   </para>
     /// </value>
-    public long ContentLength64 {
-      get {
-        return _contentLength;
-      }
-    }
+    public long ContentLength64 => _contentLength;
 
     /// <summary>
     /// Gets the media type of the entity body data included in the request.
@@ -207,11 +198,7 @@ namespace WebSocketSharp.Net
     ///   <see langword="null"/> if the header is not present.
     ///   </para>
     /// </value>
-    public string ContentType {
-      get {
-        return _headers["Content-Type"];
-      }
-    }
+    public string ContentType => _headers["Content-Type"];
 
     /// <summary>
     /// Gets the HTTP cookies included in the request.
@@ -240,11 +227,7 @@ namespace WebSocketSharp.Net
     /// <c>true</c> if the request has the entity body data; otherwise,
     /// <c>false</c>.
     /// </value>
-    public bool HasEntityBody {
-      get {
-        return _contentLength > 0 || _chunked;
-      }
-    }
+    public bool HasEntityBody => _contentLength > 0 || _chunked;
 
     /// <summary>
     /// Gets the HTTP headers included in the request.
@@ -252,11 +235,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="NameValueCollection"/> that contains the headers.
     /// </value>
-    public NameValueCollection Headers {
-      get {
-        return _headers;
-      }
-    }
+    public NameValueCollection Headers => _headers;
 
     /// <summary>
     /// Gets the HTTP method specified by the client.
@@ -265,11 +244,7 @@ namespace WebSocketSharp.Net
     /// A <see cref="string"/> that represents the HTTP method specified in
     /// the request line.
     /// </value>
-    public string HttpMethod {
-      get {
-        return _httpMethod;
-      }
-    }
+    public string HttpMethod => _httpMethod;
 
     /// <summary>
     /// Gets a stream that contains the entity body data included in
@@ -302,11 +277,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// <c>true</c> if the client is authenticated; otherwise, <c>false</c>.
     /// </value>
-    public bool IsAuthenticated {
-      get {
-        return _context.User != null;
-      }
-    }
+    public bool IsAuthenticated => _context.User != null;
 
     /// <summary>
     /// Gets a value indicating whether the request is sent from the
@@ -316,11 +287,7 @@ namespace WebSocketSharp.Net
     /// <c>true</c> if the request is sent from the same computer as
     /// the server; otherwise, <c>false</c>.
     /// </value>
-    public bool IsLocal {
-      get {
-        return _connection.IsLocal;
-      }
-    }
+    public bool IsLocal => _connection.IsLocal;
 
     /// <summary>
     /// Gets a value indicating whether a secure connection is used to send
@@ -329,11 +296,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// <c>true</c> if the connection is secure; otherwise, <c>false</c>.
     /// </value>
-    public bool IsSecureConnection {
-      get {
-        return _connection.IsSecure;
-      }
-    }
+    public bool IsSecureConnection => _connection.IsSecure;
 
     /// <summary>
     /// Gets a value indicating whether the request is a WebSocket handshake
@@ -343,11 +306,7 @@ namespace WebSocketSharp.Net
     /// <c>true</c> if the request is a WebSocket handshake request; otherwise,
     /// <c>false</c>.
     /// </value>
-    public bool IsWebSocketRequest {
-      get {
-        return _httpMethod == "GET" && _headers.Upgrades ("websocket");
-      }
-    }
+    public bool IsWebSocketRequest => _httpMethod == "GET" && _headers.Upgrades ("websocket");
 
     /// <summary>
     /// Gets a value indicating whether a persistent connection is requested.
@@ -356,11 +315,7 @@ namespace WebSocketSharp.Net
     /// <c>true</c> if the request specifies that the connection is kept open;
     /// otherwise, <c>false</c>.
     /// </value>
-    public bool KeepAlive {
-      get {
-        return _headers.KeepsAlive (_protocolVersion);
-      }
-    }
+    public bool KeepAlive => _headers.KeepsAlive (_protocolVersion);
 
     /// <summary>
     /// Gets the endpoint to which the request is sent.
@@ -369,11 +324,7 @@ namespace WebSocketSharp.Net
     /// A <see cref="System.Net.IPEndPoint"/> that represents the server
     /// IP address and port number.
     /// </value>
-    public System.Net.IPEndPoint LocalEndPoint {
-      get {
-        return _connection.LocalEndPoint;
-      }
-    }
+    public System.Net.IPEndPoint LocalEndPoint => _connection.LocalEndPoint;
 
     /// <summary>
     /// Gets the HTTP version specified by the client.
@@ -382,11 +333,7 @@ namespace WebSocketSharp.Net
     /// A <see cref="Version"/> that represents the HTTP version specified in
     /// the request line.
     /// </value>
-    public Version ProtocolVersion {
-      get {
-        return _protocolVersion;
-      }
-    }
+    public Version ProtocolVersion => _protocolVersion;
 
     /// <summary>
     /// Gets the query string included in the request.
@@ -423,11 +370,7 @@ namespace WebSocketSharp.Net
     /// A <see cref="string"/> that represents the request target specified in
     /// the request line.
     /// </value>
-    public string RawUrl {
-      get {
-        return _rawUrl;
-      }
-    }
+    public string RawUrl => _rawUrl;
 
     /// <summary>
     /// Gets the endpoint from which the request is sent.
@@ -436,11 +379,7 @@ namespace WebSocketSharp.Net
     /// A <see cref="System.Net.IPEndPoint"/> that represents the client
     /// IP address and port number.
     /// </value>
-    public System.Net.IPEndPoint RemoteEndPoint {
-      get {
-        return _connection.RemoteEndPoint;
-      }
-    }
+    public System.Net.IPEndPoint RemoteEndPoint => _connection.RemoteEndPoint;
 
     /// <summary>
     /// Gets the trace identifier of the request.
@@ -448,11 +387,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="Guid"/> that represents the trace identifier.
     /// </value>
-    public Guid RequestTraceIdentifier {
-      get {
-        return _requestTraceIdentifier;
-      }
-    }
+    public Guid RequestTraceIdentifier => _requestTraceIdentifier;
 
     /// <summary>
     /// Gets the URL requested by the client.
@@ -520,11 +455,7 @@ namespace WebSocketSharp.Net
     ///   <see langword="null"/> if the header is not present.
     ///   </para>
     /// </value>
-    public string UserAgent {
-      get {
-        return _headers["User-Agent"];
-      }
-    }
+    public string UserAgent => _headers["User-Agent"];
 
     /// <summary>
     /// Gets the IP address and port number to which the request is sent.
@@ -533,11 +464,7 @@ namespace WebSocketSharp.Net
     /// A <see cref="string"/> that represents the server IP address and
     /// port number.
     /// </value>
-    public string UserHostAddress {
-      get {
-        return _connection.LocalEndPoint.ToString ();
-      }
-    }
+    public string UserHostAddress => _connection.LocalEndPoint.ToString ();
 
     /// <summary>
     /// Gets the server host name requested by the client.
@@ -550,11 +477,7 @@ namespace WebSocketSharp.Net
     ///   It includes the port number if provided.
     ///   </para>
     /// </value>
-    public string UserHostName {
-      get {
-        return _userHostName;
-      }
-    }
+    public string UserHostName => _userHostName;
 
     /// <summary>
     /// Gets the natural languages that are acceptable for the client.

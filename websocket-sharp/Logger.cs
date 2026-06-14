@@ -123,9 +123,7 @@ namespace WebSocketSharp
     /// A <see cref="string"/> that represents the path to the log file if any.
     /// </value>
     public string File {
-      get {
-        return _file;
-      }
+      get => _file;
 
       set {
         lock (_sync)
@@ -148,9 +146,7 @@ namespace WebSocketSharp
     ///   </para>
     /// </value>
     public LogLevel Level {
-      get {
-        return _level;
-      }
+      get => _level;
 
       set {
         lock (_sync)
@@ -178,9 +174,7 @@ namespace WebSocketSharp
     ///   </para>
     /// </value>
     public Action<LogData, string> Output {
-      get {
-        return _output;
-      }
+      get => _output;
 
       set {
         lock (_sync)

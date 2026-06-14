@@ -193,9 +193,7 @@ namespace WebSocketSharp.Server
     ///   </para>
     /// </value>
     public bool KeepClean {
-      get {
-        return _keepClean;
-      }
+      get => _keepClean;
 
       set {
         lock (_sync) {
@@ -251,9 +249,7 @@ namespace WebSocketSharp.Server
     /// The value specified for a set operation is zero or less.
     /// </exception>
     public TimeSpan WaitTime {
-      get {
-        return _waitTime;
-      }
+      get => _waitTime;
 
       set {
         if (value <= TimeSpan.Zero) {

@@ -111,7 +111,10 @@ namespace Archipelago.MultiClient.Net.Models
         /// <param name="left">a color</param>
         /// <param name="right">a color</param>
         /// <returns>true, if both sides represent the same color</returns>
-        public static bool operator ==(Color left, Color right) => left.Equals(right);
+        public static bool operator ==(Color left, Color right)
+        {
+	        return left.Equals(right);
+        }
 
         /// <summary>
         /// Value In-Equality
@@ -119,6 +122,9 @@ namespace Archipelago.MultiClient.Net.Models
         /// <param name="left">a color</param>
         /// <param name="right">a color</param>
         /// <returns>true, if both sides represent an different color</returns>
-		public static bool operator !=(Color left, Color right) => !(left == right);
-	}
+		public static bool operator !=(Color left, Color right)
+		{
+			return !(left == right);
+		}
+    }
 }

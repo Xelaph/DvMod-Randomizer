@@ -5,9 +5,9 @@ using HarmonyLib;
 namespace DvMod.Randomizer {
     [HarmonyPatch(typeof(PlayerManager), nameof(PlayerManager.SetCar))]
     public class DeathLinkPatch {
-        private static void SendDeathLink(TrainCar _) {
+        private static void SendDeathLink(TrainCar _) =>
             Main.Player!.deathLinkService!.SendDeathLink(new(Main.Player.Session.Players.ActivePlayer.Name, "derailed"));
-        }
+        
         public static void Derail(DeathLink _) => PlayerManager.Car?.Derail();
         public static void Prefix(TrainCar newCar) {
             if (Main.Player == null) return;

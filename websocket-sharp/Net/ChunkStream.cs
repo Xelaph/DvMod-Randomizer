@@ -80,39 +80,19 @@ namespace WebSocketSharp.Net
 
     #region Internal Properties
 
-    internal int Count {
-      get {
-        return _count;
-      }
-    }
+    internal int Count => _count;
 
-    internal byte[] EndBuffer {
-      get {
-        return _endBuffer;
-      }
-    }
+    internal byte[] EndBuffer => _endBuffer;
 
-    internal int Offset {
-      get {
-        return _offset;
-      }
-    }
+    internal int Offset => _offset;
 
     #endregion
 
     #region Public Properties
 
-    public WebHeaderCollection Headers {
-      get {
-        return _headers;
-      }
-    }
+    public WebHeaderCollection Headers => _headers;
 
-    public bool WantsMore {
-      get {
-        return _state < InputChunkState.End;
-      }
-    }
+    public bool WantsMore => _state < InputChunkState.End;
 
     #endregion
 

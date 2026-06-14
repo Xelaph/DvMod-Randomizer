@@ -80,10 +80,7 @@ namespace Archipelago.MultiClient.Net.Colors
 		/// Gets the palette color corresponding to a Hint's status.
 		/// </summary>
 		/// <returns>The corresponding palette color, or null if not specified</returns>
-		public static PaletteColor? GetColor(Hint hint)
-		{
-			return GetColor(hint.Status);
-		}
+		public static PaletteColor? GetColor(Hint hint) => GetColor(hint.Status);
 
 		/// <summary>
 		/// Gets the palette color corresponding to an ItemFlags.
@@ -105,10 +102,7 @@ namespace Archipelago.MultiClient.Net.Colors
 		/// Gets the palette color corresponding to an ItemInfo's flags.
 		/// </summary>
 		/// <returns>The corresponding palette color, or null if not specified</returns>
-		public static PaletteColor? GetColor(ItemInfo item)
-		{
-			return GetColor(item.Flags);
-		}
+		public static PaletteColor? GetColor(ItemInfo item) => GetColor(item.Flags);
 
 		/// <summary>
 		/// Gets the palette color corresponding to a PlayerInfo.

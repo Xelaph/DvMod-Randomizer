@@ -129,11 +129,7 @@ namespace WebSocketSharp.Net
     ///   It is any of the Win32 error codes.
     ///   </para>
     /// </value>
-    public override int ErrorCode {
-      get {
-        return NativeErrorCode;
-      }
-    }
+    public override int ErrorCode => NativeErrorCode;
 
     #endregion
   }

@@ -281,9 +281,7 @@ namespace WebSocketSharp.Server
     /// The set operation is not available when the session has already started.
     /// </exception>
     public Action<CookieCollection, CookieCollection> CookiesResponder {
-      get {
-        return _cookiesResponder;
-      }
+      get => _cookiesResponder;
 
       set {
         if (_registered) {
@@ -313,9 +311,7 @@ namespace WebSocketSharp.Server
     /// The set operation is not available when the session has already started.
     /// </exception>
     public bool EmitOnPing {
-      get {
-        return _emitOnPing;
-      }
+      get => _emitOnPing;
 
       set {
         if (_registered) {
@@ -358,9 +354,7 @@ namespace WebSocketSharp.Server
     /// The set operation is not available when the session has already started.
     /// </exception>
     public Func<string, bool> HostValidator {
-      get {
-        return _hostValidator;
-      }
+      get => _hostValidator;
 
       set {
         if (_registered) {
@@ -405,9 +399,7 @@ namespace WebSocketSharp.Server
     /// The set operation is not available when the session has already started.
     /// </exception>
     public bool IgnoreExtensions {
-      get {
-        return _ignoreExtensions;
-      }
+      get => _ignoreExtensions;
 
       set {
         if (_registered) {
@@ -438,9 +430,7 @@ namespace WebSocketSharp.Server
     /// The set operation is not available when the session has already started.
     /// </exception>
     public bool NoDelay {
-      get {
-        return _noDelay;
-      }
+      get => _noDelay;
 
       set {
         if (_registered) {
@@ -484,9 +474,7 @@ namespace WebSocketSharp.Server
     /// The set operation is not available when the session has already started.
     /// </exception>
     public Func<string, bool> OriginValidator {
-      get {
-        return _originValidator;
-      }
+      get => _originValidator;
 
       set {
         if (_registered) {
@@ -525,11 +513,10 @@ namespace WebSocketSharp.Server
     /// The set operation is not available when the session has already started.
     /// </exception>
     public string Protocol {
-      get {
-        return _registered
-               ? _websocket.Protocol
-               : (_protocol ?? String.Empty);
-      }
+      get =>
+        _registered
+          ? _websocket.Protocol
+          : (_protocol ?? String.Empty);
 
       set {
         if (_registered) {
@@ -566,11 +553,7 @@ namespace WebSocketSharp.Server
     ///   <see cref="DateTime.MaxValue"/> when the session has not started yet.
     ///   </para>
     /// </value>
-    public DateTime StartTime {
-      get {
-        return _startTime;
-      }
-    }
+    public DateTime StartTime => _startTime;
 
     /// <summary>
     /// Gets or sets the delegate used to respond to the user headers.
@@ -603,9 +586,7 @@ namespace WebSocketSharp.Server
     /// The set operation is not available when the session has already started.
     /// </exception>
     public Action<NameValueCollection, WebHeaderCollection> UserHeadersResponder {
-      get {
-        return _userHeadersResponder;
-      }
+      get => _userHeadersResponder;
 
       set {
         if (_registered) {
@@ -1597,11 +1578,7 @@ namespace WebSocketSharp.Server
     ///   <see langword="null"/> when the session has not started yet.
     ///   </para>
     /// </value>
-    WebSocket IWebSocketSession.WebSocket {
-      get {
-        return _websocket;
-      }
-    }
+    WebSocket IWebSocketSession.WebSocket => _websocket;
 
     #endregion
   }

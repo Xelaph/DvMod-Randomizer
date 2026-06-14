@@ -103,29 +103,18 @@ namespace WebSocketSharp
 
     #region Internal Properties
 
-    internal ushort Code {
-      get {
-        return _length >= 2
-               ? _data.SubArray (0, 2).ToUInt16 (ByteOrder.Big)
-               : (ushort) 1005;
-      }
-    }
+    internal ushort Code =>
+      _length >= 2
+        ? _data.SubArray (0, 2).ToUInt16 (ByteOrder.Big)
+        : (ushort) 1005;
 
     internal long ExtensionDataLength {
-      get {
-        return _extDataLength;
-      }
+      get => _extDataLength;
 
-      set {
-        _extDataLength = value;
-      }
+      set => _extDataLength = value;
     }
 
-    internal bool HasReservedCode {
-      get {
-        return _length >= 2 && Code.IsReservedStatusCode ();
-      }
-    }
+    internal bool HasReservedCode => _length >= 2 && Code.IsReservedStatusCode ();
 
     internal string Reason {
       get {
@@ -146,27 +135,17 @@ namespace WebSocketSharp
 
     #region Public Properties
 
-    public byte[] ApplicationData {
-      get {
-        return _extDataLength > 0
-               ? _data.SubArray (_extDataLength, _length - _extDataLength)
-               : _data;
-      }
-    }
+    public byte[] ApplicationData =>
+      _extDataLength > 0
+        ? _data.SubArray (_extDataLength, _length - _extDataLength)
+        : _data;
 
-    public byte[] ExtensionData {
-      get {
-        return _extDataLength > 0
-               ? _data.SubArray (0, _extDataLength)
-               : _emptyBytes;
-      }
-    }
+    public byte[] ExtensionData =>
+      _extDataLength > 0
+        ? _data.SubArray (0, _extDataLength)
+        : _emptyBytes;
 
-    public ulong Length {
-      get {
-        return (ulong) _length;
-      }
-    }
+    public ulong Length => (ulong) _length;
 
     #endregion
 

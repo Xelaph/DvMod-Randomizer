@@ -26,7 +26,6 @@
  */
 #endregion
 
-using System;
 using System.Collections.Specialized;
 using System.Security.Principal;
 
@@ -62,11 +61,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="string"/> that represents the algorithm parameter.
     /// </value>
-    public string Algorithm {
-      get {
-        return _parameters["algorithm"];
-      }
-    }
+    public string Algorithm => _parameters["algorithm"];
 
     /// <summary>
     /// Gets the cnonce parameter from a digest authentication attempt.
@@ -74,11 +69,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="string"/> that represents the cnonce parameter.
     /// </value>
-    public string Cnonce {
-      get {
-        return _parameters["cnonce"];
-      }
-    }
+    public string Cnonce => _parameters["cnonce"];
 
     /// <summary>
     /// Gets the nc parameter from a digest authentication attempt.
@@ -86,11 +77,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="string"/> that represents the nc parameter.
     /// </value>
-    public string Nc {
-      get {
-        return _parameters["nc"];
-      }
-    }
+    public string Nc => _parameters["nc"];
 
     /// <summary>
     /// Gets the nonce parameter from a digest authentication attempt.
@@ -98,11 +85,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="string"/> that represents the nonce parameter.
     /// </value>
-    public string Nonce {
-      get {
-        return _parameters["nonce"];
-      }
-    }
+    public string Nonce => _parameters["nonce"];
 
     /// <summary>
     /// Gets the opaque parameter from a digest authentication attempt.
@@ -110,11 +93,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="string"/> that represents the opaque parameter.
     /// </value>
-    public string Opaque {
-      get {
-        return _parameters["opaque"];
-      }
-    }
+    public string Opaque => _parameters["opaque"];
 
     /// <summary>
     /// Gets the qop parameter from a digest authentication attempt.
@@ -122,11 +101,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="string"/> that represents the qop parameter.
     /// </value>
-    public string Qop {
-      get {
-        return _parameters["qop"];
-      }
-    }
+    public string Qop => _parameters["qop"];
 
     /// <summary>
     /// Gets the realm parameter from a digest authentication attempt.
@@ -134,11 +109,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="string"/> that represents the realm parameter.
     /// </value>
-    public string Realm {
-      get {
-        return _parameters["realm"];
-      }
-    }
+    public string Realm => _parameters["realm"];
 
     /// <summary>
     /// Gets the response parameter from a digest authentication attempt.
@@ -146,11 +117,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="string"/> that represents the response parameter.
     /// </value>
-    public string Response {
-      get {
-        return _parameters["response"];
-      }
-    }
+    public string Response => _parameters["response"];
 
     /// <summary>
     /// Gets the uri parameter from a digest authentication attempt.
@@ -158,11 +125,7 @@ namespace WebSocketSharp.Net
     /// <value>
     /// A <see cref="string"/> that represents the uri parameter.
     /// </value>
-    public string Uri {
-      get {
-        return _parameters["uri"];
-      }
-    }
+    public string Uri => _parameters["uri"];
 
     #endregion
 

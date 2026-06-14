@@ -108,9 +108,15 @@ namespace Archipelago.MultiClient.Net.BounceFeatures.DeathLink
         }
 
 #pragma warning disable CS1591
-		public static bool operator ==(DeathLink lhs, DeathLink rhs) => lhs?.Equals(rhs) ?? rhs is null;
-		
-		public static bool operator !=(DeathLink lhs, DeathLink rhs) => !(lhs == rhs);
+		public static bool operator ==(DeathLink lhs, DeathLink rhs)
+		{
+			return lhs?.Equals(rhs) ?? rhs is null;
+		}
+
+		public static bool operator !=(DeathLink lhs, DeathLink rhs)
+		{
+			return !(lhs == rhs);
+		}
 #pragma warning restore CS1591
 	}
 }

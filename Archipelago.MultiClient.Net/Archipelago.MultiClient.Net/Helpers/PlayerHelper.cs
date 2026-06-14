@@ -311,12 +311,21 @@ namespace Archipelago.MultiClient.Net.Helpers
 		/// <summary>
 		/// Converts the PlayerInfo to the slot
 		/// </summary>
-		public static implicit operator int(PlayerInfo p) => p.Slot;
+		public static implicit operator int(PlayerInfo p)
+		{
+			return p.Slot;
+		}
 
 #pragma warning disable CS1591
-		public static bool operator ==(PlayerInfo lhs, PlayerInfo rhs) => lhs?.Equals(rhs) ?? rhs is null;
+		public static bool operator ==(PlayerInfo lhs, PlayerInfo rhs)
+		{
+			return lhs?.Equals(rhs) ?? rhs is null;
+		}
 
-		public static bool operator !=(PlayerInfo lhs, PlayerInfo rhs) => !(lhs == rhs);
+		public static bool operator !=(PlayerInfo lhs, PlayerInfo rhs)
+		{
+			return !(lhs == rhs);
+		}
 #pragma warning restore CS1591
 
 		/// <summary>

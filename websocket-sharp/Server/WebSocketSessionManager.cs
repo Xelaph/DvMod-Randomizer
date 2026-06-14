@@ -31,9 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Timers;
 
 namespace WebSocketSharp.Server
 {
@@ -89,11 +87,7 @@ namespace WebSocketSharp.Server
 
     #region Internal Properties
 
-    internal ServerState State {
-      get {
-        return _state;
-      }
-    }
+    internal ServerState State => _state;
 
     #endregion
 
@@ -233,9 +227,7 @@ namespace WebSocketSharp.Server
     /// otherwise, <c>false</c>.
     /// </value>
     public bool KeepClean {
-      get {
-        return _keepClean;
-      }
+      get => _keepClean;
 
       set {
         lock (_sync) {
@@ -290,9 +282,7 @@ namespace WebSocketSharp.Server
     /// The value specified for a set operation is zero or less.
     /// </exception>
     public TimeSpan WaitTime {
-      get {
-        return _waitTime;
-      }
+      get => _waitTime;
 
       set {
         if (value <= TimeSpan.Zero) {
