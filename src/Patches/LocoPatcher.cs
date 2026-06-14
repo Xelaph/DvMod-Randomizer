@@ -13,35 +13,22 @@ namespace DvMod.Randomizer
     [HarmonyPatch(typeof(CommsRadioCrewVehicle))]
     public static class CrewCommsPatch {
         [HarmonyPostfix, HarmonyPatch("UpdateAvailableVehicles")]
-        public static void CustomVehicles(ref List<TrainCarLivery> ___availableVehiclesForSpawn) {
-            if (Main.player == null) 
-                return;
-            Garage[] crewVehicleGarages = [
-                Garage.Bob,
-                Garage.Caboose,
-                Garage.DM1U,
-                Garage.DE6_Slug,
-                Garage.Museum_FlatbedShort,
-                Garage.DE2_Relic,
-                Garage.DM3_Relic,
-                Garage.DH4_Relic,
-                Garage.DE6_Relic,
-                Garage.S060_Relic,
-                Garage.S282_Relic,
-            ];
-            ___availableVehiclesForSpawn = 
-                    crewVehicleGarages
-                    .Select(g => g.ToV2())
+        public static void CustomVehicles(CommsRadioCrewVehicle __instance) {
+            if (Main.player == null) return;
+            __instance.availableVehiclesForSpawn.Clear(); 
+            __instance.availableVehiclesForSpawn.AddRange( 
+                    SingletonBehaviour<CarSpawner>.Instance.crewVehicleGarages
                     .Where(Main.player!.HasUnlocked)
                     .SelectMany(g => g.garageCarLiveries)
-                    .AddItem(TrainCarType.HandCar.ToV2())
-                    .ToList();
+                    .ToList()
+                    );
+            __instance.availableVehiclesForSpawn.AddRange(SingletonBehaviour<CarSpawner>.Instance.vehiclesWithoutGarage);
         }
-        [HarmonyPrefix, HarmonyPatch("SetState")]
+        /*[HarmonyPrefix, HarmonyPatch("SetState")]
         public static void RefreshList(CommsRadioCrewVehicle.State newState, CommsRadioCrewVehicle __instance) {
             if (newState == CommsRadioCrewVehicle.State.EnterSpawnMode)
                 __instance.UpdateAvailableVehicles();
-        }
+        }*/
     }
 
     [HarmonyPatch(typeof(GaragePadlockUnlocker), "OnGarageUnlocked")]

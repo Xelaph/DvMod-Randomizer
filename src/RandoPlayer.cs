@@ -200,6 +200,10 @@ namespace DvMod.Randomizer
                     }
                 }
             }*/
+            if (Input.GetKeyDown("[0]")) {
+                Input.ResetInputAxes();
+                
+            }
         }
         public void InitGame() {
             //Check if we need to resync (items received while we were offline)
