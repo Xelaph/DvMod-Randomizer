@@ -22,8 +22,7 @@ namespace DvMod.Randomizer
                      .requiredGeneralLicense)) &&
                 (__instance.JobLicense.requiredJobLicense == null ||
                  SingletonBehaviour<LicenseManager>.Instance.IsJobLicenseAcquired(__instance.JobLicense
-                     .requiredJobLicense)) &&
-                    __instance.JobLicense.v1 is JobLicenses.FreightHaul or JobLicenses.Shunting;
+                     .requiredJobLicense));
             if (!__instance.IsAcquired){
                 __instance.status.text = "$" + __instance.JobLicense.price.ToString("N2", LocalizationAPI.CC);
                 __instance.name.text += "?";
@@ -41,8 +40,7 @@ namespace DvMod.Randomizer
                      .requiredGeneralLicense)) &&
                     (__instance.GeneralLicense.requiredJobLicense == null ||
                         SingletonBehaviour<LicenseManager>.Instance.IsJobLicenseAcquired(__instance.GeneralLicense
-                     .requiredJobLicense)) &&
-                     __instance.GeneralLicense.v1 is GeneralLicenseType.TrainDriver or GeneralLicenseType.DE2 or GeneralLicenseType.Dispatcher1;
+                     .requiredJobLicense));
             if (!__instance.IsAcquired){
                 __instance.status.text = "$" + __instance.GeneralLicense.price.ToString("N2", LocalizationAPI.CC);
                 __instance.name.text += "?";
