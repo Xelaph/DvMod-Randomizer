@@ -28,7 +28,7 @@ namespace DvMod.Randomizer
                 default :
                 missing = ToAdd;
                 break;
-            };
+            }
             if (missing.Count > 0) {
                 int PagesToAdd = missing.Count / 9 + (missing.Count % 9 > 0 ? 1 : 0);
                 JobReportPaymentTemplatePaperData lastPageData = (JobReportPaymentTemplatePaperData) mainList.Last();
@@ -43,7 +43,7 @@ namespace DvMod.Randomizer
                 }
                 mainList.InsertRange(mainList.Count-1, 
                     Enumerable.Range(0, PagesToAdd).Select(
-                        i => new JobReportTasksTemplatePaperData([.. ToAdd.Skip(9*i).Take(9)], (newLastPage - PagesToAdd + i).ToString(), newTotalPages)
+                        i => new JobReportTasksTemplatePaperData([.. missing.Skip(9*i).Take(9)], (newLastPage - PagesToAdd + i).ToString(), newTotalPages)
                     )
                 );
                 
@@ -82,7 +82,7 @@ namespace DvMod.Randomizer
                     else if (jobState.RemainingLoco == 0)
                         ToAdd.Add(new("You already got the reward for driving the "+LocoName, "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
                     else
-                        ToAdd.Add(new($"You need to finish {jobState.RemainingLoco} with a {LocoName} to earn a reward", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS));
+                        ToAdd.Add(new($"You need to finish {jobState.RemainingLoco} jobs with a {LocoName} to earn a reward", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS));
                 }
                 
             } else {
