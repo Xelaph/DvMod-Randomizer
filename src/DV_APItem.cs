@@ -8,6 +8,7 @@ using DV.CabControls;
 using DV.Customization.Paint;
 using DV.Damage;
 using DV.InventorySystem;
+using DV.JObjectExtstensions;
 using DV.LocoRestoration;
 using DV.Simulation.Cars;
 using DV.ThingTypes;
