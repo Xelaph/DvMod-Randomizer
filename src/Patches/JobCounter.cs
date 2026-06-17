@@ -52,9 +52,9 @@ namespace DvMod.Randomizer
 
         [HarmonyPatch("GetReportTemplateData")]
         public static void Postfix(ref List<TemplatePaperData> __result, Job_data data) {
-            if (Main.player == null) return;
+            if (!Main.IsConnected) return;
             if (data.state != JobState.Completed) return;
-            JobFinishState jobState = Main.player.FinishJob(data);
+            JobFinishState jobState = Main.Player.FinishJob(data);
             List<JobReportTasksTemplatePaperData.JobReportEntry> ToAdd = [];
             string job = jobState.IsShunting?"shunting":"transport";
             string otherJob = !jobState.IsShunting?"shunting":"transport";

@@ -25,9 +25,12 @@ namespace DvMod.Randomizer
             SceneManager.UnloadSceneAsync((int)DVScenes.Game);
             SingletonBehaviour<CoroutineManager>.Instance.StopCoroutine("LoadingRoutine");
         }
-
+        [HarmonyPrefix, HarmonyPatch("Initialize")]
+        public static void SaveLoadingPatch(bool ___initialized, out bool __state) => __state = ___initialized;
+        
         [HarmonyPostfix, HarmonyPatch("Initialize")]
-        public static void SaveLoadingEndPatch(SaveGameData ___saveGameData) {
+        public static void SaveLoadingEndPatch(SaveGameData ___saveGameData, bool __state) {
+            if (__state) return;
             RandoSaveData? data = ___saveGameData.GetObject<RandoSaveData>("RandoData");
             if (data == null) {
                 Main.Log("Launching game in normal mode");
@@ -38,13 +41,13 @@ namespace DvMod.Randomizer
                 return;
             }
             try {
-                Main.player ??= new(data);
+                Main.Connect(data);
             } catch (TimeoutException) {
                 ExitWithMessage($"Could not connect to server. Returning to main menu...");
-                Main.player = null;
+                Main.Disconnect();
                 return;
             }
-            Main.player.InitGame();
+            Main.Player.InitGame();
         }
 
     }    
@@ -52,8 +55,8 @@ namespace DvMod.Randomizer
     public class SavingPatch {
         [HarmonyPrefix, HarmonyPatch("UpdateInternalData")]
         public static void SavePrefix(SaveGameData ___data) {
-            if (Main.player == null) return;
-            ___data.SetObject("RandoData", Main.player.Data);
+            if (!Main.IsConnected) return;
+            ___data.SetObject("RandoData", Main.Player.Data);
         }
     }
 
@@ -63,13 +66,11 @@ namespace DvMod.Randomizer
         [HarmonyPostfix, HarmonyPatch(nameof(StartGameData_NewCareer.DoLoad))]
         public static IEnumerator TeleportPlayerPostfix(IEnumerator ret, Transform playerContainer) {
             yield return ret;
-            Main.Log("Trying to teleport to " + Main.player!.SlotData.StartStation);
             Transform teleportAnchor = 
                 StationController.allStations
-                    .Find(sc => sc.stationInfo.YardID.Equals(Main.player!.SlotData.StartStation))
+                    .Find(sc => sc.stationInfo.YardID.Equals(Main.Player.SlotData.StartStation))
                     .stationRange
                     .stationCenterAnchor;
-            Main.Log("Teleport position: " + teleportAnchor.position);
             playerContainer.position = teleportAnchor.position;
             playerContainer.rotation = teleportAnchor.rotation;
             yield return null;
@@ -78,9 +79,10 @@ namespace DvMod.Randomizer
         public static bool Prefix(StartGameData_NewCareer __instance, ref SaveGameData saveGameData, IGameSession session, IDifficulty difficultyParams) {
             if (!Main.settings!.CreateAPSave) return true;
             try {
-                Main.player ??= new(null);
+                Main.Connect(null);
             } catch (TimeoutException) {
                 Main.Log("Tried, but failed. Sorry");
+                Main.Disconnect();
                 MainMenu.GoBackToMainMenu();
                 return false;
             }
@@ -94,13 +96,13 @@ namespace DvMod.Randomizer
             session.PerformGameplayEntryDifficultyCheck(DifficultyToUse);
             //SingletonBehaviour<CoroutineManager>.Instance.Run(TeleportPlayer());
             //__instance.DifficultyToUse = DifficultyToUse;
-            saveGameData.SetFloat("Player_money", Main.player.SlotData.Money);
+            saveGameData.SetFloat("Player_money", Main.Player.SlotData.Money);
             saveGameData.SetBool("Tutorial_01_completed", value: true);
             saveGameData.SetBool("Tutorial_02_completed", value: true);
             saveGameData.SetBool("Tutorial_03_completed", value: true);
             saveGameData.SetInt("Starting_items", 0);
             session.GameData.SetBool("Difficulty_picked", value: true);
-            Main.player.InitGame();
+            Main.Player.InitGame();
             return false;
         }
     }

@@ -19,7 +19,7 @@ namespace DvMod.Randomizer
             return ret;
         }
         public static bool Prefix(SaveGameData data, LicenseManager __instance) {
-            if (Main.player == null) return true;
+            if (!Main.IsConnected) return true;
             ProcessListOfIDs(data.GetStringArray("Licenses_General"), Globals.G.Types.generalLicenses).ForEach(__instance.AcquireGeneralLicense);
 
     		ProcessListOfIDs(data.GetStringArray("Licenses_Jobs"), Globals.G.Types.jobLicenses).ForEach(__instance.AcquireJobLicense);
@@ -32,11 +32,11 @@ namespace DvMod.Randomizer
     [HarmonyPatch(typeof(StaticLicenseBookletRender), nameof(StaticLicenseBookletRender.GetStaticTemplatePaperData))]
     public static class LocoHintPatcher {
         public static void Postfix(GeneralLicenseType_v2 ___generalLicense, ref TemplatePaperData[] __result) {
-            if (Main.player == null) return;
+            if (!Main.IsConnected) return;
             int Order = RandoCommonData.GetOrderFromLocoLicense(___generalLicense);
-            if (Order < 0 || !Main.player.Config.HintsOnLocoLicense) return;
+            if (Order < 0 || !Main.Player.Config.HintsOnLocoLicense) return;
             LicenseTemplatePaperData FirstPage = (LicenseTemplatePaperData) __result[0];
-            FirstPage.licenseDescription += $"\nIn {Main.player.Config.LocoJobsThreshold[Order]} job with this loco, you will earn a {Main.player.GetItemNameFromLocationId(RandoCommonData.AP_ID.LOC_LOCO_NB_JOBS+Order, true)}";
+            FirstPage.licenseDescription += $"\nIn {Main.Player.Config.LocoJobsThreshold[Order]} job with this loco, you will earn a {Main.Player.GetItemNameFromLocationId(RandoCommonData.AP_ID.LOC_LOCO_NB_JOBS+Order, true)}";
         }
     }
 }

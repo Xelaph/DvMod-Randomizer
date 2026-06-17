@@ -11,13 +11,13 @@ namespace DvMod.Randomizer {
         private static readonly Color NO_LICENSE = new(3f,0f,0f);
         private static readonly MapMarker[] allMarkers = new MapMarker[20];
         public static void Postfix(MapMarker __instance) {
-            if (Main.player != null && __instance.fastTravelDestination.markerType == FastTravelDestination.MarkerType.Station) {
+            if (Main.IsConnected && __instance.fastTravelDestination.markerType == FastTravelDestination.MarkerType.Station) {
                 string stationName = StationController.allStations.FindMin(
                         sc => Vector3.Distance(sc.stationRange.stationCenterAnchor.position, __instance.fastTravelDestination.playerTeleportAnchor.position)
                 )!.stationInfo.YardID;
                 int order = RandoCommonData.GetOrderFromStationName(stationName);
                 allMarkers[order] = __instance;
-                if (Main.player.GotStationLicense(stationName))
+                if (Main.Player.GotStationLicense(stationName))
                     GotLicense(stationName);
                 else
                     NoLicense(stationName);

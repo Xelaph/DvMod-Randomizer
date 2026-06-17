@@ -138,13 +138,13 @@ namespace DvMod.Randomizer
                 object x = 1;
                 if (Time.time - LastTime > TimeThreshold && (PlayerManager.PlayerTransform.AbsolutePosition() - LocoPosition).magnitude < SpatialThreshold) {
                     string stationNeeded = RandoCommonData.GetStationFromLocoLocations(LocoPosition);
-                    bool StationOk = Main.player!.GotStationLicense(stationNeeded);
+                    bool StationOk = Main.Player.GotStationLicense(stationNeeded);
                     bool MuseumOk = SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(GeneralLicenseType.MuseumCitySouth.ToV2());
                     if (StationOk && MuseumOk) {
-                        ItemInfo item = Main.player.UnlockCheck(CheckId);
-                        Main.player.CheckRestoLoco(CheckId);
+                        ItemInfo item = Main.Player.UnlockCheck(CheckId);
+                        Main.Player.CheckRestoLoco(CheckId);
                         Main.NotifyPlayer($"You found a {item.ItemDisplayName} for {item.Player.Name} on the ground!");
-                        Main.player.UpdateEvent -= CheckPosition;
+                        Main.Player.UpdateEvent -= CheckPosition;
                     } else{
                         LastTime = Time.time;
                         if (StationOk && !MuseumOk)
@@ -200,8 +200,8 @@ namespace DvMod.Randomizer
         }
         private IEnumerator Subscribe() {
             while (Menu == null) yield return null;
-            Menu.controller.ExitLevelRequested += Dispose;
-            Menu.controller.QuitGameRequested += Dispose;
+            Menu.controller.ExitLevelRequested += Main.Disconnect;
+            Menu.controller.QuitGameRequested += Main.Disconnect;
         }
         public RandoPlayer(RandoSaveData? saveData) {
             bool UseGivenAuth = saveData == null || Main.settings!.ForceUseSave;
@@ -234,11 +234,10 @@ namespace DvMod.Randomizer
 
         }
         public void Dispose() {
-            Main.player = null;
-        }
-        ~RandoPlayer() {
-            Menu.controller.ExitLevelRequested -= Dispose;
-            Menu.controller.QuitGameRequested -= Dispose;
+            if (Menu != null && Menu.controller != null) {
+                Menu.controller.ExitLevelRequested -= Main.Disconnect;
+                Menu.controller.QuitGameRequested -= Main.Disconnect;
+            }
             Data.Index -= waitingQueue.Count;
             SetupListeners(false);
             deathLinkService = null;
@@ -340,13 +339,13 @@ namespace DvMod.Randomizer
                     Item_job1 = null,
                     Item_job2 = null,
                     Item_loco = null,
-                    RemainingForVictory = Main.player!.Config.VictoryThreshold,
-                    RemainingLoco = Main.player!.Config.LocoJobsThreshold[0],
+                    RemainingForVictory = Main.Player.Config.VictoryThreshold,
+                    RemainingLoco = Main.Player.Config.LocoJobsThreshold[0],
                     IsShunting = IsShunting,
                     GotStationLicense = false,
                     Station=Station,
-                    RemainingJobs = (IsShunting?Main.player!.Config.ShuntThreshold:Main.player!.Config.FreightThreshold)[StOrder],
-                    RemainingOtherJobs = (!IsShunting?Main.player!.Config.ShuntThreshold:Main.player!.Config.FreightThreshold)[StOrder],
+                    RemainingJobs = (IsShunting?Main.Player.Config.ShuntThreshold:Main.Player.Config.FreightThreshold)[StOrder],
+                    RemainingOtherJobs = (!IsShunting?Main.Player.Config.ShuntThreshold:Main.Player.Config.FreightThreshold)[StOrder],
                     LastCar = null,
                     Tokens = Data.Tokens
                 };

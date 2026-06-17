@@ -14,8 +14,8 @@ namespace DvMod.Randomizer
     public static class CareerManagerLicensesPatcher {
         [HarmonyPostfix, HarmonyPatch(nameof(CareerManagerLicensesScreen.LicenseEntry.UpdateJobLicenseData))]
         public static void JobLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
-            if (Main.player == null) return;
-            __instance.IsAcquired = Main.player.HasChecked(__instance.JobLicense);
+            if (!Main.IsConnected) return;
+            __instance.IsAcquired = Main.Player.HasChecked(__instance.JobLicense);
             __instance.IsObtainable =
                 (__instance.JobLicense.requiredGeneralLicense == null ||
                  SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(__instance.JobLicense
@@ -32,8 +32,8 @@ namespace DvMod.Randomizer
         }
         [HarmonyPostfix, HarmonyPatch(nameof(CareerManagerLicensesScreen.LicenseEntry.UpdateGeneralLicenseData))]
         public static void GeneralLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
-            if (Main.player == null) return;
-            __instance.IsAcquired = Main.player.HasChecked(__instance.GeneralLicense);
+            if (!Main.IsConnected) return;
+            __instance.IsAcquired = Main.Player.HasChecked(__instance.GeneralLicense);
             __instance.IsObtainable =
                     (__instance.GeneralLicense.requiredGeneralLicense == null ||
                         SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(__instance.GeneralLicense
@@ -55,20 +55,20 @@ namespace DvMod.Randomizer
         public static void NamePatcher(TextMeshPro ___licenseNameText) => ___licenseNameText.text += "?";
         [HarmonyPrefix, HarmonyPatch(nameof(CareerManagerLicensePayingScreen.HandleInputAction))]
         public static bool BuyingPatch(InputAction input, CareerManagerLicensePayingScreen __instance, JobLicenseType_v2 ___jobLicenseToBuy, GeneralLicenseType_v2 ___generalLicenseToBuy) {
-            if (Main.player == null) return true;
+            if (!Main.IsConnected) return true;
             if (input != InputAction.Confirm) return true;
             if (!__instance.cashReg.Buy()) return true;
             float price;
             ItemInfo item;
             if (___generalLicenseToBuy != null) {
                 (long Id, int _) = RandoCommonData.GetIDFromGeneralLicense(___generalLicenseToBuy);
-                item = Main.player.UnlockCheck(Id);
-                Main.player.CheckGLicense(Id);
+                item = Main.Player.UnlockCheck(Id);
+                Main.Player.CheckGLicense(Id);
                 price = ___generalLicenseToBuy.price;
             } else {
                 (long Id, int _) = RandoCommonData.GetIDFromJobLicense(___jobLicenseToBuy);
-                item = Main.player.UnlockCheck(Id);
-                Main.player.CheckJLicense(Id);
+                item = Main.Player.UnlockCheck(Id);
+                Main.Player.CheckJLicense(Id);
                 price = ___jobLicenseToBuy.price;
             }
             CashRegisterModule ToPrint = new GenericThingCashRegisterModule();

@@ -1,3 +1,4 @@
+using System;
 using DV.UI;
 using DV.Utils;
 using HarmonyLib;
@@ -29,7 +30,19 @@ namespace DvMod.Randomizer
         public const int VERSION = 2;
         public static Settings? settings;
         public static UnityModManager.ModEntry? mod;
-        public static RandoPlayer? player;
+        private static RandoPlayer? _player;
+        public static RandoPlayer Player => _player ?? throw new NullReferenceException();
+        public static bool IsConnected => _player != null;
+
+        public static void Connect(RandoSaveData? saveData) {
+            if (IsConnected) _player!.Dispose();
+            _player = new RandoPlayer(saveData);
+        }
+        public static void Disconnect() {
+            if (!IsConnected) return;
+            _player!.Dispose();
+            _player = null;
+        }
         public static void Load(UnityModManager.ModEntry modEntry)
         {
             settings = Settings.Load<Settings>(modEntry);
@@ -37,7 +50,6 @@ namespace DvMod.Randomizer
             mod.OnToggle = OnToggle;
             mod.OnGUI += OnGUI;
             mod.OnSaveGUI += OnSaveGUI;
-
         }
         public static void OnGUI(UnityModManager.ModEntry modEntry) {
             settings!.Draw(modEntry);

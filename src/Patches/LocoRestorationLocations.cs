@@ -6,7 +6,7 @@ namespace DvMod.Randomizer {
     [HarmonyPatch(typeof(SimulationFlow), "Tick")]
     public static class UpdatePatch {
         public static void Postfix() {
-            Main.player?.CallUpdate();
+            if (Main.IsConnected) Main.Player.CallUpdate();
         }
     }
 }
