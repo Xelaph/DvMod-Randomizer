@@ -16,7 +16,7 @@ namespace DvMod.Randomizer
         public static void JobLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
             if (!Main.IsConnected) return;
             __instance.IsAcquired = Main.Player.HasChecked(__instance.JobLicense);
-            __instance.IsObtainable =
+            __instance.IsObtainable = !__instance.IsAcquired && 
                 (__instance.JobLicense.requiredGeneralLicense == null ||
                  SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(__instance.JobLicense
                      .requiredGeneralLicense)) &&
@@ -34,7 +34,7 @@ namespace DvMod.Randomizer
         public static void GeneralLicensesInfoPatch(CareerManagerLicensesScreen.LicenseEntry __instance) {
             if (!Main.IsConnected) return;
             __instance.IsAcquired = Main.Player.HasChecked(__instance.GeneralLicense);
-            __instance.IsObtainable =
+            __instance.IsObtainable = !__instance.IsAcquired && 
                     (__instance.GeneralLicense.requiredGeneralLicense == null ||
                         SingletonBehaviour<LicenseManager>.Instance.IsGeneralLicenseAcquired(__instance.GeneralLicense
                      .requiredGeneralLicense)) &&
