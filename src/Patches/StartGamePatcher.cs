@@ -57,25 +57,24 @@ namespace DvMod.Randomizer
         }
     }
 
-    [HarmonyPatch(typeof(StartGameData_NewCareer), nameof(StartGameData_NewCareer.PrepareNewSaveData))]
+    [HarmonyPatch(typeof(StartGameData_NewCareer))]
     public class NewSavePatch {
-        private static IEnumerator TeleportPlayer() {
-            while (StationController.allStations == null || StationController.allStations.Count == 0)
-                yield return WaitFor.Seconds(0.5f);
+
+        [HarmonyPostfix, HarmonyPatch(nameof(StartGameData_NewCareer.DoLoad))]
+        public static IEnumerator TeleportPlayerPostfix(IEnumerator ret, Transform playerContainer) {
+            yield return ret;
+            Main.Log("Trying to teleport to " + Main.player!.SlotData.StartStation);
             Transform teleportAnchor = 
-                    StationController.allStations
+                StationController.allStations
                     .Find(sc => sc.stationInfo.YardID.Equals(Main.player!.SlotData.StartStation))
                     .stationRange
                     .stationCenterAnchor;
-            PlayerManager.TeleportPlayer(teleportAnchor.position, teleportAnchor.rotation, null, useRotation: true);
-            while (!SingletonBehaviour<WorldStreamingInit>.Instance.IsSceneAndTerrainRegionLoaded(teleportAnchor.position))
-            {
-                yield return WaitFor.Seconds(0.5f);
-                Debug.LogWarning("Waiting terrains and streamers to finish loading");
-            }
-            PlayerManager.TeleportPlayer(teleportAnchor.position, teleportAnchor.rotation, null, useRotation: true);
-            Main.settings!.CreateAPSave = false;
+            Main.Log("Teleport position: " + teleportAnchor.position);
+            playerContainer.position = teleportAnchor.position;
+            playerContainer.rotation = teleportAnchor.rotation;
+            yield return null;
         }
+        [HarmonyPrefix, HarmonyPatch(nameof(StartGameData_NewCareer.PrepareNewSaveData))]
         public static bool Prefix(StartGameData_NewCareer __instance, ref SaveGameData saveGameData, IGameSession session, IDifficulty difficultyParams) {
             if (!Main.settings!.CreateAPSave) return true;
             try {
@@ -93,7 +92,7 @@ namespace DvMod.Randomizer
             IDifficulty DifficultyToUse = difficultyParams ?? DifficultyParamsSetter.Standard;
             DifficultyParamsSetter.SetDifficultyParams(DifficultyToUse);
             session.PerformGameplayEntryDifficultyCheck(DifficultyToUse);
-            SingletonBehaviour<CoroutineManager>.Instance.Run(TeleportPlayer());
+            //SingletonBehaviour<CoroutineManager>.Instance.Run(TeleportPlayer());
             //__instance.DifficultyToUse = DifficultyToUse;
             saveGameData.SetFloat("Player_money", Main.player.SlotData.Money);
             saveGameData.SetBool("Tutorial_01_completed", value: true);
