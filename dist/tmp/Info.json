@@ -1,8 +1,0 @@
-{
-    "Id": "Randomizer",
-    "DisplayName": "Archipelago Randomizer",
-    "AssemblyName": "Randomizer.dll",
-    "Version": "0.1.0",
-    "EntryMethod": "DvMod.Randomizer.Main.Load",
-    "Author": "Bacucysone"
-}

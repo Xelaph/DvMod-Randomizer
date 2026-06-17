@@ -5,7 +5,8 @@
     <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
     <RootNamespace>DvMod.Randomizer</RootNamespace>
-    <InformationalVersion>0.1.0</InformationalVersion>
+    <AssemblyName>Randomizer</AssemblyName>
+    <InformationalVersion>0.2.2</InformationalVersion>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
@@ -44,4 +45,15 @@
     <Reference Include="UnityEngine.ImageConversionModule" />
   </ItemGroup>
 
+
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<!-- Copy to build folder -->
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="./build/"/>
+
+		<!-- Package after Release build -->
+		<Exec Condition="'$(ConfigurationName)' == 'Release' And '$(OS)' == 'Windows_NT'" Command="powershell -executionpolicy bypass -Command &quot;(./package.ps1)&quot;"/>
+		<Exec Condition="'$(ConfigurationName)' == 'Release' And '$(OS)' != 'Windows_NT'" Command="pwsh -Command &quot;(./package.ps1)&quot;"/>
+	</Target>
+  
 </Project>
