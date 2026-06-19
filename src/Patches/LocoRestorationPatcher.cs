@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using DV;
 using DV.LocoRestoration;
 using DV.OriginShift;
@@ -15,18 +16,17 @@ namespace DvMod.Randomizer
     }
     [HarmonyPatch(typeof(LocoRestorationController))]
     public static class LocoRestorationPatcher {
-
-        [HarmonyPrefix, HarmonyPatch("InitCarForRestoration")]
-        public static bool Prefix(LocoRestorationController __instance, TrainCar car){
-            if (!Main.IsConnected) return true;
-            if (__instance.State == LocoRestorationController.RestorationState.S0_Initialized 
-             || __instance.State == LocoRestorationController.RestorationState.S1_UnlockedRestorationLicense 
-             || __instance.State == LocoRestorationController.RestorationState.S2_LocoUnblocked
-             || __instance.State == LocoRestorationController.RestorationState.S3_RerailedCars) {
-                SingletonBehaviour<CarSpawner>.Instance.DeleteCar(car);
-                return false;
-            }
-            return true;
+        
+        [HarmonyPostfix, HarmonyPatch("Start")]
+        public static IEnumerator StartPostfix(IEnumerator originalMethod, LocoRestorationController __instance) {
+            yield return originalMethod;
+            if (!Main.IsConnected) yield break;
+            if (__instance.State >= LocoRestorationController.RestorationState.S4_OnDestinationTrack) yield break;
+            __instance.loco.OnDestroyCar -= __instance.OnUnexpectedDestroy;
+            SingletonBehaviour<CarSpawner>.Instance.DeleteCar(__instance.loco);
+            if (__instance.secondCar == null) yield break;
+            __instance.secondCar.OnDestroyCar -= __instance.OnUnexpectedDestroy;
+            SingletonBehaviour<CarSpawner>.Instance.DeleteCar(__instance.secondCar);
         }
         [HarmonyPostfix, HarmonyPatch("DeliverPartCoro")]
         public static void PartsPostfix(TrainCar ___loco, LocoRestorationController __instance) {

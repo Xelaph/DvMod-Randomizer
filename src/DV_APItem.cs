@@ -12,6 +12,7 @@ using DV.JObjectExtstensions;
 using DV.LocoRestoration;
 using DV.Simulation.Cars;
 using DV.ThingTypes;
+using DV.ThingTypes.TransitionHelpers;
 using DV.Utils;
 using UnityEngine;
 
@@ -172,9 +173,16 @@ namespace DvMod.Randomizer {
             get => false;
         }
     }
-    public class AP_RelicLoco(int idx, ItemInfo item) : DV_APItem(idx, item)
-    {
-        private PaintTheme? AbandonedTheme => LocoRestorationController.allLocoRestorationControllers?[0]?.abandonedTheme;
+    public class AP_RelicLoco(int idx, ItemInfo item) : DV_APItem(idx, item) {
+        private static PaintTheme? AbandonedThemeCache;
+
+        private static PaintTheme AbandonedTheme {
+            get {
+                if (AbandonedThemeCache == null) PaintTheme.TryLoad("Relic_Rusty", out AbandonedThemeCache);
+                return AbandonedThemeCache;
+            }
+        }
+
         protected override string Name => RandoCommonData.GetRelicNameFromId(Id)+" demo loco advancement";
         protected override bool AcquireUnconditional()
         {
@@ -183,11 +191,16 @@ namespace DvMod.Randomizer {
             switch (RelicLevel) {
                 case 1:
                 //First level relic: Spawn relic in museum
-                controller.loco = SpawnOneRelic(controller.garageSpawner.locoSpawnPoint.transform.position, controller.locoLivery, controller.garageSpawner.flipSpawnLoco);
-                if (controller.loco == null) return false;
-                if (controller.secondCarLivery != null)
-                    controller.secondCar = SpawnOneRelic(controller.garageSpawner.locoSpawnPoint.transform.position, controller.secondCarLivery, controller.garageSpawner.flipSpawnLoco);
+                TrainCar[] carSpawned = SpawnRelic(controller.garageSpawner.locoSpawnPoint.transform.position,
+                    controller.locoLivery, controller.garageSpawner.flipSpawnLoco);
+                if (!carSpawned.Select(SetupRelic).All(b => b)) return false;
+                controller.loco = carSpawned[0];
                 controller.saveData.SetString("loco", controller.loco.CarGUID);
+                
+                if (controller.secondCarLivery != null) {
+                    controller.secondCar = carSpawned[1];
+                    controller.saveData.SetString("secondCar", controller.secondCar!.CarGUID);
+                }
                 controller.SetState(LocoRestorationController.RestorationState.S4_OnDestinationTrack);
                 controller.orderPartsModule.AddThingToCart();
                 controller.orderPartsModule.ThingBought += controller.OnPartsOrdered;
@@ -204,10 +217,10 @@ namespace DvMod.Randomizer {
             }
             return true;
         }
-        private TrainCar? SpawnOneRelic(Vector3 position, TrainCarLivery carLivery, bool flipLoco) {
-            TrainCar car = SingletonBehaviour<CarSpawner>.Instance.SpawnCarOnClosestTrack(position, carLivery, flipLoco, true, true);
+
+        public static bool SetupRelic(TrainCar car) {
             if (AbandonedTheme is null){
-                return null;
+                return false;
             }
             if (car.PaintExterior != null)
             {
@@ -230,7 +243,19 @@ namespace DvMod.Randomizer {
                 component2.resourceContainerController.DepleteAllResourceContainers();
             }
             car.preventDelete = true;
-            return car;
+            return true;
+        }
+
+        public static TrainCar[] SpawnRelic(Vector3 position, TrainCarLivery carLivery, bool flipLoco) {
+            SingletonBehaviour<CarSpawner>.Instance.useCarPooling = false;
+            TrainCar[] ret = carLivery.v1 == TrainCarType.LocoSteamHeavy ?
+                SingletonBehaviour<CarSpawner>.Instance.SpawnCarTypesOnClosestTrack(
+                    [carLivery, TrainCarType.Tender.ToV2()], position, null, true, true,
+                    flipTrainConsist: flipLoco, playerSpawnedCars: true, uniqueSpawnedCars: true).ToArray() : 
+                [SingletonBehaviour<CarSpawner>.Instance.SpawnCarOnClosestTrack(position, carLivery, flipLoco,
+                        true, true)];
+            SingletonBehaviour<CarSpawner>.Instance.useCarPooling = true;
+            return ret;
         }
         public override bool IsObtainable
         {
