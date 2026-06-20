@@ -70,7 +70,7 @@ namespace DvMod.Randomizer
                 else 
                     ToAdd.Add(new($"You got all rewards for {job} in {jobState.Station}", "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
                 if (jobState.RemainingOtherJobs > 0) 
-                    ToAdd.Add(new($"There are {jobState.RemainingJobs} rewards left for {otherJob} in {jobState.Station}", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS));
+                    ToAdd.Add(new($"There are {jobState.RemainingOtherJobs} rewards left for {otherJob} in {jobState.Station}", "", JobReportTasksTemplatePaperData.EntryState.IN_PROGRESS));
                 else 
                     ToAdd.Add(new($"You got all rewards for {otherJob} in {jobState.Station}", "", JobReportTasksTemplatePaperData.EntryState.COMPLETED));
                 if (jobState.LastCar == null)
