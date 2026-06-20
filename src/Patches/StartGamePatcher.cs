@@ -16,6 +16,19 @@ using UnityEngine.SceneManagement;
 
 namespace DvMod.Randomizer
 {
+    [HarmonyPatch(typeof(LevelInfo))]
+    public class TeleportPatch {
+        [HarmonyPostfix, HarmonyPatch(nameof(LevelInfo.NewCareerSpawnPosition), MethodType.Getter)]
+        public static void TeleportPlayerPostfix(ref Vector3 __result) {
+            if (!Main.IsConnected) return;
+            Transform teleportAnchor = 
+                StationController.allStations
+                    .Find(sc => sc.stationInfo.YardID.Equals(Main.Player.SlotData.StartStation))
+                    .stationRange
+                    .transform;
+            __result = teleportAnchor.position;
+        }
+    }
 
     [HarmonyPatch(typeof(StartGameData_FromSaveGame))]
     public class LoadingPatch {
@@ -63,18 +76,18 @@ namespace DvMod.Randomizer
     [HarmonyPatch(typeof(StartGameData_NewCareer))]
     public class NewSavePatch {
 
-        [HarmonyPostfix, HarmonyPatch(nameof(StartGameData_NewCareer.DoLoad))]
+        /*[HarmonyPostfix, HarmonyPatch(nameof(StartGameData_NewCareer.DoLoad))]
         public static IEnumerator TeleportPlayerPostfix(IEnumerator ret, Transform playerContainer) {
             yield return ret;
             Transform teleportAnchor = 
                 StationController.allStations
                     .Find(sc => sc.stationInfo.YardID.Equals(Main.Player.SlotData.StartStation))
                     .stationRange
-                    .stationCenterAnchor;
+                    .transform;
             playerContainer.position = teleportAnchor.position;
             playerContainer.rotation = teleportAnchor.rotation;
             yield return null;
-        }
+        }*/
         [HarmonyPrefix, HarmonyPatch(nameof(StartGameData_NewCareer.PrepareNewSaveData))]
         public static bool Prefix(StartGameData_NewCareer __instance, ref SaveGameData saveGameData, IGameSession session, IDifficulty difficultyParams) {
             if (!Main.settings!.CreateAPSave) return true;
